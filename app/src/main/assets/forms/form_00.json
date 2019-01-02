@@ -1,0 +1,176 @@
+{
+  "name": "Basic info",
+  "table_name": "gpdp_basic_info_1",
+  "form_number": 0,
+  "loop": 0,
+  "widgets": [
+    {
+      "column_name": "ben_image",
+      "heading": "",
+      "category": 4,
+      "data_type": 0,
+      "options": "",
+      "dependencies": "none"
+    },
+    {
+      "column_name": "surveyor_id",
+      "heading": "Surveyor ID",
+      "category": 1,
+      "data_type": 0,
+      "options": "",
+      "dependencies": "none"
+    },
+    {
+      "column_name": "family_head_name",
+      "heading": "Name of head of family",
+      "category": 1,
+      "data_type": 0,
+      "options": "",
+      "dependencies": "none"
+    },
+    {
+      "column_name": "gender",
+      "heading": "Choose gender",
+      "category": 2,
+      "data_type": 0,
+      "options": "form_0_1_gender",
+      "dependencies": "none"
+    },
+    {
+      "column_name": "age",
+      "heading": "What is your age?",
+      "category": 1,
+      "data_type": 1,
+      "options": "",
+      "dependencies": "none"
+    },
+    {
+      "column_name": "district",
+      "heading": "District",
+      "category": 1,
+      "data_type": 0,
+      "options": "",
+      "dependencies": "none"
+    },
+    {
+      "column_name": "subdivision",
+      "heading": "Subdivision",
+      "category": 1,
+      "data_type": 0,
+      "options": "",
+      "dependencies": "none"
+    },
+    {
+      "column_name": "block_name",
+      "heading": "Name of Block",
+      "category": 1,
+      "data_type": 0,
+      "options": "",
+      "dependencies": "none"
+    },
+    {
+      "column_name": "gp_vc_name",
+      "heading": "Name of Panchayat",
+      "category": 1,
+      "data_type": 0,
+      "options": "",
+      "dependencies": "none"
+    },
+    {
+      "column_name": "gp_vc_type",
+      "heading": "GP/VC Type",
+      "category": 1,
+      "data_type": 0,
+      "options": "",
+      "dependencies": "none"
+    },
+    {
+      "column_name": "hamlet_name",
+      "heading": "Name of Hamlet / Locality",
+      "category": 1,
+      "data_type": 0,
+      "options": "",
+      "dependencies": "none"
+    },
+    {
+      "column_name": "ward_num",
+      "heading": "Number of Ward / Constituency",
+      "category": 2,
+      "data_type": 0,
+      "options": "form_0_ward",
+      "dependencies": "autopopulate"
+    },
+    {
+      "column_name": "male_num",
+      "heading": "Number of Males",
+      "category": 1,
+      "data_type": 1,
+      "options": "",
+      "dependencies": "add"
+    },
+    {
+      "column_name": "female_num",
+      "heading": "Number of Females",
+      "category": 1,
+      "data_type": 1,
+      "options": "",
+      "dependencies": "add"
+    },
+    {
+      "column_name": "transgender_num",
+      "heading": "Number of Transgenders",
+      "category": 1,
+      "data_type": 1,
+      "options": "",
+      "dependencies": "add"
+    },
+    {
+      "column_name": "caste",
+      "heading": "Caste",
+      "category": 2,
+      "data_type": 0,
+      "options": "form_0_caste",
+      "dependencies": "none"
+    },
+    {
+      "column_name": "religion",
+      "heading": "Religion",
+      "category": 2,
+      "data_type": 0,
+      "options": "form_0_religion",
+      "dependencies": "none"
+    },
+    {
+      "column_name": "ownership_of_house",
+      "heading": "Self acquired house/Rented house",
+      "category": 2,
+      "data_type": 0,
+      "options": "form_0_ownership_of_house",
+      "dependencies": "none"
+    },
+    {
+      "column_name": "house_type",
+      "heading": "Type of house",
+      "category": 2,
+      "data_type": 0,
+      "options": "form_0_house_type",
+      "dependencies": "none"
+    },
+    {
+      "column_name": "list_under_secc",
+      "heading": "Listed under SECC?",
+      "category": 0,
+      "data_type": 1,
+      "options": "",
+      "dependencies": "1 1"
+    },
+    {
+      "column_name": "type_of_secc",
+      "heading": "Type of SECC",
+      "category": 2,
+      "data_type": 0,
+      "options": "form_0_type_of_secc",
+      "dependencies": "none"
+    }
+  ]
+}

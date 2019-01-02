@@ -1,0 +1,80 @@
+{
+  "name": "Skill development",
+  "table_name": "gpdp_skill_development_8",
+  "form_number": 7,
+  "loop": 0,
+  "widgets": [
+    {
+      "column_name": "interest_in_skill_development",
+      "heading": "Whether any family member is interested to get skill development training?",
+      "category": 0,
+      "data_type": 1,
+      "options": "",
+      "dependencies": "5 1"
+    },
+    {
+      "column_name": "training_type_1",
+      "heading": "Type of training (1st Priority)",
+      "category": 2,
+      "data_type": 0,
+      "options": "form_7_type_of_training",
+      "dependencies": "none"
+    },
+    {
+      "column_name": "training_type_2",
+      "heading": "Type of training (2nd Priority)",
+      "category": 2,
+      "data_type": 0,
+      "options": "form_7_type_of_training",
+      "dependencies": "none"
+    },
+    {
+      "column_name": "training_type_3",
+      "heading": "Type of training (3rd Priority)",
+      "category": 2,
+      "data_type": 0,
+      "options": "form_7_type_of_training",
+      "dependencies": "none"
+    },
+    {
+      "column_name": "business",
+      "heading": "Will you be involved in or start any business/ventures after getting training?",
+      "category": 0,
+      "data_type": 1,
+      "options": "",
+      "dependencies": "1 1"
+    },
+    {
+      "column_name": "business_type",
+      "heading": "What type of business / ventures?",
+      "category": 2,
+      "data_type": 0,
+      "options": "form_7_type_of_training",
+      "dependencies": "none"
+    },
+    {
+      "column_name": "facility_from_govt",
+      "heading": "Whether you received any facility from the Government in last 5 year?",
+      "category": 0,
+      "data_type": 1,
+      "options": "",
+      "dependencies": "1 1"
+    },
+    {
+      "column_name": "mention",
+      "heading": "Mention the facilities you received",
+      "category": 1,
+      "data_type": 0,
+      "options": "",
+      "dependencies": "none"
+    },
+    {
+      "column_name": "problem",
+      "heading": "Problems faced to start business/enterprise",
+      "category": 2,
+      "data_type": 0,
+      "options": "form_7_business_problem",
+      "dependencies": "none"
+    }
+  ]
+}

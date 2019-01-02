@@ -1,0 +1,88 @@
+{
+  "name": "Loan status",
+  "table_name": "gpdp_loan_status_6",
+  "form_number": 5,
+  "loop": 0,
+  "widgets": [
+    {
+      "column_name": "taken_loan",
+      "heading": "Has any family member taken loan?",
+      "category": 0,
+      "data_type": 1,
+      "options": "",
+      "dependencies": "9 1"
+    },
+    {
+      "column_name": "source",
+      "heading": "Source of loan",
+      "category": 2,
+      "data_type": 0,
+      "options": "form_5_source",
+      "dependencies": "none"
+    },
+    {
+      "column_name": "amount",
+      "heading": "Amount of loan in Rupees",
+      "category": 1,
+      "data_type": 2,
+      "options": "",
+      "dependencies": "none"
+    },
+    {
+      "column_name": "rate_of_interest",
+      "heading": "Rate of interest of loan",
+      "category": 1,
+      "data_type": 2,
+      "options": "",
+      "dependencies": "none"
+    },
+    {
+      "column_name": "purpose",
+      "heading": "The purpose for which loan was taken",
+      "category": 1,
+      "data_type": 0,
+      "options": "",
+      "dependencies": "none"
+    },
+    {
+      "column_name": "purpose_fulfillment",
+      "heading": "Was the purpose fulfilled?",
+      "category": 0,
+      "data_type": 1,
+      "options": "",
+      "dependencies": "none"
+    },
+    {
+      "column_name": "sgsy_loan",
+      "heading": "Received SGSY Loan?",
+      "category": 0,
+      "data_type": 1,
+      "options": "",
+      "dependencies": "none"
+    },
+    {
+      "column_name": "problem_loan",
+      "heading": "Any problems faced while approaching for loan?",
+      "category": 1,
+      "data_type": 0,
+      "options": "",
+      "dependencies": "none"
+    },
+    {
+      "column_name": "problem_repay",
+      "heading": "Any problems faced/facing in repaying the loan?",
+      "category": 1,
+      "data_type": 0,
+      "options": "",
+      "dependencies": "none"
+    },
+    {
+      "column_name": "suggestion",
+      "heading": "Any suggestions in getting the loan easily?",
+      "category": 1,
+      "data_type": 0,
+      "options": "",
+      "dependencies": "none"
+    }
+  ]
+}

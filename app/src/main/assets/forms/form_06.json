@@ -1,0 +1,64 @@
+{
+  "name": "MGNREGA",
+  "table_name": "gpdp_mgnrega_7",
+  "form_number": 6,
+  "loop": 0,
+  "widgets": [
+    {
+      "column_name": "mgnrega_jobcard",
+      "heading": "Do you have an MGNREGA Job Card?",
+      "category": 0,
+      "data_type": 1,
+      "options": "",
+      "dependencies": "6 1"
+    },
+    {
+      "column_name": "number_of_familymembers_enrolled",
+      "heading": "How many family members are enrolled in the Job Card?",
+      "category": 1,
+      "data_type": 1,
+      "options": "",
+      "dependencies": "none"
+    },
+    {
+      "column_name": "mgnrega_jobcard_number",
+      "heading": "MGNREGA Job Card number",
+      "category": 1,
+      "data_type": 0,
+      "options": "",
+      "dependencies": "none"
+    },
+    {
+      "column_name": "patta",
+      "heading": "Are you a Patta Holder?",
+      "category": 0,
+      "data_type": 1,
+      "options": "",
+      "dependencies": "none"
+    },
+    {
+      "column_name": "man_days_this_year",
+      "heading": "How many man-days are provided by Panchayat this financial year to your family?",
+      "category": 1,
+      "data_type": 2,
+      "options": "",
+      "dependencies": "none"
+    },
+    {
+      "column_name": "man_days_last_year",
+      "heading": "How many man-days were provided by Panchayat last financial year to your family?",
+      "category": 1,
+      "data_type": 2,
+      "options": "",
+      "dependencies": "none"
+    },
+    {
+      "column_name": "difficulty",
+      "heading": "Any difficulty faced during the MNGREGA work?",
+      "category": 2,
+      "data_type": 0,
+      "options": "form_6_difficulty",
+      "dependencies": "none"
+    }
+  ]
+}

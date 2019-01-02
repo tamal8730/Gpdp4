@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activities.LoginActivity">
+
+
+    <ImageView
+        android:id="@+id/logo"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/cardView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.75" />
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/cardView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.8">
+
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <EditText
+                android:id="@+id/edt_surveyor_code"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/edt_height"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="24dp"
+                android:layout_marginEnd="16dp"
+                android:background="#fff"
+                android:drawableStart="@drawable/ic_person_black_24dp"
+                android:drawablePadding="10dp"
+                android:ems="10"
+                android:hint="@string/surveyor_code"
+                android:inputType="text"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
+                android:textSize="@dimen/edittext"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <EditText
+                android:id="@+id/edt_password"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/edt_height"
+                android:layout_marginTop="8dp"
+                android:background="#fff"
+                android:drawableStart="@drawable/ic_password"
+                android:drawablePadding="10dp"
+                android:ems="10"
+                android:hint="@string/password"
+                android:inputType="textPassword"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
+                android:textSize="@dimen/edittext"
+                app:layout_constraintEnd_toEndOf="@+id/edt_surveyor_code"
+                app:layout_constraintStart_toStartOf="@+id/edt_surveyor_code"
+                app:layout_constraintTop_toBottomOf="@+id/edt_surveyor_code" />
+
+            <Button
+                android:id="@+id/btn_login"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="24dp"
+                android:layout_weight="1"
+                android:background="@drawable/button_state"
+                android:paddingTop="@dimen/button_padding"
+                android:paddingBottom="@dimen/button_padding"
+                android:text="@string/login"
+                android:textAlignment="center"
+                android:textColor="#fff"
+                android:textSize="@dimen/button_text"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/remember_password"
+                app:layout_constraintVertical_bias="1.0" />
+
+            <View
+                android:id="@+id/divider10"
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:background="?android:attr/listDivider"
+                app:layout_constraintBottom_toBottomOf="@+id/edt_surveyor_code"
+                app:layout_constraintEnd_toEndOf="@+id/edt_surveyor_code"
+                app:layout_constraintStart_toStartOf="@+id/edt_surveyor_code"
+                app:layout_constraintTop_toBottomOf="@+id/edt_surveyor_code" />
+
+            <CheckBox
+                android:id="@+id/remember_password"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="6dp"
+                android:layout_marginTop="8dp"
+                android:checked="true"
+                android:hint="@string/keep_me_logged_in"
+                android:textSize="@dimen/check_box_text"
+                app:layout_constraintStart_toStartOf="@+id/edt_password"
+                app:layout_constraintTop_toBottomOf="@+id/edt_password" />
+
+            <View
+                android:id="@+id/divider11"
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:background="?android:attr/listDivider"
+                app:layout_constraintBottom_toBottomOf="@+id/edt_password"
+                app:layout_constraintEnd_toEndOf="@+id/divider10"
+                app:layout_constraintStart_toStartOf="@+id/divider10"
+                app:layout_constraintTop_toBottomOf="@+id/edt_password" />
+
+        </android.support.constraint.ConstraintLayout>
+    </android.support.v7.widget.CardView>
+
+</android.support.constraint.ConstraintLayout>

@@ -1,0 +1,160 @@
+{
+  "name": "ICDS status",
+  "table_name": "gpdp_status_icds_10",
+  "form_number": 9,
+  "loop": 0,
+  "widgets": [
+    {
+      "column_name": "number_of_members_children",
+      "heading": "Number of Children below 6 years age in the family",
+      "category": 1,
+      "data_type": 1,
+      "options": "",
+      "dependencies": "none"
+    },
+    {
+      "column_name": "numbers_of_members_enrolled_children",
+      "heading": "Number of Children below 6 years age in the family enrolled in ICDS Center",
+      "category": 1,
+      "data_type": 1,
+      "options": "",
+      "dependencies": "none"
+    },
+    {
+      "column_name": "take_meal_children",
+      "heading": "Do children below 6 years age in the family take meal from the ICDS center?",
+      "category": 0,
+      "data_type": 1,
+      "options": "",
+      "dependencies": "1 0"
+    },
+    {
+      "column_name": "reason_children",
+      "heading": "Reason for not taking meal",
+      "category": 2,
+      "data_type": 0,
+      "options": "form_9_reason_not_meal",
+      "dependencies": "none"
+    },
+    {
+      "column_name": "number_of_members_girls",
+      "heading": "Number of Adolescent girls(10-19 years age) in the family",
+      "category": 1,
+      "data_type": 1,
+      "options": "",
+      "dependencies": "none"
+    },
+    {
+      "column_name": "numbers_of_members_enrolled_girls",
+      "heading": "Number of Adolescent girls(10-19 years age) in the family enrolled in ICDS Center",
+      "category": 1,
+      "data_type": 1,
+      "options": "",
+      "dependencies": "none"
+    },
+    {
+      "column_name": "take_meal_girls",
+      "heading": "Do Adolescent girls(10-19 years age) in the family take meal from the ICDS center?",
+      "category": 0,
+      "data_type": 1,
+      "options": "",
+      "dependencies": "1 0"
+    },
+    {
+      "column_name": "reason_girls",
+      "heading": "Reason for not taking meal",
+      "category": 2,
+      "data_type": 0,
+      "options": "form_9_reason_not_meal",
+      "dependencies": "none"
+    },
+    {
+      "column_name": "number_of_members_women",
+      "heading": "Number of pregnant women in the family",
+      "category": 1,
+      "data_type": 1,
+      "options": "",
+      "dependencies": "none"
+    },
+    {
+      "column_name": "numbers_of_members_enrolled_women",
+      "heading": "Number of pregnant women in the family enrolled in ICDS Center",
+      "category": 1,
+      "data_type": 1,
+      "options": "",
+      "dependencies": "none"
+    },
+    {
+      "column_name": "take_meal_women",
+      "heading": "Do pregnant women in the family take meal from the ICDS center?",
+      "category": 0,
+      "data_type": 1,
+      "options": "",
+      "dependencies": "1 0"
+    },
+    {
+      "column_name": "reason_women",
+      "heading": "Reason for not taking meal",
+      "category": 2,
+      "data_type": 0,
+      "options": "form_9_reason_not_meal",
+      "dependencies": "none"
+    },
+    {
+      "column_name": "number_of_members_mother",
+      "heading": "Number of lactating mother in the family",
+      "category": 1,
+      "data_type": 1,
+      "options": "",
+      "dependencies": "none"
+    },
+    {
+      "column_name": "numbers_of_members_enrolled_mother",
+      "heading": "Number of lactating mother in the family enrolled in ICDS Center",
+      "category": 1,
+      "data_type": 1,
+      "options": "",
+      "dependencies": "none"
+    },
+    {
+      "column_name": "take_meal_mother",
+      "heading": "Do lactating mother in the family take meal from the ICDS center?",
+      "category": 0,
+      "data_type": 1,
+      "options": "",
+      "dependencies": "1 0"
+    },
+    {
+      "column_name": "reason_mother",
+      "heading": "Reason for not taking meal",
+      "category": 2,
+      "data_type": 0,
+      "options": "form_9_reason_not_meal",
+      "dependencies": "none"
+    },
+    {
+      "column_name": "growth_monitored",
+      "heading": "Whether the Growth of the children are monitored regularly in ICDS",
+      "category": 0,
+      "data_type": 1,
+      "options": "",
+      "dependencies": "1 0"
+    },
+    {
+      "column_name": "growth_monitored_no",
+      "heading": "Why?",
+      "category": 2,
+      "data_type": 0,
+      "options": "form_9_growth_monitored_no",
+      "dependencies": "none"
+    },
+    {
+      "column_name": "training_given_to_adolescent_girls",
+      "heading": "Whether any skill development training given to the Adolescent girls",
+      "category": 0,
+      "data_type": 1,
+      "options": "",
+      "dependencies": "none"
+    }
+  ]
+}

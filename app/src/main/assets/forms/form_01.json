@@ -1,0 +1,88 @@
+{
+  "name": "Family description",
+  "table_name": "gpdp_desc_family_2",
+  "form_number": 1,
+  "loop": 1,
+  "widgets": [
+    {
+      "column_name": "name",
+      "heading": "Name",
+      "category": 1,
+      "data_type": 0,
+      "options": "",
+      "dependencies": "none"
+    },
+    {
+      "column_name": "dob",
+      "heading": "Date of birth",
+      "category": 3,
+      "data_type": 3,
+      "options": "",
+      "dependencies": "none"
+    },
+    {
+      "column_name": "sex",
+      "heading": "Sex",
+      "category": 2,
+      "data_type": 0,
+      "options": "form_0_1_gender",
+      "dependencies": "none"
+    },
+    {
+      "column_name": "qualification",
+      "heading": "Qualification",
+      "category": 2,
+      "data_type": 0,
+      "options": "form_1_qualification",
+      "dependencies": "none"
+    },
+    {
+      "column_name": "occupation",
+      "heading": "Occupation",
+      "category": 2,
+      "data_type": 0,
+      "options": "form_1_2_occupation",
+      "dependencies": "none"
+    },
+    {
+      "column_name": "bank_account",
+      "heading": "Do you have a bank account?",
+      "category": 0,
+      "data_type": 1,
+      "options": "",
+      "dependencies": "none"
+    },
+    {
+      "column_name": "disability",
+      "heading": "Any disability?",
+      "category": 0,
+      "data_type": 1,
+      "options": "",
+      "dependencies": "1 1"
+    },
+    {
+      "column_name": "type_of_disability",
+      "heading": "Type of disability",
+      "category": 2,
+      "data_type": 0,
+      "options": "form_1_type_of_disability",
+      "dependencies": "none"
+    },
+    {
+      "column_name": "aadharno",
+      "heading": "Adhaar Number",
+      "category": 1,
+      "data_type": 0,
+      "options": "",
+      "dependencies": "none"
+    },
+    {
+      "column_name": "epicno",
+      "heading": "EPIC Number",
+      "category": 1,
+      "data_type": 0,
+      "options": "",
+      "dependencies": "none"
+    }
+  ]
+}

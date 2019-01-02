@@ -1,0 +1,23 @@
+<resources>
+    <string name="app_name">Gpdp4</string>
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+    <string name="beneficiary_code">Beneficiary code</string>
+    <string name="surveyor_code">Surveyor code</string>
+    <string name="password">Password</string>
+    <string name="login">Login</string>
+    <string name="logging_you_in">Logging you in</string>
+    <string name="district">District</string>
+    <string name="gp_vc">GP/VC</string>
+    <string name="block">Block</string>
+    <string name="subdivision">Subdivision</string>
+    <string name="colon">:</string>
+    <string name="keep_me_logged_in">Keep me logged in</string>
+    <string name="gp_vc_type">GP/VC type</string>
+
+    <string name="title_activity_splash">SplashActivity</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
+    <string name="enter_beneficiary_code">Enter beneficiary code</string>
+    <string name="or">OR</string>
+</resources>

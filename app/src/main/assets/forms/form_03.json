@@ -1,0 +1,88 @@
+{
+  "name": "Income generation",
+  "table_name": "gpdp_income_generation_4",
+  "form_number": 3,
+  "loop": 0,
+  "widgets": [
+    {
+      "column_name": "activity_id",
+      "heading": "Name of activity",
+      "category": 2,
+      "data_type": 0,
+      "options": "form_3_activity",
+      "dependencies": "none"
+    },
+    {
+      "column_name": "area",
+      "heading": "Area",
+      "category": 1,
+      "data_type": 2,
+      "options": "",
+      "dependencies": "none"
+    },
+    {
+      "column_name": "engaged_person",
+      "heading": "Who are engaged in this work?",
+      "category": 2,
+      "data_type": 1,
+      "options": "form_3_engaged_person",
+      "dependencies": "none"
+    },
+    {
+      "column_name": "annual_income",
+      "heading": "Annual income from the source",
+      "category": 1,
+      "data_type": 2,
+      "options": "",
+      "dependencies": "none"
+    },
+    {
+      "column_name": "annual_expenditure",
+      "heading": "Annual expenditure for the purpose",
+      "category": 1,
+      "data_type": 2,
+      "options": "",
+      "dependencies": "none"
+    },
+    {
+      "column_name": "govt_assistance",
+      "heading": "Any Government assistance?",
+      "category": 0,
+      "data_type": 1,
+      "options": "",
+      "dependencies": "4 1"
+    },
+    {
+      "column_name": "assistance_id",
+      "heading": "Assistance type",
+      "category": 2,
+      "data_type": 0,
+      "options": "form_3_assistance",
+      "dependencies": "none"
+    },
+    {
+      "column_name": "problem",
+      "heading": "Is there any problem?",
+      "category": 0,
+      "data_type": 1,
+      "options": "",
+      "dependencies": "2 1"
+    },
+    {
+      "column_name": "mention_problem",
+      "heading": "Mention the problems",
+      "category": 1,
+      "data_type": 0,
+      "options": "",
+      "dependencies": "none"
+    },
+    {
+      "column_name": "solve_problem",
+      "heading": "How to solve the problems?",
+      "category": 1,
+      "data_type": 0,
+      "options": "",
+      "dependencies": "none"
+    }
+  ]
+}

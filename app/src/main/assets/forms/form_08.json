@@ -1,0 +1,112 @@
+{
+  "name": "Zero hunger",
+  "table_name": "gpdp_zero_hunger_9",
+  "form_number": 8,
+  "loop": 0,
+  "widgets": [
+    {
+      "column_name": "food_scarcity",
+      "heading": "Is your family facing food scarcity?",
+      "category": 0,
+      "data_type": 1,
+      "options": "",
+      "dependencies": "2 1"
+    },
+    {
+      "column_name": "scarcity_period_from",
+      "heading": "Food Scarcity started at",
+      "category": 3,
+      "data_type": 3,
+      "options": "",
+      "dependencies": "none"
+    },
+    {
+      "column_name": "scarcity_period_to",
+      "heading": "Food scarcity ended at",
+      "category": 3,
+      "data_type": 3,
+      "options": "",
+      "dependencies": "none"
+    },
+    {
+      "column_name": "died_due_to_hunger",
+      "heading": "Has any of your family member died of hunger?",
+      "category": 0,
+      "data_type": 1,
+      "options": "",
+      "dependencies": "1 1"
+    },
+    {
+      "column_name": "number_of_family_member_died",
+      "heading": "Number of family members who died of hunger",
+      "category": 1,
+      "data_type": 1,
+      "options": "",
+      "dependencies": "none"
+    },
+    {
+      "column_name": "died_due_to_malnutrition",
+      "heading": "Is any of your family member suffering from malnutrition?",
+      "category": 0,
+      "data_type": 1,
+      "options": "",
+      "dependencies": "1 1"
+    },
+    {
+      "column_name": "number_of_family_member_suffering",
+      "heading": "Number of family members suffering from malnutrition",
+      "category": 1,
+      "data_type": 1,
+      "options": "",
+      "dependencies": "none"
+    },
+    {
+      "column_name": "ration_card",
+      "heading": "Family has a Ration Card?",
+      "category": 0,
+      "data_type": 1,
+      "options": "",
+      "dependencies": "2 1"
+    },
+    {
+      "column_name": "ration_card_number",
+      "heading": "Ration Card number",
+      "category": 1,
+      "data_type": 0,
+      "options": "",
+      "dependencies": "none"
+    },
+    {
+      "column_name": "type_of_ration_card",
+      "heading": "Type of Ration Card",
+      "category": 2,
+      "data_type": 0,
+      "options": "form_8_rationcard_type",
+      "dependencies": "none"
+    },
+    {
+      "column_name": "distance",
+      "heading": "Distance of Ration Shop from the house in Kilometres",
+      "category": 1,
+      "data_type": 2,
+      "options": "",
+      "dependencies": "none"
+    },
+    {
+      "column_name": "timely_supply",
+      "heading": "All goods supplied in time?",
+      "category": 0,
+      "data_type": 1,
+      "options": "",
+      "dependencies": "none"
+    },
+    {
+      "column_name": "fixed_quantity",
+      "heading": "Getting the fixed quantity of goods?",
+      "category": 0,
+      "data_type": 1,
+      "options": "",
+      "dependencies": "none"
+    }
+  ]
+}

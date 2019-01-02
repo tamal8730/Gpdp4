@@ -1,0 +1,104 @@
+{
+  "name": "End poverty",
+  "table_name": "gpdp_end_poverty_3",
+  "form_number": 2,
+  "loop": 0,
+  "widgets": [
+    {
+      "column_name": "occupation_1",
+      "heading": "Main occupation of the family (1st Priority)",
+      "category": 2,
+      "data_type": 0,
+      "options": "form_1_2_occupation",
+      "dependencies": "none"
+    },
+    {
+      "column_name": "occupation_2",
+      "heading": "Main occupation of the family (2nd Priority)",
+      "category": 2,
+      "data_type": 0,
+      "options": "form_1_2_occupation",
+      "dependencies": "none"
+    },
+    {
+      "column_name": "occupation_3",
+      "heading": "Main occupation of the family (3rd Priority)",
+      "category": 2,
+      "data_type": 0,
+      "options": "form_1_2_occupation",
+      "dependencies": "none"
+    },
+    {
+      "column_name": "getting_pension",
+      "heading": "Is any family member getting pension from Social Pension Scheme?",
+      "category": 0,
+      "data_type": 1,
+      "options": "",
+      "dependencies": "1 1"
+    },
+    {
+      "column_name": "pension_type",
+      "heading": "Type of pension",
+      "category": 2,
+      "data_type": 0,
+      "options": "form_2_type_of_pension",
+      "dependencies": "none"
+    },
+    {
+      "column_name": "not_getting_pension",
+      "heading": "Is there any eligible family member, who is / are not getting pension from Social Pension Scheme?",
+      "category": 0,
+      "data_type": 1,
+      "options": "",
+      "dependencies": "1 1"
+    },
+    {
+      "column_name": "reason",
+      "heading": "Reason of not getting pension",
+      "category": 2,
+      "data_type": 0,
+      "options": "form_2_not_getting_pension_reason",
+      "dependencies": "none"
+    },
+    {
+      "column_name": "earning_male",
+      "heading": "Number of earning Males",
+      "category": 1,
+      "data_type": 1,
+      "options": "",
+      "dependencies": "none"
+    },
+    {
+      "column_name": "earning_female",
+      "heading": "Number of earning Females",
+      "category": 1,
+      "data_type": 1,
+      "options": "",
+      "dependencies": "none"
+    },
+    {
+      "column_name": "earning_transgender",
+      "heading": "Number of earning Transgenders",
+      "category": 1,
+      "data_type": 1,
+      "options": "",
+      "dependencies": "none"
+    },
+    {
+      "column_name": "expenditure",
+      "heading": "Monthly family expenditure",
+      "category": 1,
+      "data_type": 2,
+      "options": "",
+      "dependencies": "none"
+    },
+    {
+      "column_name": "savings",
+      "heading": "Monthly family savings",
+      "category": 1,
+      "data_type": 2,
+      "options": "",
+      "dependencies": "none"
+    }
+  ]
+}

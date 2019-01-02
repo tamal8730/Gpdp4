@@ -1,0 +1,40 @@
+{
+  "name": "form_10",
+  "table_name": "gpdp_food_source_11",
+  "form_number": 11,
+  "loop": 0,
+  "widgets": [
+    {
+      "column_name": "market",
+      "category": 1,
+      "heading": "Market (kg)",
+      "dependencies": "none",
+      "data_type": 2,
+      "options": null
+    },
+    {
+      "column_name": "own",
+      "category": 1,
+      "heading": "Own (kg)",
+      "dependencies": "none",
+      "data_type": 2,
+      "options": null
+    },
+    {
+      "column_name": "consumption",
+      "category": 1,
+      "heading": "Consumption (kg)",
+      "dependencies": "none",
+      "data_type": 2,
+      "options": null
+    },
+    {
+      "column_name": "sale_to_market",
+      "category": 1,
+      "heading": "Sale to market (kg)",
+      "dependencies": "none",
+      "data_type": 2,
+      "options": null
+    }
+  ]
+}

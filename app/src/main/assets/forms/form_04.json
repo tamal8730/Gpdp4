@@ -1,0 +1,104 @@
+{
+  "name": "Self help groups",
+  "table_name": "gpdp_shg_5",
+  "form_number": 4,
+  "loop": 0,
+  "widgets": [
+    {
+      "column_name": "involved_shg",
+      "heading": "Any family member involved in SHG activity?",
+      "category": 0,
+      "data_type": 1,
+      "options": "",
+      "dependencies": "11 1"
+    },
+    {
+      "column_name": "name_of_shg",
+      "heading": "Name of SHG",
+      "category": 1,
+      "data_type": 0,
+      "options": "",
+      "dependencies": "none"
+    },
+    {
+      "column_name": "number_of_family_mem",
+      "heading": "How many family members are involved in SHG activity?",
+      "category": 1,
+      "data_type": 1,
+      "options": "",
+      "dependencies": "none"
+    },
+    {
+      "column_name": "name_family_member",
+      "heading": "Names of family members involved in SHG activity",
+      "category": 1,
+      "data_type": 0,
+      "options": "",
+      "dependencies": "none"
+    },
+    {
+      "column_name": "shg_active",
+      "heading": "Is the SHG active?",
+      "category": 0,
+      "data_type": 1,
+      "options": "",
+      "dependencies": "none"
+    },
+    {
+      "column_name": "shggradation_id",
+      "heading": "Present status of SHG Gradation",
+      "category": 2,
+      "data_type": 0,
+      "options": "form_4_shggradation",
+      "dependencies": "none"
+    },
+    {
+      "column_name": "internal_lending",
+      "heading": "Is internal lending available among the group members?",
+      "category": 0,
+      "data_type": 1,
+      "options": "",
+      "dependencies": "none"
+    },
+    {
+      "column_name": "emergency_credit",
+      "heading": "Is credit available during emergency?",
+      "category": 0,
+      "data_type": 1,
+      "options": "",
+      "dependencies": "none"
+    },
+    {
+      "column_name": "activity_undertaken",
+      "heading": "Any activity undertaken by SHG?",
+      "category": 0,
+      "data_type": 1,
+      "options": "",
+      "dependencies": "1 1"
+    },
+    {
+      "column_name": "mention_activities_undertaken",
+      "heading": "What are the activities undertaken?",
+      "category": 1,
+      "data_type": 0,
+      "options": "",
+      "dependencies": "none"
+    },
+    {
+      "column_name": "monthly_subscription",
+      "heading": "Monthly subscription to SHG in Rupees",
+      "category": 1,
+      "data_type": 2,
+      "options": "",
+      "dependencies": "none"
+    },
+    {
+      "column_name": "monthly_income",
+      "heading": "Monthly income from SHG in Rupees",
+      "category": 1,
+      "data_type": 2,
+      "options": "",
+      "dependencies": "none"
+    }
+  ]
+}
