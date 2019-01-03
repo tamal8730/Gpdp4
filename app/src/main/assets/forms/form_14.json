@@ -1,0 +1,48 @@
+{
+  "name": "Family health status of last one year",
+  "table_name": "gpdp_health_status_16",
+  "form_number": 15,
+  "loop": "form_14_diseases diseases_id D",
+  "widgets": [
+    {
+      "column_name": "suffered",
+      "heading": "Suffered?",
+      "category": 0,
+      "data_type": 1,
+      "options": "",
+      "dependencies": "none"
+    },
+    {
+      "column_name": "still_suffering",
+      "heading": "Still suffering?",
+      "category": 0,
+      "data_type": 1,
+      "options": "",
+      "dependencies": "none"
+    },
+    {
+      "column_name": "type_of_treatment",
+      "heading": "Type of treatment",
+      "category": 2,
+      "data_type": 0,
+      "options": "form_14_type_of_treatment",
+      "dependencies": "none"
+    },
+    {
+      "column_name": "place_of_treatment",
+      "heading": "Place of treatment",
+      "category": 2,
+      "data_type": 0,
+      "options": "form_11_12_14_18_source",
+      "dependencies": "none"
+    },
+    {
+      "column_name": "died_or_not",
+      "heading": "Whether died or not",
+      "category": 0,
+      "data_type": 1,
+      "options": "",
+      "dependencies": "none"
+    }
+  ]
+}

@@ -1,0 +1,112 @@
+{
+  "name": "Good health",
+  "table_name": "gpdp_good_health_15",
+  "form_number": 14,
+  "loop": null,
+  "widgets": [
+    {
+      "column_name": "sub_centre",
+      "heading": "Whether any sub-centre is available in your village",
+      "category": 0,
+      "data_type": 1,
+      "options": "",
+      "dependencies": "none"
+    },
+    {
+      "column_name": "get_treatment",
+      "heading": "Do you get any treatment/advice from the sub-centre",
+      "category": 0,
+      "data_type": 1,
+      "options": "",
+      "dependencies": "none"
+    },
+    {
+      "column_name": "nearest_hospital",
+      "heading": "Nearest hospital from your home",
+      "category": 1,
+      "data_type": 0,
+      "options": "",
+      "dependencies": "none"
+    },
+    {
+      "column_name": "asha_worker_availablity",
+      "heading": "Do you know any ASHA worker in your locality",
+      "category": 0,
+      "data_type": 1,
+      "options": "",
+      "dependencies": "none"
+    },
+    {
+      "column_name": "treatment_frm_asha",
+      "heading": "Do you get any treatment / advice from ASHA worker",
+      "category": 0,
+      "data_type": 1,
+      "options": "",
+      "dependencies": "none"
+    },
+    {
+      "column_name": "health_insurance",
+      "heading": "Whether family members are covered under any health insurance",
+      "category": 0,
+      "data_type": 1,
+      "options": "",
+      "dependencies": "none"
+    },
+    {
+      "column_name": "child_availability",
+      "heading": "If any child member is there in the family",
+      "category": 0,
+      "data_type": 1,
+      "options": "",
+      "dependencies": "none"
+    },
+    {
+      "column_name": "vaccines",
+      "heading": "All vaccines taken / taking properly or not",
+      "category": 0,
+      "data_type": 1,
+      "options": "",
+      "dependencies": "none"
+    },
+    {
+      "column_name": "reason_no_vaccines",
+      "heading": "Why you are not able to take vaccines",
+      "category": 1,
+      "data_type": 0,
+      "options": "",
+      "dependencies": "none"
+    },
+    {
+      "column_name": "pregnant_woman",
+      "heading": "Any female member(s) was/were pregnant during last five years",
+      "category": 0,
+      "data_type": 1,
+      "options": "",
+      "dependencies": "none"
+    },
+    {
+      "column_name": "delivery_place",
+      "heading": "Place of delivery",
+      "category": 2,
+      "data_type": 0,
+      "options": "form_13_delivery_place",
+      "dependencies": "none"
+    },
+    {
+      "column_name": "get_transport_cost",
+      "heading": "Transportation cost received or not",
+      "category": 0,
+      "data_type": 1,
+      "options": "",
+      "dependencies": "none"
+    },
+    {
+      "column_name": "reason_for_home",
+      "heading": "If delivery performed in home, then why",
+      "category": 0,
+      "data_type": 1,
+      "options": "form_13_reason_fr_delivery_in_home",
+      "dependencies": "none"
+    }
+  ]
+}

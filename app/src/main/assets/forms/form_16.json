@@ -1,0 +1,32 @@
+{
+  "name": "Gender equality",
+  "table_name": "gpdp_gender_equality_18",
+  "form_number": 17,
+  "loop": "form_16_question_set question_id Q",
+  "widgets": [
+    {
+      "column_name": "status_male",
+      "heading": "Male",
+      "category": 0,
+      "data_type": 1,
+      "options": "",
+      "dependencies": "none"
+    },
+    {
+      "column_name": "status_female",
+      "heading": "Female",
+      "category": 0,
+      "data_type": 1,
+      "options": "",
+      "dependencies": "none"
+    },
+    {
+      "column_name": "remark",
+      "heading": "Remarks",
+      "category": 1,
+      "data_type": 0,
+      "options": "",
+      "dependencies": "none"
+    }
+  ]
+}

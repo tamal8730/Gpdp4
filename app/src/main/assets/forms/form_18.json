@@ -1,0 +1,72 @@
+{
+  "name": "Drinking water status",
+  "table_name": "gpdp_drinking_water_status_20",
+  "form_number": 19,
+  "loop": null,
+  "widgets": [
+    {
+      "column_name": "source_of_water",
+      "heading": "Source of drinking water",
+      "category": 2,
+      "data_type": 0,
+      "options": "form_18_source_of_water",
+      "dependencies": "none"
+    },
+    {
+      "column_name": "distance_of_water_source",
+      "heading": "Distance of drinking water source",
+      "category": 1,
+      "data_type": 2,
+      "options": "",
+      "dependencies": "none"
+    },
+    {
+      "column_name": "ownership_id",
+      "heading": "Ownership of the source of water",
+      "category": 2,
+      "data_type": 0,
+      "options": "form_11_12_14_18_source",
+      "dependencies": "none"
+    },
+    {
+      "column_name": "quality",
+      "heading": "Quality of drinking water is good",
+      "category": 0,
+      "data_type": 1,
+      "options": "",
+      "dependencies": "1 0"
+    },
+    {
+      "column_name": "reason_fr_poor_quality",
+      "heading": "If quality is poor, why?",
+      "category": 2,
+      "data_type": 0,
+      "options": "form_18_reason_for_poor_quality_of_water",
+      "dependencies": "none"
+    },
+    {
+      "column_name": "scarcity",
+      "heading": "Facing problem of drinking water scarcity?",
+      "category": 0,
+      "data_type": 1,
+      "options": "",
+      "dependencies": "2 1"
+    },
+    {
+      "column_name": "month_of_scarcity",
+      "heading": "If yes, in which months?",
+      "category": 3,
+      "data_type": 3,
+      "options": "",
+      "dependencies": "none"
+    },
+    {
+      "column_name": "reason_of_water_scarcity",
+      "heading": "Reason of water scarcity",
+      "category": 2,
+      "data_type": 0,
+      "options": "form_18_reason_of_water_scarcity",
+      "dependencies": "none"
+    }
+  ]
+}

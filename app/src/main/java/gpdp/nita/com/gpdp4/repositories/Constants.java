@@ -26,35 +26,29 @@ public class Constants {
     public static ArrayList<String> looplist;
     public static ArrayList<Integer> formSequence = new ArrayList<>();
     public static final String[] master_tables = {
-            "form_0_1_gender",
             "form_0_caste",
             "form_0_religion",
             "form_0_ownership_of_house",
             "form_0_house_type",
             "form_0_type_of_secc",
+            "form_0_1_gender",
 
             "form_1_qualification",
             "form_1_2_occupation",
             "form_1_type_of_disability",
 
-
             "form_2_type_of_pension",
             "form_2_not_getting_pension_reason",
-
 
             "form_3_activity",
             "form_3_assistance",
             "form_3_engaged_person",
 
-
             "form_4_shggradation",
-
 
             "form_5_source",
 
-
             "form_6_difficulty",
-
 
             "form_7_type_of_training",
             "form_7_business_problem",
@@ -65,6 +59,7 @@ public class Constants {
             "form_9_growth_monitored_no",
 
             "form_10_food_items",
+
     };
     static final String IMAGE_UPLOAD_PATH = "http://nakshakantha.com/beneficiary_images/";
     private static final int NUMBER_OF_FORMS = 11;

@@ -1,0 +1,40 @@
+{
+  "name": "Agriculture related issues extra",
+  "table_name": "gpdp_agriculture_issues_extra_14",
+  "form_number": 13,
+  "loop": "form_12_question_set question_id Q",
+  "widgets": [
+    {
+      "column_name": "question_status",
+      "category": 0,
+      "heading": "Whether required seeds are available as and when needed?",
+      "data_type": 1,
+      "options": "",
+      "dependencies": "1 1"
+    },
+    {
+      "column_name": "source_id",
+      "category": 2,
+      "heading": "Source",
+      "data_type": 0,
+      "options": "form_11_12_14_18_source",
+      "dependencies": "none"
+    },
+    {
+      "column_name": "government_subsidy",
+      "category": 0,
+      "heading": "Whether getting any government subsidy?",
+      "data_type": 1,
+      "options": "",
+      "dependencies": "1 1"
+    },
+    {
+      "column_name": "government_subsidy",
+      "category": 0,
+      "heading": "If government supplied then quantity is sufficient?",
+      "data_type": 1,
+      "options": "",
+      "dependencies": "none"
+    }
+  ]
+}

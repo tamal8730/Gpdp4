@@ -1,0 +1,24 @@
+{
+  "name": "Women empowerment status",
+  "table_name": "gpdp_women_empowerment_19",
+  "form_number": 18,
+  "loop": "form_17_question_set question_id Q",
+  "widgets": [
+    {
+      "column_name": "question_status",
+      "heading": "Answer yes/no",
+      "category": 0,
+      "data_type": 1,
+      "options": "",
+      "dependencies": "1 0"
+    },
+    {
+      "column_name": "reason_id",
+      "heading": "Reason",
+      "category": 2,
+      "data_type": 0,
+      "options": "form_17_reason",
+      "dependencies": "none"
+    }
+  ]
+}
