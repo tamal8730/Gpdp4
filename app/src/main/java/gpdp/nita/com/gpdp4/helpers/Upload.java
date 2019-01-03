@@ -247,6 +247,7 @@ public class Upload {
 
         ArrayList<String> filesList = new ArrayList<>(Arrays.asList(files));
         for (String file : fileNames) {
+            file = file.split(" ")[0];
             if (!filesList.contains(file + ".json")) {
                 return false;
             }

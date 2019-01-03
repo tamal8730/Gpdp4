@@ -98,7 +98,7 @@ public class MyJson {
         return list;
     }
 
-    MyJson initLists() {
+    public MyJson initLists() {
         tableList = new ArrayList<>();
         columnsListList = new ArrayList<>();
         loopList = new ArrayList<>();
@@ -132,7 +132,7 @@ public class MyJson {
         return getFormJson(s);
     }
 
-    void setTableAndColumnList() {
+    public void setTableAndColumnList() {
         try {
             String[] s = context.getAssets().list("forms");
             assert s != null;
@@ -179,6 +179,4 @@ public class MyJson {
     public ArrayList<String> getColumns(int formNumber) {
         return columnsListList.get(formNumber);
     }
-
-
 }

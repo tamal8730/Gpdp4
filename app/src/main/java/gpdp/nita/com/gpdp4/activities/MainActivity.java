@@ -13,14 +13,12 @@ import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 
 import org.json.JSONArray;
-import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -32,6 +30,8 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import gpdp.nita.com.gpdp4.R;
 import gpdp.nita.com.gpdp4.adapters.MenuAdapter;
 import gpdp.nita.com.gpdp4.helpers.DatabaseHelper;
+import gpdp.nita.com.gpdp4.helpers.InternetCheckAsync;
+import gpdp.nita.com.gpdp4.helpers.MyJson;
 import gpdp.nita.com.gpdp4.helpers.Upload;
 import gpdp.nita.com.gpdp4.interfaces.OnJsonsDownloaded;
 import gpdp.nita.com.gpdp4.interfaces.OnMenuItemSelected;
@@ -69,6 +69,7 @@ public class MainActivity extends AppCompatActivity {
         mSharedPrefAuto = this.getSharedPreferences(Constants.AUTO_VALUES, Context.MODE_PRIVATE);
 
         upload = new Upload(this);
+
         upload.setOnJsonDownloadedListener(new OnJsonsDownloaded() {
             @Override
             public void onSuccess() {
@@ -102,13 +103,19 @@ public class MainActivity extends AppCompatActivity {
                 .putString("gp_vc_type", tokens[7])
                 .apply();
 
-
-        RequestQueue queue = Volley.newRequestQueue(this);
-        queue.add(upload.requestJSONForUpdates(Constants.TABLES_TO_BE_DOWNLOADED_AFTER_LOGIN[0], true));
-        queue.addRequestFinishedListener(new RequestQueue.RequestFinishedListener<JSONObject>() {
+        new InternetCheckAsync(new InternetCheckAsync.Consumer() {
             @Override
-            public void onRequestFinished(Request<JSONObject> request) {
+            public void accept(Boolean isConnected) {
+                if (isConnected) {
+                    RequestQueue queue = Volley.newRequestQueue(MainActivity.this);
+                    queue.add(upload.requestJSONForUpdates(Constants.TABLES_TO_BE_DOWNLOADED_AFTER_LOGIN[0], true));
+                } else {
+                    if (!upload.allFilesExist(Constants.TABLES_TO_BE_DOWNLOADED_AFTER_LOGIN)) {
+                        Toast.makeText(MainActivity.this, "Cannot proceed", Toast.LENGTH_SHORT).show();
+                    } else {
 
+                    }
+                }
             }
         });
 
@@ -199,9 +206,47 @@ public class MainActivity extends AppCompatActivity {
         finish();
     }
 
-    @Override
-    protected void onRestart() {
-        super.onRestart();
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        initJsons();
+    }
+
+    private void initJsons() {
+
+        Constants.repeatedIndices.clear();
+        Constants.formSequence.clear();
+
+        MyJson myJson = new MyJson(this).initLists();
+        myJson.setTableAndColumnList();
+        ArrayList<String> loopList = myJson.getLoopList();
+        Constants.looplist = loopList;
+        int c = 0;
+
+
+        for (int i = 0; i < loopList.size(); i++) {
+            if (loopList.get(i) == null) {
+                Constants.formSequence.add(i);
+                Constants.repeatedIndices.add("");
+            } else {
+                String[] tokens = loopList.get(i).split(" ");
+                if (tokens[0].equals("add")) {
+                } else {
+                    ArrayList<Object> keys = MyJson.getSpinnerKeys(tokens[0], 0);
+                    int l = keys.size() - 1;
+                    for (int j = 0; j < l; j++) {
+                        Constants.repeatedIndices.add((keys.get(1 + j)).toString());
+                        Constants.formSequence.add(i);
+                        c++;
+                    }
+                }
+            }
+            c++;
+        }
+        for (int i = 0; i < Constants.formSequence.size(); i++) {
+            Log.d("posxx", Constants.formSequence.get(i) + " " + Constants.repeatedIndices.get(i));
+        }
     }
 }
+

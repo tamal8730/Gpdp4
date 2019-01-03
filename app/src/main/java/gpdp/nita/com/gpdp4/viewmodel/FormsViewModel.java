@@ -107,14 +107,14 @@ public class FormsViewModel extends AndroidViewModel {
 
 
     public void loadNext() {
-        if (formNumber >= Constants.formNumbers.size() - 1) {
+        if (formNumber >= Constants.formSequence.size() - 1) {
             onFormsEnd();
         } else {
             formNumber++;
             if (formNumber == 1) {
                 Constants.initFormList();
             }
-            loadForm(Constants.formNumbers.get(formNumber), formNumber);
+            loadForm(Constants.formSequence.get(formNumber), formNumber);
         }
     }
 
@@ -140,10 +140,7 @@ public class FormsViewModel extends AndroidViewModel {
 
     private void initDatabase(int formNumber, int index) {
 
-        String suffix = "" + Constants.repeatedFormsIndices.get(index, 0);
-        if (formNumber <= 9) {
-            suffix = "0" + Constants.repeatedFormsIndices.get(index, 0);
-        }
+        String suffix = Constants.repeatedIndices.get(index);
 
         OneFormJson form = new MyJson(getApplication())
                 .getFormJson(formNumber);
@@ -151,8 +148,7 @@ public class FormsViewModel extends AndroidViewModel {
         DatabaseHelper.ben_code = benCode;
         DatabaseHelper.tableName = form.getTableName();
         DatabaseHelper.hasUniqueIdentifier = uniqueIdentifierResolver(form);
-        DatabaseHelper.unique_identifier_val = DatabaseHelper.hasUniqueIdentifier ?
-                DatabaseHelper.unique_identifier_val_prefix + suffix
+        DatabaseHelper.unique_identifier_val = DatabaseHelper.hasUniqueIdentifier ? suffix
                 : null;
         DatabaseHelper.columnNames = form.getColumnNames();
         DatabaseHelper.dataTypes = form.getDataTypes();
@@ -165,11 +161,6 @@ public class FormsViewModel extends AndroidViewModel {
         else {
             String[] tokens = loop.split(" ");
             DatabaseHelper.unique_identifier_name = tokens[1];
-            if (tokens[0].equals("add")) {
-                DatabaseHelper.unique_identifier_val_prefix = DatabaseHelper.ben_code + "_";
-            } else {
-                DatabaseHelper.unique_identifier_val_prefix = tokens[2];
-            }
             return true;
         }
     }
@@ -177,7 +168,7 @@ public class FormsViewModel extends AndroidViewModel {
     public void loadPrev() {
         if (formNumber != 0) {
             formNumber--;
-            loadForm(Constants.formNumbers.get(formNumber), formNumber);
+            loadForm(Constants.formSequence.get(formNumber), formNumber);
         }
     }
 

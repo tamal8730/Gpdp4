@@ -29,7 +29,6 @@ public class Repo {
     private Object[] answersList;
     private OneFormJson oneFormJson;
     private DatabaseHelper databaseHelper;
-    private MutableLiveData<ArrayList<Object>> oneRowLiveData;
 
 
     public Repo(Application application, int formNumber) {
@@ -67,7 +66,7 @@ public class Repo {
     }
 
     public MutableLiveData<ArrayList<Object>> getOneRowLive() {
-        oneRowLiveData = new MutableLiveData<>();
+        MutableLiveData<ArrayList<Object>> oneRowLiveData = new MutableLiveData<>();
         boolean hasUniqueId = DatabaseHelper.hasUniqueIdentifier;
         oneRowLiveData.setValue(databaseHelper.getOneRow(hasUniqueId ?
                 DatabaseHelper.unique_identifier_val :

@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -18,11 +17,8 @@ import com.android.volley.toolbox.Volley;
 
 import org.json.JSONObject;
 
-import java.io.IOException;
-import java.net.InetSocketAddress;
-import java.net.Socket;
-
 import gpdp.nita.com.gpdp4.R;
+import gpdp.nita.com.gpdp4.helpers.InternetCheckAsync;
 import gpdp.nita.com.gpdp4.helpers.Upload;
 import gpdp.nita.com.gpdp4.helpers.Utility;
 import gpdp.nita.com.gpdp4.interfaces.OnJsonsDownloaded;
@@ -58,6 +54,7 @@ public class SplashActivity extends AppCompatActivity {
 
     }
 
+
     private void toMain() {
         if (mLoggedIn.getBoolean(Constants.KEY_LOGGED_IN, false)) {
             Intent toMain = new Intent(this, MainActivity.class);
@@ -86,7 +83,7 @@ public class SplashActivity extends AppCompatActivity {
     private void requestJson() {
 
 
-        new InternetCheck(new InternetCheck.Consumer() {
+        new InternetCheckAsync(new InternetCheckAsync.Consumer() {
             @Override
             public void accept(Boolean internet) {
                 if (!internet) {
@@ -127,35 +124,4 @@ public class SplashActivity extends AppCompatActivity {
         }
     }
 
-}
-
-class InternetCheck extends AsyncTask<Void, Void, Boolean> {
-
-    private Consumer mConsumer;
-
-    InternetCheck(Consumer consumer) {
-        mConsumer = consumer;
-        execute();
-    }
-
-    @Override
-    protected Boolean doInBackground(Void... voids) {
-        try {
-            Socket sock = new Socket();
-            sock.connect(new InetSocketAddress("8.8.8.8", 53), 1500);
-            sock.close();
-            return true;
-        } catch (IOException e) {
-            return false;
-        }
-    }
-
-    @Override
-    protected void onPostExecute(Boolean internet) {
-        mConsumer.accept(internet);
-    }
-
-    public interface Consumer {
-        void accept(Boolean internet);
-    }
 }

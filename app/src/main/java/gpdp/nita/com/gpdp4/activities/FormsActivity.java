@@ -55,8 +55,6 @@ public class FormsActivity extends AppCompatActivity implements OnValuesEnteredL
     List<FormsModel> mFormsModels;
 
     CircleImageView circleImageView;
-
-
     String benCode;
 
     Object[] answersList;

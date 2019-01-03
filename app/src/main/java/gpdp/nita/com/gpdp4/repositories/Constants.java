@@ -1,8 +1,10 @@
 package gpdp.nita.com.gpdp4.repositories;
 
-import android.util.SparseIntArray;
+import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
 
 import gpdp.nita.com.gpdp4.helpers.DatabaseHelper;
 
@@ -21,6 +23,8 @@ public class Constants {
     static final String STRING_DEFAULT = "0";
     public static final String KEY_LOGGED_IN = "logged_in";
     public static final String KEY_SERVER_RESPONSE = "server_response";
+    public static ArrayList<String> looplist;
+    public static ArrayList<Integer> formSequence = new ArrayList<>();
     public static final String[] master_tables = {
             "form_0_1_gender",
             "form_0_caste",
@@ -65,18 +69,26 @@ public class Constants {
     static final String IMAGE_UPLOAD_PATH = "http://nakshakantha.com/beneficiary_images/";
     private static final int NUMBER_OF_FORMS = 11;
     static int NUMBER_DEFAULT = 0;
-    public static ArrayList<Integer> formNumbers = new ArrayList<>();
-    public static SparseIntArray repeatedFormsIndices = new SparseIntArray();
+    //public static ArrayList<Integer> formNumbers = new ArrayList<>();
+    public static ArrayList<String> repeatedIndices = new ArrayList<>();
 
     public static void initFormList() {
-        Constants.formNumbers.clear();
-        Constants.formNumbers.add(0);
-        for (int i = 1; i <= DatabaseHelper.getForm2Count(); i++) {
-            repeatedFormsIndices.put(i, i);
-            Constants.formNumbers.add(1);
+        Iterator<String> iter = repeatedIndices.iterator();
+        while (iter.hasNext()) {
+            String str = iter.next();
+            if (str.split("_")[0].equals(DatabaseHelper.ben_code)) iter.remove();
         }
-        for (int i = 2; i <= NUMBER_OF_FORMS - 1; i++) {
-            Constants.formNumbers.add(i);
+        formSequence.removeAll(Collections.singleton(1));
+        for (int i = 1; i <= DatabaseHelper.getForm2Count(); i++) {
+            String s;
+            if (i <= 9) s = "0" + i;
+            else s = i + "";
+            repeatedIndices.add(i, DatabaseHelper.ben_code + "_" + s);
+            formSequence.add(i, 1);
+        }
+
+        for (int i = 0; i < formSequence.size(); i++) {
+            Log.d("posxxx", formSequence.get(i) + " " + repeatedIndices.get(i));
         }
     }
 }

@@ -22,7 +22,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     public static String ben_code;
     public static String unique_identifier_name;
-    public static String unique_identifier_val_prefix;
     public static boolean hasUniqueIdentifier = false;
     public static String unique_identifier_val;
     public static String tableName;
@@ -176,6 +175,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             }
             if (tableName.equals("gpdp_basic_info_1"))
                 contentValues.put("survey_date", getDateAndTime());
+
             db.insert(tableName, null, contentValues);
         }
     }
@@ -225,7 +225,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             query = "ben_code = ?";
             selectArgs = new String[]{code};
         }
-
         if (rowExist())
             return db.rawQuery(
                     "select " + getConcatCols() + " from " + tableName + " where " + query, selectArgs
