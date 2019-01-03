@@ -38,7 +38,7 @@ public class FormsViewModel extends AndroidViewModel {
     private SharedPreferences mAutoValues;
 
 
-    public FormsViewModel(@NonNull Application application, String benCode) {
+    FormsViewModel(@NonNull Application application, String benCode) {
         super(application);
         if (mutableLiveData != null) {
             return;
@@ -48,7 +48,7 @@ public class FormsViewModel extends AndroidViewModel {
         loadForm(application, formNumber);
     }
 
-    public void loadForm(Application application, int formNumber) {
+    private void loadForm(Application application, int formNumber) {
 
         mRepo = new Repo(application, formNumber);
         //form0MutableLiveData = mRepo.getLiveAnswers(benCode);
@@ -125,10 +125,9 @@ public class FormsViewModel extends AndroidViewModel {
     private void onFormsEnd() {
         mAutoValues = getApplication().getSharedPreferences(Constants.AUTO_VALUES, Context.MODE_PRIVATE);
         JSONArray payload = mRepo.onFormsEnd();
-        Upload.getInstance().sendJSONArray(
+        new Upload(getApplication()).sendJSONArray(
                 payload,
                 DatabaseHelper.ben_code,
-                getApplication(),
                 mAutoValues.getString("surveyor_id", "unknown"));
     }
 
@@ -182,7 +181,7 @@ public class FormsViewModel extends AndroidViewModel {
         for (int i = 0; i < (formsModels != null ? formsModels.size() : 0); i++) {
 
             FormsModel formsModel = formsModels.get(i);
-            Object run = null;
+            Object run;
 //            if (form0 != null)
 //                run = form0.run(i);
 

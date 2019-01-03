@@ -12,6 +12,12 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.Volley;
+
+import org.json.JSONObject;
+
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Socket;
@@ -25,6 +31,7 @@ import gpdp.nita.com.gpdp4.repositories.Constants;
 public class SplashActivity extends AppCompatActivity {
 
     SharedPreferences mLoggedIn;
+    Upload upload;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,8 +41,18 @@ public class SplashActivity extends AppCompatActivity {
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_splash);
 
+        upload = new Upload(this);
+        upload.setOnJsonDownloadedListener(new OnJsonsDownloaded() {
+            @Override
+            public void onSuccess() {
+                toMain();
+            }
 
-        Upload.filesDownloaded = 0;
+            @Override
+            public void onError(String errorMessage) {
+                Toast.makeText(SplashActivity.this, errorMessage, Toast.LENGTH_SHORT).show();
+            }
+        });
 
         mLoggedIn = this.getSharedPreferences(Constants.REMEMBER_LOGIN, Context.MODE_PRIVATE);
 
@@ -63,25 +80,11 @@ public class SplashActivity extends AppCompatActivity {
         if (result) {
             requestJson();
         }
-        Upload.filesDownloaded = 0;
     }
 
 
     private void requestJson() {
 
-        final Upload upload = Upload.getInstance();
-
-        upload.setOnJsonDownloadedListener(new OnJsonsDownloaded() {
-            @Override
-            public void onSuccess() {
-                toMain();
-            }
-
-            @Override
-            public void onError() {
-                Toast.makeText(SplashActivity.this, "Cannot proceed volley", Toast.LENGTH_SHORT).show();
-            }
-        });
 
         new InternetCheck(new InternetCheck.Consumer() {
             @Override
@@ -93,9 +96,17 @@ public class SplashActivity extends AppCompatActivity {
                         toMain();
                     }
                 } else {
+                    RequestQueue updateQueue = Volley.newRequestQueue(SplashActivity.this);
                     for (String tableName : Constants.master_tables) {
-                        upload.requestJSONForUpdates(tableName, SplashActivity.this, false);
+                        updateQueue.add(
+                                upload.requestJSONForUpdates(tableName, false));
                     }
+                    updateQueue.addRequestFinishedListener(new RequestQueue.RequestFinishedListener<JSONObject>() {
+                        @Override
+                        public void onRequestFinished(Request<JSONObject> request) {
+
+                        }
+                    });
                 }
             }
         });

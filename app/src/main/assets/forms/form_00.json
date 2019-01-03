@@ -98,7 +98,7 @@
       "category": 2,
       "data_type": 0,
       "options": "form_0_ward",
-      "dependencies": "autopopulate"
+      "dependencies": ""
     },
     {
       "column_name": "male_num",

@@ -9,7 +9,6 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.android.volley.Request;
-import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
@@ -38,26 +37,23 @@ import gpdp.nita.com.gpdp4.repositories.Constants;
 
 public class Upload {
 
-    private static final Upload instance = new Upload();
-    public static int filesDownloaded = 0;
+    private int filesDownloaded;
     private ProgressDialog progressDialog;
     private OnJsonsDownloaded onJsonDownloadedListener;
+    private Context context;
 
-    private Upload() {
-    }
-
-    public static Upload getInstance() {
-        return instance;
+    public Upload(Context context) {
+        this.context = context;
+        filesDownloaded = 0;
     }
 
     public void setOnJsonDownloadedListener(OnJsonsDownloaded onJsonDownloadedListener) {
         this.onJsonDownloadedListener = onJsonDownloadedListener;
     }
 
+    public void sendJSONArray(JSONArray payload, final String ben_code, String surveyorCode) {
 
-    public void sendJSONArray(JSONArray payload, final String ben_code, final Context context, String surveyorCode) {
-
-        saveJsonOnExternalStorage(context, ben_code + ".json", payload.toString(), "backups/" + surveyorCode);
+        saveJsonOnExternalStorage(ben_code + ".json", payload.toString(), "backups/" + surveyorCode);
 
 //        progressDialog = new ProgressDialog(context);
 //        progressDialog.setMessage("Please Wait, We are sending your data on Server");
@@ -85,12 +81,11 @@ public class Upload {
                         Toast.makeText(context, error.toString(), Toast.LENGTH_LONG).show();
                     }
                 });
-        RequestQueue requestQueue = Volley.newRequestQueue(context);
-        requestQueue.add(jsonArrayRequest);
+        Volley.newRequestQueue(context).add(jsonArrayRequest);
     }
 
 
-    public void sendImage(Bitmap bitmap, final Context context, final String ben_code) {
+    public void sendImage(Bitmap bitmap, final String ben_code) {
 
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
@@ -99,7 +94,6 @@ public class Upload {
         StringRequest request = new StringRequest(Request.Method.POST, Constants.UPLOAD_URL, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-
             }
         }, new Response.ErrorListener() {
             @Override
@@ -119,8 +113,7 @@ public class Upload {
             }
         };
 
-        RequestQueue requestQueue = Volley.newRequestQueue(context);
-        requestQueue.add(request);
+        Volley.newRequestQueue(context).add(request);
     }
 
 
@@ -143,15 +136,16 @@ public class Upload {
                 returnVal.append(Integer.toString((md5Byte & 0xff) + 0x100, 16).substring(1));
             }
         } catch (Throwable t) {
+            Log.d("posxx", t.getLocalizedMessage());
             t.printStackTrace();
         }
         return returnVal.toString().toUpperCase();
     }
 
-    private String getHashFromFileName(String filename, boolean afterLogin) {
+    private String getHashFromFileName(String filename) {
         InputStream is;
         try {
-            String fileName = "gpdp/data/" + (afterLogin ? filename.split(" ")[0] : filename) + ".json";
+            String fileName = "gpdp/data/" + filename + ".json";
             String path = Environment.getExternalStorageDirectory() + "/" + fileName;
             File file = new File(path);
             if (!file.exists()) return " ";
@@ -159,27 +153,29 @@ public class Upload {
             return getHashFromFileInputStream(is);
 
         } catch (IOException e) {
+            Log.d("posxx", e.getLocalizedMessage());
             e.printStackTrace();
             return null;
         }
     }
 
-    private JSONObject encapsulateHashInJson(String filename, boolean afterLogin, Context context) {
+    private JSONObject encapsulateHashInJson(String filename) {
 
         JSONObject jsonObject = new JSONObject();
         try {
-            jsonObject.put("name", afterLogin ? filename.split(" ")[0] : filename);
-            jsonObject.put("hash", getHashFromFileName(filename, afterLogin));
-            jsonObject.put("data", getExtraDataToSend(filename, afterLogin, context));
+            jsonObject.put("name", filename.split(" ")[0]);
+            jsonObject.put("hash", getHashFromFileName(filename.split(" ")[0]));
+            jsonObject.put("data", getExtraDataToSend(filename));
         } catch (JSONException e) {
+            Log.d("posxx", e.getLocalizedMessage());
             e.printStackTrace();
         }
         return jsonObject;
     }
 
-    private JSONObject getExtraDataToSend(String filename, boolean afterLogin, Context context) {
+    private JSONObject getExtraDataToSend(String filename) {
         JSONObject extras = new JSONObject();
-        if (!afterLogin) return extras;
+        if (filename.equals(filename.split(" ")[0])) return extras;
         else {
             String[] tokens = filename.split(" ");
             String val = context.getSharedPreferences(Constants.AUTO_VALUES, Context.MODE_PRIVATE)
@@ -187,41 +183,41 @@ public class Upload {
             try {
                 extras.put(tokens[1], val);
             } catch (JSONException e) {
+                Log.d("posxx", e.getLocalizedMessage());
                 e.printStackTrace();
             }
         }
         return extras;
     }
 
-    public void requestJSONForUpdates(final String filename, final Context context, final boolean afterLogin) {
+    public JsonObjectRequest requestJSONForUpdates(final String filename, final boolean afterLogin) {
 
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST,
+        return new JsonObjectRequest(Request.Method.POST,
                 Constants.UPDATE_TABLES,
-                encapsulateHashInJson(filename, afterLogin, context),
+                encapsulateHashInJson(filename),
 
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
                         try {
                             int error = response.getInt("error");
+                            Log.d("filexx", filename.split(" ")[0] + " " + error);
                             if (error == 1) {
                                 String s = response.getString("data");
-                                saveJsonOnExternalStorage(context,
-                                        afterLogin ? filename.split(" ")[0] : filename
-                                                + ".json", s, "data");
+                                saveJsonOnExternalStorage(filename.split(" ")[0] + ".json", s, "data");
 
                                 filesDownloaded++;
                             } else if (error == 2) {
                                 filesDownloaded++;
                             } else if (error == 0) {
-                                onError();
+                                onError("404");
                             }
-                            if (filesDownloaded == Constants.master_tables.length) {
+                            if (filesDownloaded == (!afterLogin ? Constants.master_tables.length : Constants.TABLES_TO_BE_DOWNLOADED_AFTER_LOGIN.length)) {
                                 onSuccess();
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
-                            onError();
+                            onError(e.getMessage());
                         }
                     }
                 },
@@ -229,19 +225,17 @@ public class Upload {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         error.printStackTrace();
-                        onError();
+                        onError(error.getMessage());
                     }
                 });
-        RequestQueue requestQueue = Volley.newRequestQueue(context);
-        requestQueue.add(jsonObjectRequest);
     }
 
     private void onSuccess() {
         onJsonDownloadedListener.onSuccess();
     }
 
-    private void onError() {
-        onJsonDownloadedListener.onError();
+    private void onError(String errorMessage) {
+        onJsonDownloadedListener.onError(errorMessage);
     }
 
     public boolean allFilesExist(String[] fileNames) {
@@ -254,18 +248,19 @@ public class Upload {
         ArrayList<String> filesList = new ArrayList<>(Arrays.asList(files));
         for (String file : fileNames) {
             if (!filesList.contains(file + ".json")) {
-                Log.d("posxx", file);
                 return false;
             }
         }
         return true;
     }
 
-    private void saveJsonOnExternalStorage(Context context, String sFileName, String sBody, String subFolder) {
+    private void saveJsonOnExternalStorage(String sFileName, String sBody, String subFolder) {
         try {
             File root = new File(Environment.getExternalStorageDirectory(), "gpdp/" + subFolder + "/");
             if (!root.exists()) {
-                root.mkdirs();
+                if (!root.mkdirs()) {
+                    cannotCreateDirs();
+                }
             }
             File gpxfile = new File(root, sFileName);
             FileWriter writer = new FileWriter(gpxfile);
@@ -276,5 +271,9 @@ public class Upload {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private void cannotCreateDirs() {
+        
     }
 }

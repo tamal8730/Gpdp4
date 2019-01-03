@@ -66,7 +66,11 @@ public class FormsActivity extends AppCompatActivity implements OnValuesEnteredL
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_forms);
 
-        benCode = getIntent().getExtras().getString("ben_code");
+        if (getIntent().getExtras() != null)
+            benCode = getIntent().getExtras().getString("ben_code");
+        else {
+            benCodeError();
+        }
         FormsViewModel.formNumber = 0;
 
         recyclerView = findViewById(R.id.recycler);
@@ -113,6 +117,10 @@ public class FormsActivity extends AppCompatActivity implements OnValuesEnteredL
                 formsViewModel.loadPrev();
             }
         });
+
+    }
+
+    private void benCodeError() {
 
     }
 
@@ -263,8 +271,7 @@ public class FormsActivity extends AppCompatActivity implements OnValuesEnteredL
     }
 
     private void sendBitmap(Bitmap bm) {
-        Upload.getInstance()
-                .sendImage(bm, this, DatabaseHelper.ben_code);
+        new Upload(this).sendImage(bm, DatabaseHelper.ben_code);
     }
 
     private void onCaptureImageResult(Intent data) {

@@ -9,13 +9,18 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 
 import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -28,6 +33,7 @@ import gpdp.nita.com.gpdp4.R;
 import gpdp.nita.com.gpdp4.adapters.MenuAdapter;
 import gpdp.nita.com.gpdp4.helpers.DatabaseHelper;
 import gpdp.nita.com.gpdp4.helpers.Upload;
+import gpdp.nita.com.gpdp4.interfaces.OnJsonsDownloaded;
 import gpdp.nita.com.gpdp4.interfaces.OnMenuItemSelected;
 import gpdp.nita.com.gpdp4.models.MainMenuModel;
 import gpdp.nita.com.gpdp4.repositories.Constants;
@@ -40,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
     SharedPreferences mSharedPrefLogin, mSharedPrefAuto;
     RecyclerView recyclerView;
     LinearLayoutManager linearLayoutManager;
+    Upload upload;
 
     ArrayList<MainMenuModel> models;
 
@@ -48,8 +55,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         setTitle("Surveyor profile");
-
-        Upload.getInstance().requestJSONForUpdates(Constants.TABLES_TO_BE_DOWNLOADED_AFTER_LOGIN[0], this, true);
 
         recyclerView = findViewById(R.id.main_menu_recycler);
         models = new ArrayList<>();
@@ -62,6 +67,19 @@ public class MainActivity extends AppCompatActivity {
 
         mSharedPrefLogin = this.getSharedPreferences(Constants.REMEMBER_LOGIN, Context.MODE_PRIVATE);
         mSharedPrefAuto = this.getSharedPreferences(Constants.AUTO_VALUES, Context.MODE_PRIVATE);
+
+        upload = new Upload(this);
+        upload.setOnJsonDownloadedListener(new OnJsonsDownloaded() {
+            @Override
+            public void onSuccess() {
+                Log.d("posxx", "success");
+            }
+
+            @Override
+            public void onError(String errorMessage) {
+                Log.d("posxx", errorMessage);
+            }
+        });
 
         subdivision = findViewById(R.id.subdivision);
         block = findViewById(R.id.block);
@@ -83,6 +101,16 @@ public class MainActivity extends AppCompatActivity {
                 .putString("surveyor_id", tokens[2])
                 .putString("gp_vc_type", tokens[7])
                 .apply();
+
+
+        RequestQueue queue = Volley.newRequestQueue(this);
+        queue.add(upload.requestJSONForUpdates(Constants.TABLES_TO_BE_DOWNLOADED_AFTER_LOGIN[0], true));
+        queue.addRequestFinishedListener(new RequestQueue.RequestFinishedListener<JSONObject>() {
+            @Override
+            public void onRequestFinished(Request<JSONObject> request) {
+
+            }
+        });
 
 
         String imgUrl = tokens[0].trim();
@@ -156,9 +184,7 @@ public class MainActivity extends AppCompatActivity {
             }
             JSONArray payload = new JSONArray();
             payload.put(text);
-            Upload
-                    .getInstance()
-                    .sendJSONArray(payload, DatabaseHelper.ben_code, this, surveyorId);
+            upload.sendJSONArray(payload, DatabaseHelper.ben_code, surveyorId);
         }
     }
 
