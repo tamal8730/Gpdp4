@@ -22,7 +22,7 @@ public class MyJson {
     private Gson gson = new Gson();
     private ArrayList<String> tableList;
     private ArrayList<ArrayList<String>> columnsListList;
-    private ArrayList<Integer> loopList;
+    private ArrayList<String> loopList;
     private ArrayList<ArrayList<Integer>> dataTypes;
 
     private Context context;
@@ -164,7 +164,7 @@ public class MyJson {
         return dataTypes;
     }
 
-    public ArrayList<Integer> getLoopList() {
+    public ArrayList<String> getLoopList() {
         return loopList;
     }
 

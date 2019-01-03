@@ -2,7 +2,7 @@
   "name": "ICDS status",
   "table_name": "gpdp_status_icds_10",
   "form_number": 9,
-  "loop": 0,
+  "loop": null,
   "widgets": [
     {
       "column_name": "number_of_members_children",

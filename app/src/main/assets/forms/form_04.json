@@ -2,7 +2,7 @@
   "name": "Self help groups",
   "table_name": "gpdp_shg_5",
   "form_number": 4,
-  "loop": 0,
+  "loop": null,
   "widgets": [
     {
       "column_name": "involved_shg",

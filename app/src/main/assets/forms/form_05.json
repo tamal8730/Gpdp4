@@ -2,7 +2,7 @@
   "name": "Loan status",
   "table_name": "gpdp_loan_status_6",
   "form_number": 5,
-  "loop": 0,
+  "loop": null,
   "widgets": [
     {
       "column_name": "taken_loan",

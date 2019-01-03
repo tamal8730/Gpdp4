@@ -2,7 +2,7 @@
   "name": "Family description",
   "table_name": "gpdp_desc_family_2",
   "form_number": 1,
-  "loop": 1,
+  "loop": "add member_id",
   "widgets": [
     {
       "column_name": "name",

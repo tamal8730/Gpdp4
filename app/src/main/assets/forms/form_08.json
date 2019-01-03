@@ -2,7 +2,7 @@
   "name": "Zero hunger",
   "table_name": "gpdp_zero_hunger_9",
   "form_number": 8,
-  "loop": 0,
+  "loop": null,
   "widgets": [
     {
       "column_name": "food_scarcity",

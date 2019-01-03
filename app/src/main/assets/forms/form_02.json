@@ -2,7 +2,7 @@
   "name": "End poverty",
   "table_name": "gpdp_end_poverty_3",
   "form_number": 2,
-  "loop": 0,
+  "loop": null,
   "widgets": [
     {
       "column_name": "occupation_1",

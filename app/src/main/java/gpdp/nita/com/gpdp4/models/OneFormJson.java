@@ -17,7 +17,7 @@ public class OneFormJson {
     private int formNumber;
 
     @SerializedName("loop")
-    private int loop;
+    private String loop;
 
     @SerializedName("widgets")
     private List<OneQuestionJson> widgets;
@@ -35,7 +35,7 @@ public class OneFormJson {
         return formNumber;
     }
 
-    public int getLoop() {
+    public String getLoop() {
         return loop;
     }
 

@@ -66,8 +66,10 @@ public class FormsActivity extends AppCompatActivity implements OnValuesEnteredL
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_forms);
 
-        if (getIntent().getExtras() != null)
+        if (getIntent().getExtras() != null) {
             benCode = getIntent().getExtras().getString("ben_code");
+            DatabaseHelper.ben_code = benCode;
+        }
         else {
             benCodeError();
         }

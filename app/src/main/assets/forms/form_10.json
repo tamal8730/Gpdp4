@@ -2,7 +2,8 @@
   "name": "form_10",
   "table_name": "gpdp_food_source_11",
   "form_number": 11,
-  "loop": 0,
+  "loop": "form_10_food_items item_id I",
+  //json file | unique column name | item prefix
   "widgets": [
     {
       "column_name": "market",

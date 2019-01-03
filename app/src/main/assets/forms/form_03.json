@@ -2,7 +2,7 @@
   "name": "Income generation",
   "table_name": "gpdp_income_generation_4",
   "form_number": 3,
-  "loop": 0,
+  "loop": null,
   "widgets": [
     {
       "column_name": "activity_id",

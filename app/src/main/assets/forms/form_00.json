@@ -2,7 +2,7 @@
   "name": "Basic info",
   "table_name": "gpdp_basic_info_1",
   "form_number": 0,
-  "loop": 0,
+  "loop": null,
   "widgets": [
     {
       "column_name": "ben_image",

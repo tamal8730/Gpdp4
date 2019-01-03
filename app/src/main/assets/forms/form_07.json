@@ -2,7 +2,7 @@
   "name": "Skill development",
   "table_name": "gpdp_skill_development_8",
   "form_number": 7,
-  "loop": 0,
+  "loop": null,
   "widgets": [
     {
       "column_name": "interest_in_skill_development",

@@ -2,7 +2,7 @@
   "name": "MGNREGA",
   "table_name": "gpdp_mgnrega_7",
   "form_number": 6,
-  "loop": 0,
+  "loop": null,
   "widgets": [
     {
       "column_name": "mgnrega_jobcard",

@@ -1,5 +1,7 @@
 package gpdp.nita.com.gpdp4.repositories;
 
+import android.util.SparseIntArray;
+
 import java.util.ArrayList;
 
 import gpdp.nita.com.gpdp4.helpers.DatabaseHelper;
@@ -64,11 +66,13 @@ public class Constants {
     private static final int NUMBER_OF_FORMS = 11;
     static int NUMBER_DEFAULT = 0;
     public static ArrayList<Integer> formNumbers = new ArrayList<>();
+    public static SparseIntArray repeatedFormsIndices = new SparseIntArray();
 
     public static void initFormList() {
         Constants.formNumbers.clear();
         Constants.formNumbers.add(0);
         for (int i = 1; i <= DatabaseHelper.getForm2Count(); i++) {
+            repeatedFormsIndices.put(i, i);
             Constants.formNumbers.add(1);
         }
         for (int i = 2; i <= NUMBER_OF_FORMS - 1; i++) {

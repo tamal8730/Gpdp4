@@ -68,14 +68,17 @@ public class Repo {
 
     public MutableLiveData<ArrayList<Object>> getOneRowLive() {
         oneRowLiveData = new MutableLiveData<>();
-        boolean hasMemId = DatabaseHelper.hasMemberId;
-        oneRowLiveData.setValue(databaseHelper.getOneRow(hasMemId ? DatabaseHelper.member_id : DatabaseHelper.ben_code));
+        boolean hasUniqueId = DatabaseHelper.hasUniqueIdentifier;
+        oneRowLiveData.setValue(databaseHelper.getOneRow(hasUniqueId ?
+                DatabaseHelper.unique_identifier_val :
+                DatabaseHelper.ben_code));
+
         return oneRowLiveData;
     }
 
     public ArrayList<Object> getOneRow() {
-        boolean hasMemId = DatabaseHelper.hasMemberId;
-        return databaseHelper.getOneRow(hasMemId ? DatabaseHelper.member_id : DatabaseHelper.ben_code);
+        boolean hasMemId = DatabaseHelper.hasUniqueIdentifier;
+        return databaseHelper.getOneRow(hasMemId ? DatabaseHelper.unique_identifier_val : DatabaseHelper.ben_code);
     }
 
 

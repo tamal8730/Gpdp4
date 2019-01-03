@@ -7,7 +7,6 @@ import android.arch.lifecycle.MutableLiveData;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
-import android.util.Log;
 
 import org.json.JSONArray;
 
@@ -30,13 +29,11 @@ import gpdp.nita.com.gpdp4.repositories.Repo;
 public class FormsViewModel extends AndroidViewModel {
 
     public static int formNumber = 0;
-    private static int numberOfTimesForm2Completed = 0;
     private MutableLiveData<List<FormsModel>> mutableLiveData;
     private String benCode;
     private Repo mRepo;
     private MutableLiveData<ArrayList<Object>> oneRowLiveData;
     private SharedPreferences mAutoValues;
-
 
     FormsViewModel(@NonNull Application application, String benCode) {
         super(application);
@@ -110,7 +107,6 @@ public class FormsViewModel extends AndroidViewModel {
 
 
     public void loadNext() {
-        Log.d("formxx", formNumber + " " + Constants.formNumbers.size());
         if (formNumber >= Constants.formNumbers.size() - 1) {
             onFormsEnd();
         } else {
@@ -144,21 +140,38 @@ public class FormsViewModel extends AndroidViewModel {
 
     private void initDatabase(int formNumber, int index) {
 
-        String suffix = "_" + index;
+        String suffix = "" + Constants.repeatedFormsIndices.get(index, 0);
         if (formNumber <= 9) {
-            suffix = "_0" + index;
+            suffix = "0" + Constants.repeatedFormsIndices.get(index, 0);
         }
 
-        OneFormJson prevForm = new MyJson(getApplication())
+        OneFormJson form = new MyJson(getApplication())
                 .getFormJson(formNumber);
 
         DatabaseHelper.ben_code = benCode;
-        DatabaseHelper.tableName = prevForm.getTableName();
-        DatabaseHelper.hasMemberId = prevForm.getLoop() == 1;
-        DatabaseHelper.member_id = prevForm.getLoop() == 1 ? benCode + suffix : null;
-        DatabaseHelper.columnNames = prevForm.getColumnNames();
-        DatabaseHelper.dataTypes = prevForm.getDataTypes();
+        DatabaseHelper.tableName = form.getTableName();
+        DatabaseHelper.hasUniqueIdentifier = uniqueIdentifierResolver(form);
+        DatabaseHelper.unique_identifier_val = DatabaseHelper.hasUniqueIdentifier ?
+                DatabaseHelper.unique_identifier_val_prefix + suffix
+                : null;
+        DatabaseHelper.columnNames = form.getColumnNames();
+        DatabaseHelper.dataTypes = form.getDataTypes();
 
+    }
+
+    private boolean uniqueIdentifierResolver(OneFormJson form) {
+        String loop = form.getLoop();
+        if (loop == null) return false;
+        else {
+            String[] tokens = loop.split(" ");
+            DatabaseHelper.unique_identifier_name = tokens[1];
+            if (tokens[0].equals("add")) {
+                DatabaseHelper.unique_identifier_val_prefix = DatabaseHelper.ben_code + "_";
+            } else {
+                DatabaseHelper.unique_identifier_val_prefix = tokens[2];
+            }
+            return true;
+        }
     }
 
     public void loadPrev() {

@@ -22,10 +22,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
 
     public static String ben_code;
-    public static String unique_identifier;
-    public static String member_id;
+    public static String unique_identifier_name;
+    public static String unique_identifier_val_prefix;
+    public static boolean hasUniqueIdentifier = false;
+    public static String unique_identifier_val;
     public static String tableName;
-    public static boolean hasMemberId = false;
     public static ArrayList<String> columnNames;
     public static ArrayList<Integer> dataTypes;
     private static DatabaseHelper instance = null;
@@ -61,10 +62,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return sum;
     }
 
-    private String columnNamesConcat(ArrayList<String> columnNames, int loop, ArrayList<Integer> dataType) {
+    private String columnNamesConcat(ArrayList<String> columnNames, String loop, ArrayList<Integer> dataType, String tableName) {
 
         StringBuilder s = new StringBuilder(" (ben_code TEXT,");
-        if (loop == 1) s.append("member_id TEXT,");
+
+        uniqueIdentifierResolver(s, loop);
 
         if (tableName.equals("gpdp_basic_info_1"))
             s.append("survey_date TEXT,");
@@ -91,21 +93,31 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return s.toString();
     }
 
+    private void uniqueIdentifierResolver(StringBuilder s, String loop) {
+        if (loop != null) {
+            String[] tokens = loop.split(" ");
+            s.append(tokens[1]).append(" TEXT,");
+        }
+    }
+
     @Override
     public void onCreate(SQLiteDatabase db) {
 
         myJson.setTableAndColumnList();
         ArrayList<String> tableNames = myJson.getTableList();
         ArrayList<ArrayList<String>> columnList = myJson.getColumnsListList();
-        ArrayList<Integer> loopList = myJson.getLoopList();
+        ArrayList<String> loopList = myJson.getLoopList();
         ArrayList<ArrayList<Integer>> dataTypes = myJson.getDataTypes();
 
         for (int i = 0; i < tableNames.size(); i++) {
 
             db.execSQL(
-                    "create table if not exists " + tableNames.get(i) + columnNamesConcat(columnList.get(i),
+                    "create table if not exists " + tableNames.get(i) + columnNamesConcat(
+                            columnList.get(i),
                             loopList.get(i),
-                            dataTypes.get(i))
+                            dataTypes.get(i),
+                            tableNames.get(i)
+                    )
             );
         }
     }
@@ -148,7 +160,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     private void update(Object[] answers, String code) {
         SQLiteDatabase db = this.getWritableDatabase();
-        String codeStr = hasMemberId ? "member_id" : "ben_code";
+        String codeStr = hasUniqueIdentifier ? unique_identifier_name : "ben_code";
         ContentValues contentValues = new ContentValues();
         for (int i = 0; i < answers.length; i++) {
             populateContentValue(answers[i], columnNames.get(i), contentValues);
@@ -160,12 +172,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public void insert(Object[] answers) {
 
         if (rowExist()) {
-            update(answers, hasMemberId ? member_id : ben_code);
+            update(answers, hasUniqueIdentifier ? unique_identifier_val : ben_code);
         } else {
             SQLiteDatabase db = this.getWritableDatabase();
             ContentValues contentValues = new ContentValues();
             contentValues.put("ben_code", ben_code);
-            if (hasMemberId) contentValues.put("member_id", member_id);
+            if (hasUniqueIdentifier)
+                contentValues.put(unique_identifier_name, unique_identifier_val);
             for (int i = 0; i < answers.length; i++) {
                 populateContentValue(answers[i], columnNames.get(i), contentValues);
             }
@@ -176,9 +189,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private boolean rowExist() {
         SQLiteDatabase db = this.getReadableDatabase();
         String s;
-        if (!hasMemberId) s = "ben_code";
-        else s = "member_id";
-        String cc = hasMemberId ? member_id : ben_code;
+        if (!hasUniqueIdentifier) s = "ben_code";
+        else s = unique_identifier_name;
+        String cc = hasUniqueIdentifier ? unique_identifier_val : ben_code;
         Cursor c = db.rawQuery("select " + s + " from " + tableName + " where " + s + " = ?", new String[]{cc});
         if (c == null) return false;
         if (!c.moveToFirst()) return false;
@@ -197,9 +210,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return s.toString();
     }
 
-    public Cursor getCursor(String code) {
+    private Cursor getCursor(String code) {
         SQLiteDatabase db = this.getWritableDatabase();
-        String s = hasMemberId ? "member_id" : "ben_code";
+        String s = hasUniqueIdentifier ? unique_identifier_name : "ben_code";
         if (rowExist())
             return db.rawQuery(
                     "select " + getConcatCols() + " from " + tableName + " where " + s + " = ?", new String[]{code}
