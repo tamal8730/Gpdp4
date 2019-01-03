@@ -5,7 +5,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -31,10 +30,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static ArrayList<Integer> dataTypes;
     private static DatabaseHelper instance = null;
     private MyJson myJson;
-    private boolean dateTimeSet = false;
-
-    //private String memberId=null;
-
 
     private DatabaseHelper(Context context) {
         super(context, Constants.DATABASE_NAME, null, 1);
@@ -132,16 +127,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     private void populateContentValue(Object currentEntry, String columnName, ContentValues contentValues) {
 
-
-        //to be removed
-
-
-        if (tableName.equals("gpdp_basic_info_1") && !dateTimeSet && !rowExist()) {
-            contentValues.put("survey_date", getDateAndTime());
-            dateTimeSet = true;
-        }
-
-
         if (currentEntry instanceof String) {
             contentValues.put(columnName, (String) currentEntry);
         } else if (currentEntry instanceof Integer) {
@@ -154,19 +139,26 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private String getDateAndTime() {
 
         SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd H:m:s", Locale.getDefault());
-        Log.d("timexx", fmt.format(Calendar.getInstance().getTime()));
         return fmt.format(Calendar.getInstance().getTime());
     }
 
     private void update(Object[] answers, String code) {
         SQLiteDatabase db = this.getWritableDatabase();
-        String codeStr = hasUniqueIdentifier ? unique_identifier_name : "ben_code";
+        String query;
+        String[] selectArgs;
+        if (hasUniqueIdentifier) {
+            query = "ben_code = ? and " + unique_identifier_name + " = ?";
+            selectArgs = new String[]{ben_code, code};
+        } else {
+            query = "ben_code = ?";
+            selectArgs = new String[]{ben_code};
+        }
         ContentValues contentValues = new ContentValues();
         for (int i = 0; i < answers.length; i++) {
             populateContentValue(answers[i], columnNames.get(i), contentValues);
         }
         db.update(tableName, contentValues,
-                codeStr + " = ?", new String[]{code});
+                query, selectArgs);
     }
 
     public void insert(Object[] answers) {
@@ -182,17 +174,28 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             for (int i = 0; i < answers.length; i++) {
                 populateContentValue(answers[i], columnNames.get(i), contentValues);
             }
+            if (tableName.equals("gpdp_basic_info_1"))
+                contentValues.put("survey_date", getDateAndTime());
             db.insert(tableName, null, contentValues);
         }
     }
 
     private boolean rowExist() {
         SQLiteDatabase db = this.getReadableDatabase();
-        String s;
-        if (!hasUniqueIdentifier) s = "ben_code";
-        else s = unique_identifier_name;
-        String cc = hasUniqueIdentifier ? unique_identifier_val : ben_code;
-        Cursor c = db.rawQuery("select " + s + " from " + tableName + " where " + s + " = ?", new String[]{cc});
+
+
+        String query;
+        String[] selectArgs;
+        if (hasUniqueIdentifier) {
+            query = "ben_code = ? and " + unique_identifier_name + " = ?";
+            selectArgs = new String[]{ben_code, unique_identifier_val};
+        } else {
+            query = "ben_code = ?";
+            selectArgs = new String[]{ben_code};
+        }
+
+        Cursor c = db.rawQuery("select ben_code from " + tableName + " where " + query, selectArgs);
+
         if (c == null) return false;
         if (!c.moveToFirst()) return false;
         boolean f = !c.isNull(0);
@@ -212,10 +215,20 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     private Cursor getCursor(String code) {
         SQLiteDatabase db = this.getWritableDatabase();
-        String s = hasUniqueIdentifier ? unique_identifier_name : "ben_code";
+
+        String query;
+        String[] selectArgs;
+        if (hasUniqueIdentifier) {
+            query = "ben_code = ? and " + unique_identifier_name + " = ?";
+            selectArgs = new String[]{ben_code, code};
+        } else {
+            query = "ben_code = ?";
+            selectArgs = new String[]{code};
+        }
+
         if (rowExist())
             return db.rawQuery(
-                    "select " + getConcatCols() + " from " + tableName + " where " + s + " = ?", new String[]{code}
+                    "select " + getConcatCols() + " from " + tableName + " where " + query, selectArgs
             );
         else return null;
     }
