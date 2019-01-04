@@ -33,7 +33,6 @@ public class FormsViewModel extends AndroidViewModel {
     private String benCode;
     private Repo mRepo;
     private MutableLiveData<ArrayList<Object>> oneRowLiveData;
-    private SharedPreferences mAutoValues;
 
     FormsViewModel(@NonNull Application application, String benCode) {
         super(application);
@@ -120,6 +119,10 @@ public class FormsViewModel extends AndroidViewModel {
         }
     }
 
+    public String getSubTitle() {
+        return Constants.subTitles.get(formNumber);
+    }
+
     public boolean loadFormNumber(int form) {
         if (!Constants.formSequence.contains(form))
             return false;
@@ -131,7 +134,7 @@ public class FormsViewModel extends AndroidViewModel {
     }
 
     private void onFormsEnd() {
-        mAutoValues = getApplication().getSharedPreferences(Constants.AUTO_VALUES, Context.MODE_PRIVATE);
+        SharedPreferences mAutoValues = getApplication().getSharedPreferences(Constants.AUTO_VALUES, Context.MODE_PRIVATE);
         JSONArray payload = mRepo.onFormsEnd();
         new Upload(getApplication()).sendJSONArray(
                 payload,

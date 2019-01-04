@@ -80,10 +80,10 @@ public class Constants {
             "form_18_reason_of_water_scarcity"
 
     };
-    public static final String IMAGE_UPLOAD_PATH = "http://nakshakantha.com/beneficiary_images/";
+    static final String IMAGE_UPLOAD_PATH = "http://nakshakantha.com/beneficiary_images/";
     static int NUMBER_DEFAULT = 0;
     public static ArrayList<String> repeatedIndices = new ArrayList<>();
-    public static ArrayList<String> formNames = new ArrayList<>();
+    public static ArrayList<String> subTitles = new ArrayList<>();
 
 
     public static void initFormList() {
@@ -93,18 +93,24 @@ public class Constants {
             String str = iter.next();
             if (str.split("_")[0].equals(DatabaseHelper.ben_code)) iter.remove();
         }
+        iter = subTitles.iterator();
+        while (iter.hasNext()) {
+            String str = iter.next();
+            if (str.split(" ")[0].equals("Person")) iter.remove();
+        }
+
         formSequence.removeAll(Collections.singleton(1));
         for (int i = 1; i <= DatabaseHelper.getForm2Count(); i++) {
             String s;
             if (i <= 9) s = "0" + i;
             else s = i + "";
             repeatedIndices.add(i, DatabaseHelper.ben_code + "_" + s);
+            subTitles.add(i, "Person " + s);
             formSequence.add(i, 1);
         }
 
         for (int i = 0; i < formSequence.size(); i++) {
-            Log.d("posxxx", formSequence.get(i) + " " + repeatedIndices);
+            Log.d("posxxx", formSequence.get(i) + " " + repeatedIndices.get(i) + " " + subTitles.get(i));
         }
-
     }
 }

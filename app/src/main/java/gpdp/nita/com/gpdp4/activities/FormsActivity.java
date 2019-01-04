@@ -87,7 +87,6 @@ public class FormsActivity extends AppCompatActivity implements OnValuesEnteredL
         mPrev = findViewById(R.id.btn_prev);
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setSubtitle("hello");
 
         drawerLayout = findViewById(R.id.drawer);
         navigationView = findViewById(R.id.nav_view);
@@ -162,6 +161,7 @@ public class FormsActivity extends AppCompatActivity implements OnValuesEnteredL
                 mFormsModels = formsModels;
                 adapter.notifyDataSetChanged();
                 linearLayoutManager.scrollToPosition(0);
+                getSupportActionBar().setSubtitle(formsViewModel.getSubTitle());
             }
         });
 

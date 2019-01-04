@@ -220,6 +220,7 @@ public class MainActivity extends AppCompatActivity {
 
         Constants.repeatedIndices.clear();
         Constants.formSequence.clear();
+        Constants.subTitles.clear();
 
         MyJson myJson = new MyJson(this).initLists();
         myJson.setTableAndColumnList();
@@ -230,16 +231,19 @@ public class MainActivity extends AppCompatActivity {
             if (loopList.get(i) == null) {
                 Constants.formSequence.add(i);
                 Constants.repeatedIndices.add("");
+                Constants.subTitles.add("");
             } else {
                 String[] tokens = loopList.get(i).split(" ");
                 if (tokens[0].equals("add")) {
 
                 } else {
                     ArrayList<Object> keys = MyJson.getSpinnerKeys(tokens[0], 0);
+                    ArrayList<String> vals = MyJson.getSpinnerList(tokens[0]);
                     int l = keys.size() - 1;
                     for (int j = 0; j < l; j++) {
                         Constants.repeatedIndices.add((keys.get(1 + j)).toString());
                         Constants.formSequence.add(i);
+                        Constants.subTitles.add(vals.get(1 + j));
                     }
                 }
             }
