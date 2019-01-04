@@ -3,8 +3,10 @@ package gpdp.nita.com.gpdp4.activities;
 import android.app.Activity;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -69,12 +71,19 @@ public class FormsActivity extends AppCompatActivity implements OnValuesEnteredL
     CircleImageView circleImageView;
     String benCode;
 
+    CircleImageView drawerDp;
+    TextView drawerSurveyorCode, drawerName;
+
+    SharedPreferences mAutoValuesSharedPref;
+
     Object[] answersList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_forms);
+
+        mAutoValuesSharedPref = this.getSharedPreferences(Constants.AUTO_VALUES, Context.MODE_PRIVATE);
 
         if (getIntent().getExtras() != null) {
             benCode = getIntent().getExtras().getString("ben_code");
@@ -97,6 +106,12 @@ public class FormsActivity extends AppCompatActivity implements OnValuesEnteredL
                 R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
+
+        drawerDp = navigationView.getHeaderView(0).findViewById(R.id.drawer_dp);
+        drawerName = navigationView.getHeaderView(0).findViewById(R.id.drawer_name);
+        drawerSurveyorCode = navigationView.getHeaderView(0).findViewById(R.id.drawer_surveyor_code);
+
+        setDrawerHeader();
 
         navigationView.setCheckedItem(R.id.form0);
         setTitle(navigationView.getCheckedItem().getTitle());
@@ -208,6 +223,18 @@ public class FormsActivity extends AppCompatActivity implements OnValuesEnteredL
             }
         });
 
+    }
+
+    private void setDrawerHeader() {
+        drawerSurveyorCode.setText(mAutoValuesSharedPref.getString("surveyor_id", ""));
+        drawerName.setText(mAutoValuesSharedPref.getString("surveyor_name", ""));
+        Glide
+                .with(this)
+                .setDefaultRequestOptions(new RequestOptions()
+                        .error(R.drawable.ic_default_avatar)
+                        .placeholder(R.drawable.ic_default_avatar))
+                .load(mAutoValuesSharedPref.getString("surveyor_img_url", ""))
+                .into(drawerDp);
     }
 
     private void benCodeError() {

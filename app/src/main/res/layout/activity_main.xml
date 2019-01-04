@@ -60,6 +60,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:text="TRWESADU43"
+        android:textStyle="bold"
         android:textColor="@color/colorPrimary"
         android:textSize="12sp"
         app:layout_constraintBottom_toBottomOf="@+id/surveyor_img"

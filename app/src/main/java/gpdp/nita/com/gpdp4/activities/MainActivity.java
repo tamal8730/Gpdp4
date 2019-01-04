@@ -95,12 +95,14 @@ public class MainActivity extends AppCompatActivity {
                 .split("#");
 
         mSharedPrefAuto.edit()
+                .putString("surveyor_name", tokens[1])
                 .putString("district", tokens[3])
                 .putString("subdivision", tokens[4])
                 .putString("block_name", tokens[5])
                 .putString("gp_vc_name", tokens[6])
                 .putString("surveyor_id", tokens[2])
                 .putString("gp_vc_type", tokens[7])
+                .putString("surveyor_img_url", tokens[0].trim())
                 .apply();
 
         new InternetCheckAsync(new InternetCheckAsync.Consumer() {
