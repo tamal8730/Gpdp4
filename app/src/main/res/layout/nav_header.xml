@@ -10,7 +10,7 @@
         android:id="@+id/drawer_dp"
         android:layout_width="60dp"
         android:layout_height="60dp"
-        android:layout_marginStart="8dp"
+        android:layout_marginStart="16dp"
         android:layout_marginBottom="16dp"
         android:src="@drawable/ic_default_avatar"
         app:layout_constraintBottom_toTopOf="@+id/drawer_name"

@@ -1,6 +1,8 @@
 package gpdp.nita.com.gpdp4.activities;
 
 import android.app.Activity;
+import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
@@ -9,6 +11,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
@@ -42,6 +46,7 @@ import gpdp.nita.com.gpdp4.adapters.FormsAdapter;
 import gpdp.nita.com.gpdp4.helpers.DatabaseHelper;
 import gpdp.nita.com.gpdp4.helpers.Upload;
 import gpdp.nita.com.gpdp4.helpers.Utility;
+import gpdp.nita.com.gpdp4.interfaces.OnFormsEndListener;
 import gpdp.nita.com.gpdp4.interfaces.OnValuesEnteredListener;
 import gpdp.nita.com.gpdp4.models.FormsModel;
 import gpdp.nita.com.gpdp4.repositories.Constants;
@@ -75,13 +80,19 @@ public class FormsActivity extends AppCompatActivity implements OnValuesEnteredL
     TextView drawerSurveyorCode, drawerName;
 
     SharedPreferences mAutoValuesSharedPref;
+    ProgressDialog progressDialog;
 
     Object[] answersList;
+
+    Dialog dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_forms);
+
+        dialog = new Dialog(FormsActivity.this);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
         mAutoValuesSharedPref = this.getSharedPreferences(Constants.AUTO_VALUES, Context.MODE_PRIVATE);
 
@@ -199,6 +210,38 @@ public class FormsActivity extends AppCompatActivity implements OnValuesEnteredL
             }
         });
 
+        formsViewModel.setOnFormsEndListener(new OnFormsEndListener() {
+            @Override
+            public void onSyncStarted() {
+                progressDialog = new ProgressDialog(FormsActivity.this);
+                progressDialog.setMessage("Please wait while we sync your data with our servers.");
+                progressDialog.show();
+            }
+
+            @Override
+            public void onFormsEnd(boolean isSuccessful) {
+                if (isSuccessful) {
+                    dialog.setContentView(R.layout.layout_success);
+                    dialog.findViewById(R.id.success_to_main).setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            toMain();
+                        }
+                    });
+                } else {
+                    dialog.setContentView(R.layout.layout_error);
+                    dialog.findViewById(R.id.error_tomain).setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            toMain();
+                        }
+                    });
+                }
+                dialog.show();
+                progressDialog.dismiss();
+            }
+        });
+
         initRecyclerView();
 
 
@@ -223,6 +266,12 @@ public class FormsActivity extends AppCompatActivity implements OnValuesEnteredL
             }
         });
 
+    }
+
+    private void toMain() {
+        Intent toMain = new Intent(this, MainActivity.class);
+        startActivity(toMain);
+        finish();
     }
 
     private void setDrawerHeader() {

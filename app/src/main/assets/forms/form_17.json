@@ -6,7 +6,7 @@
   "widgets": [
     {
       "column_name": "question_status",
-      "heading": "Answer yes/no",
+      "heading": "Answer to the above",
       "category": 0,
       "data_type": 1,
       "options": "",

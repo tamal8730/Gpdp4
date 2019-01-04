@@ -7,7 +7,7 @@
     {
       "column_name": "question_status",
       "category": 0,
-      "heading": "Whether required seeds are available as and when needed?",
+      "heading": "Answer to the above",
       "data_type": 1,
       "options": "",
       "dependencies": "1 1"

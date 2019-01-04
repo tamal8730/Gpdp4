@@ -23,9 +23,8 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:text="LOGOUT"
-        android:textColor="#8A333333"
+        android:textColor="#333333"
         android:textSize="@dimen/list_item"
-        android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@+id/menu_icon"
         app:layout_constraintStart_toEndOf="@+id/menu_icon"
         app:layout_constraintTop_toTopOf="@+id/menu_icon" />

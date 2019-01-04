@@ -1,6 +1,5 @@
 package gpdp.nita.com.gpdp4.helpers;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Environment;
@@ -32,14 +31,16 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
+import gpdp.nita.com.gpdp4.interfaces.OnFormsEndListener;
 import gpdp.nita.com.gpdp4.interfaces.OnJsonsDownloaded;
 import gpdp.nita.com.gpdp4.repositories.Constants;
 
 public class Upload {
 
     private int filesDownloaded;
-    private ProgressDialog progressDialog;
+    //    private ProgressDialog progressDialog;
     private OnJsonsDownloaded onJsonDownloadedListener;
+    private OnFormsEndListener onFormsEndListener;
     private Context context;
 
     public Upload(Context context) {
@@ -51,13 +52,16 @@ public class Upload {
         this.onJsonDownloadedListener = onJsonDownloadedListener;
     }
 
-    public void sendJSONArray(JSONArray payload, final String ben_code, String surveyorCode) {
+    public void setOnFormsEndListener(OnFormsEndListener onFormsEndListener) {
+        this.onFormsEndListener = onFormsEndListener;
+    }
 
-        saveJsonOnExternalStorage(ben_code + ".json", payload.toString(), "backups/" + surveyorCode);
+    public void sendJSONArray(final JSONArray payload, final String ben_code, final String surveyorCode) {
 
 //        progressDialog = new ProgressDialog(context);
-//        progressDialog.setMessage("Please Wait, We are sending your data on Server");
+//        progressDialog.setMessage("Please wait while we sync your data with our servers.");
 //        progressDialog.show();
+        onFormsEndListener.onSyncStarted();
 
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.POST, Constants.HTTP_URL, payload,
                 new Response.Listener<JSONArray>() {
@@ -65,23 +69,43 @@ public class Upload {
                     public void onResponse(JSONArray response) {
                         try {
                             String res = response.getString(0);
-                            Toast.makeText(context, ben_code + " synced", Toast.LENGTH_SHORT).show();
+                            sendSuccess();
 //                            progressDialog.dismiss();
 
                         } catch (JSONException e) {
                             e.printStackTrace();
-                            Toast.makeText(context, ben_code + " not synced", Toast.LENGTH_SHORT).show();
+
+                            saveJsonOnExternalStorage(ben_code + ".json",
+                                    payload.toString(),
+                                    "backups/" + surveyorCode);
+
+                            showError();
                         }
+//                        progressDialog.dismiss();
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
 //                        progressDialog.dismiss();
-                        Toast.makeText(context, error.toString(), Toast.LENGTH_LONG).show();
+
+                        saveJsonOnExternalStorage(ben_code + ".json",
+                                payload.toString(),
+                                "backups/" + surveyorCode);
+
+                        showError();
+
                     }
                 });
         Volley.newRequestQueue(context).add(jsonArrayRequest);
+    }
+
+    private void showError() {
+        onFormsEndListener.onFormsEnd(false);
+    }
+
+    private void sendSuccess() {
+        onFormsEndListener.onFormsEnd(true);
     }
 
 

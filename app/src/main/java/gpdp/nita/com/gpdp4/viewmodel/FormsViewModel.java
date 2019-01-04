@@ -16,6 +16,7 @@ import java.util.List;
 import gpdp.nita.com.gpdp4.helpers.DatabaseHelper;
 import gpdp.nita.com.gpdp4.helpers.MyJson;
 import gpdp.nita.com.gpdp4.helpers.Upload;
+import gpdp.nita.com.gpdp4.interfaces.OnFormsEndListener;
 import gpdp.nita.com.gpdp4.models.DateModel;
 import gpdp.nita.com.gpdp4.models.EditTextModel;
 import gpdp.nita.com.gpdp4.models.FormsModel;
@@ -33,6 +34,7 @@ public class FormsViewModel extends AndroidViewModel {
     private String benCode;
     private Repo mRepo;
     private MutableLiveData<ArrayList<Object>> oneRowLiveData;
+    private OnFormsEndListener onFormsEndListener;
 
     FormsViewModel(@NonNull Application application, String benCode) {
         super(application);
@@ -42,6 +44,10 @@ public class FormsViewModel extends AndroidViewModel {
         this.benCode = benCode;
         initDatabase(0, 0);
         loadForm(application, formNumber);
+    }
+
+    public void setOnFormsEndListener(OnFormsEndListener onFormsEndListener) {
+        this.onFormsEndListener = onFormsEndListener;
     }
 
     private void loadForm(Application application, int formNumber) {
@@ -136,7 +142,20 @@ public class FormsViewModel extends AndroidViewModel {
     private void onFormsEnd() {
         SharedPreferences mAutoValues = getApplication().getSharedPreferences(Constants.AUTO_VALUES, Context.MODE_PRIVATE);
         JSONArray payload = mRepo.onFormsEnd();
-        new Upload(getApplication()).sendJSONArray(
+        Upload upload = new Upload(getApplication());
+        upload.setOnFormsEndListener(new OnFormsEndListener() {
+            @Override
+            public void onSyncStarted() {
+                onFormsEndListener.onSyncStarted();
+            }
+
+            @Override
+            public void onFormsEnd(boolean isSuccessful) {
+                onFormsEndListener.onFormsEnd(isSuccessful);
+            }
+        });
+
+        upload.sendJSONArray(
                 payload,
                 DatabaseHelper.ben_code,
                 mAutoValues.getString("surveyor_id", "unknown"));

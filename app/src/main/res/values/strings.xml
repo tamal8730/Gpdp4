@@ -25,4 +25,5 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="details_of_family_members">Details of family members</string>
+    <string name="error_message">We could not sync your entry to our servers. A local backup has been created</string>
 </resources>

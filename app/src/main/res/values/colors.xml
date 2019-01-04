@@ -5,4 +5,6 @@
     <color name="colorAccent">#e98b38</color>
 
     <color name="black_overlay">#66000000</color>
+    <color name="alizarin">#e74c3c</color>
+    <color name="pomegranate">#c0392b</color>
 </resources>
