@@ -23,6 +23,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -59,6 +60,7 @@ public class FormsActivity extends AppCompatActivity implements OnValuesEnteredL
     FormsViewModel formsViewModel;
     Button mNext, mPrev;
     List<FormsModel> mFormsModels;
+    TextView subtitle;
 
     Toolbar toolbar;
     DrawerLayout drawerLayout;
@@ -86,6 +88,7 @@ public class FormsActivity extends AppCompatActivity implements OnValuesEnteredL
         mNext = findViewById(R.id.btn_next);
         mPrev = findViewById(R.id.btn_prev);
         toolbar = findViewById(R.id.toolbar);
+        subtitle = findViewById(R.id.txt_subtitle);
         setSupportActionBar(toolbar);
 
         drawerLayout = findViewById(R.id.drawer);
@@ -161,7 +164,14 @@ public class FormsActivity extends AppCompatActivity implements OnValuesEnteredL
                 mFormsModels = formsModels;
                 adapter.notifyDataSetChanged();
                 linearLayoutManager.scrollToPosition(0);
-                getSupportActionBar().setSubtitle(formsViewModel.getSubTitle());
+                String subT = formsViewModel.getSubTitle();
+                if (subT.trim().equals(""))
+                    subtitle.setVisibility(View.GONE);
+                else {
+                    subtitle.setVisibility(View.VISIBLE);
+                    subtitle.setText(subT);
+                }
+
             }
         });
 
