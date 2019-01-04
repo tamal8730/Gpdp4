@@ -69,13 +69,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             s.append(columnNames.get(i));
             switch (dataType.get(i)) {
                 case 0:
-                    s.append(" TEXT DEFAULT '0' NOT NULL,");
+                    s.append(" TEXT DEFAULT '' NOT NULL,");
                     break;
                 case 1:
                     s.append(" INTEGER DEFAULT 0 NOT NULL,");
                     break;
                 case 2:
-                    s.append(" DOUBLE DEFAULT 0 NOT NULL,");
+                    s.append(" DOUBLE DEFAULT 0.0 NOT NULL,");
                     break;
                 case 3:
                     s.append(" DATE DEFAULT '0000-00-00' NOT NULL,");

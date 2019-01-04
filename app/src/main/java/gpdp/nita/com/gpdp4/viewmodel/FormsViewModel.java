@@ -123,10 +123,10 @@ public class FormsViewModel extends AndroidViewModel {
     public boolean loadFormNumber(int form) {
         if (!Constants.formSequence.contains(form))
             return false;
-        formNumber = form;
+        formNumber = Constants.formSequence.indexOf(form);
         if (formNumber == 0)
             Constants.initFormList();
-        loadForm(formNumber, formNumber);
+        loadForm(form, formNumber);
         return true;
     }
 
