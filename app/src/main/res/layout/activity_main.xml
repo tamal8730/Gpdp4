@@ -60,6 +60,8 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:text="TRWESADU43"
+        android:textColor="@color/colorPrimary"
+        android:textSize="12sp"
         app:layout_constraintBottom_toBottomOf="@+id/surveyor_img"
         app:layout_constraintEnd_toEndOf="@+id/surveyor_name"
         app:layout_constraintHorizontal_bias="0.5"

@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:checkableBehavior="single">
+
+        <item
+            android:id="@+id/form0"
+            android:title="@string/basic_info" />
+
+        <item
+            android:id="@+id/form1"
+            android:title="@string/details_of_family_members" />
+
+        <item
+            android:id="@+id/form2"
+            android:title="End poverty" />
+
+        <item
+            android:id="@+id/form3"
+            android:title="Income generation" />
+
+        <item
+            android:id="@+id/form4"
+            android:title="SHG" />
+
+        <item
+            android:id="@+id/form5"
+            android:title="Loan status" />
+
+        <item
+            android:id="@+id/form6"
+            android:title="MGNREGA" />
+
+        <item
+            android:id="@+id/form7"
+            android:title="Skill development" />
+
+        <item
+            android:id="@+id/form8"
+            android:title="Zero hunger" />
+
+        <item
+            android:id="@+id/form9"
+            android:title="ICDS enrollment" />
+
+        <item
+            android:id="@+id/form10"
+            android:title="Food items" />
+
+        <item
+            android:id="@+id/form11"
+            android:title="Agricultural issues" />
+
+        <item
+            android:id="@+id/form12"
+            android:title="Agricultural issues extra" />
+
+        <item
+            android:id="@+id/form13"
+            android:title="Health and well-being" />
+
+        <item
+            android:id="@+id/form14"
+            android:title="Health status of last year" />
+
+        <item
+            android:id="@+id/form15"
+            android:title="Quality education" />
+
+        <item
+            android:id="@+id/form16"
+            android:title="Gender equality" />
+
+        <item
+            android:id="@+id/form17"
+            android:title="Women empowerment status" />
+
+        <item
+            android:id="@+id/form18"
+            android:title="Drinking water status" />
+
+        <item
+            android:id="@+id/form19"
+            android:title="Domestic water status" />
+
+        <item
+            android:id="@+id/form20"
+            android:title="Status of toilets" />
+
+    </group>
+
+</menu>

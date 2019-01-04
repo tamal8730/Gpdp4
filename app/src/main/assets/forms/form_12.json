@@ -29,7 +29,7 @@
       "dependencies": "1 1"
     },
     {
-      "column_name": "government_subsidy",
+      "column_name": "quantity_sufficient",
       "category": 0,
       "heading": "If government supplied then quantity is sufficient?",
       "data_type": 1,

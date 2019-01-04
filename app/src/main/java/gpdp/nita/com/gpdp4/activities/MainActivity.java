@@ -176,23 +176,26 @@ public class MainActivity extends AppCompatActivity {
         String surveyorId = mSharedPrefAuto.getString("surveyor_id", "unknown");
         String path = "gpdp/backups/" + surveyorId;
         File root = new File(Environment.getExternalStorageDirectory(), path);
-        for (String fileName : root.list()) {
-            StringBuilder text = new StringBuilder();
-            try {
-                BufferedReader br = new BufferedReader(new FileReader(root + "/" + fileName));
-                String line;
-                while ((line = br.readLine()) != null) {
-                    text.append(line);
-                    text.append('\n');
+        if (root.exists()) {
+            for (String fileName : root.list()) {
+                StringBuilder text = new StringBuilder();
+                try {
+                    BufferedReader br = new BufferedReader(new FileReader(root + "/" + fileName));
+                    String line;
+                    while ((line = br.readLine()) != null) {
+                        text.append(line);
+                        text.append('\n');
+                    }
+                    br.close();
+                } catch (IOException e) {
+                    Toast.makeText(this, "Error reading files", Toast.LENGTH_SHORT).show();
                 }
-                br.close();
-            } catch (IOException e) {
-                Toast.makeText(this, "Error reading files", Toast.LENGTH_SHORT).show();
+                JSONArray payload = new JSONArray();
+                payload.put(text);
+                upload.sendJSONArray(payload, DatabaseHelper.ben_code, surveyorId);
             }
-            JSONArray payload = new JSONArray();
-            payload.put(text);
-            upload.sendJSONArray(payload, DatabaseHelper.ben_code, surveyorId);
         }
+
     }
 
     private void toForm() {
@@ -222,8 +225,6 @@ public class MainActivity extends AppCompatActivity {
         myJson.setTableAndColumnList();
         ArrayList<String> loopList = myJson.getLoopList();
         Constants.looplist = loopList;
-        int c = 0;
-
 
         for (int i = 0; i < loopList.size(); i++) {
             if (loopList.get(i) == null) {
@@ -232,17 +233,16 @@ public class MainActivity extends AppCompatActivity {
             } else {
                 String[] tokens = loopList.get(i).split(" ");
                 if (tokens[0].equals("add")) {
+
                 } else {
                     ArrayList<Object> keys = MyJson.getSpinnerKeys(tokens[0], 0);
                     int l = keys.size() - 1;
                     for (int j = 0; j < l; j++) {
                         Constants.repeatedIndices.add((keys.get(1 + j)).toString());
                         Constants.formSequence.add(i);
-                        c++;
                     }
                 }
             }
-            c++;
         }
         for (int i = 0; i < Constants.formSequence.size(); i++) {
             Log.d("posxx", Constants.formSequence.get(i) + " " + Constants.repeatedIndices.get(i));

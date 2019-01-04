@@ -11,10 +11,16 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.NavigationView;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -54,6 +60,10 @@ public class FormsActivity extends AppCompatActivity implements OnValuesEnteredL
     Button mNext, mPrev;
     List<FormsModel> mFormsModels;
 
+    Toolbar toolbar;
+    DrawerLayout drawerLayout;
+    NavigationView navigationView;
+
     CircleImageView circleImageView;
     String benCode;
 
@@ -67,8 +77,7 @@ public class FormsActivity extends AppCompatActivity implements OnValuesEnteredL
         if (getIntent().getExtras() != null) {
             benCode = getIntent().getExtras().getString("ben_code");
             DatabaseHelper.ben_code = benCode;
-        }
-        else {
+        } else {
             benCodeError();
         }
         FormsViewModel.formNumber = 0;
@@ -76,6 +85,71 @@ public class FormsActivity extends AppCompatActivity implements OnValuesEnteredL
         recyclerView = findViewById(R.id.recycler);
         mNext = findViewById(R.id.btn_next);
         mPrev = findViewById(R.id.btn_prev);
+        toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setSubtitle("hello");
+
+        drawerLayout = findViewById(R.id.drawer);
+        navigationView = findViewById(R.id.nav_view);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar,
+                R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawerLayout.addDrawerListener(toggle);
+        toggle.syncState();
+
+        navigationView.setCheckedItem(R.id.form0);
+        setTitle(navigationView.getCheckedItem().getTitle());
+
+        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+                int id = menuItem.getItemId();
+                if (id == R.id.form0)
+                    return selectNavItem(0, menuItem);
+                else if (id == R.id.form1)
+                    return selectNavItem(1, menuItem);
+                else if (id == R.id.form2)
+                    return selectNavItem(2, menuItem);
+                else if (id == R.id.form3)
+                    return selectNavItem(3, menuItem);
+                else if (id == R.id.form4)
+                    return selectNavItem(4, menuItem);
+                else if (id == R.id.form5)
+                    return selectNavItem(5, menuItem);
+                else if (id == R.id.form6)
+                    return selectNavItem(6, menuItem);
+                else if (id == R.id.form7)
+                    return selectNavItem(7, menuItem);
+                else if (id == R.id.form8)
+                    return selectNavItem(8, menuItem);
+                else if (id == R.id.form9)
+                    return selectNavItem(9, menuItem);
+                else if (id == R.id.form10)
+                    return selectNavItem(10, menuItem);
+                else if (id == R.id.form11)
+                    return selectNavItem(11, menuItem);
+                else if (id == R.id.form12)
+                    return selectNavItem(12, menuItem);
+                else if (id == R.id.form13)
+                    return selectNavItem(13, menuItem);
+                else if (id == R.id.form14)
+                    return selectNavItem(14, menuItem);
+                else if (id == R.id.form15)
+                    return selectNavItem(15, menuItem);
+                else if (id == R.id.form16)
+                    return selectNavItem(16, menuItem);
+                else if (id == R.id.form17)
+                    return selectNavItem(17, menuItem);
+                else if (id == R.id.form18)
+                    return selectNavItem(18, menuItem);
+                else if (id == R.id.form19)
+                    return selectNavItem(19, menuItem);
+                else if (id == R.id.form20)
+                    return selectNavItem(20, menuItem);
+
+                return false;
+            }
+        });
+
 
         formsViewModel = ViewModelProviders.of(this, new MyCustomViewModelFactory(this.getApplication(), benCode))
                 .get(FormsViewModel.class);
@@ -107,14 +181,20 @@ public class FormsActivity extends AppCompatActivity implements OnValuesEnteredL
             @Override
             public void onClick(View v) {
                 formsViewModel.insert(answersList);
-                formsViewModel.loadNext();
+                int i = formsViewModel.loadNext();
+                if (i != -1)
+                    navigationView.setCheckedItem(getId(i));
+                setTitle(navigationView.getCheckedItem().getTitle());
             }
         });
 
         mPrev.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                formsViewModel.loadPrev();
+                int i = formsViewModel.loadPrev();
+                if (i != -1)
+                    navigationView.setCheckedItem(getId(i));
+                setTitle(navigationView.getCheckedItem().getTitle());
             }
         });
 
@@ -122,6 +202,75 @@ public class FormsActivity extends AppCompatActivity implements OnValuesEnteredL
 
     private void benCodeError() {
 
+    }
+
+    private int getId(int pos) {
+        switch (pos) {
+            case 0:
+                return R.id.form0;
+            case 1:
+                return R.id.form1;
+
+            case 2:
+                return R.id.form2;
+            case 3:
+                return R.id.form3;
+
+            case 4:
+                return R.id.form4;
+            case 5:
+                return R.id.form5;
+
+            case 6:
+                return R.id.form6;
+            case 7:
+                return R.id.form7;
+
+            case 8:
+                return R.id.form8;
+            case 9:
+                return R.id.form9;
+
+            case 10:
+                return R.id.form10;
+            case 11:
+                return R.id.form11;
+
+            case 12:
+                return R.id.form12;
+            case 13:
+                return R.id.form13;
+
+            case 14:
+                return R.id.form14;
+            case 15:
+                return R.id.form15;
+
+            case 16:
+                return R.id.form16;
+            case 17:
+                return R.id.form17;
+
+            case 18:
+                return R.id.form18;
+            case 19:
+                return R.id.form19;
+
+            case 20:
+                return R.id.form20;
+
+            default:
+                return -1;
+        }
+    }
+
+    private boolean selectNavItem(int index, MenuItem menuItem) {
+        boolean formPresent = formsViewModel.loadFormNumber(index);
+        if (formPresent) {
+            drawerLayout.closeDrawer(GravityCompat.START);
+            setTitle(menuItem.getTitle());
+            return true;
+        } else return false;
     }
 
     private void initRecyclerView() {
@@ -292,5 +441,14 @@ public class FormsActivity extends AppCompatActivity implements OnValuesEnteredL
                         .skipMemoryCache(true))
                 .load(thumbnail)
                 .into(circleImageView);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            drawerLayout.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
     }
 }

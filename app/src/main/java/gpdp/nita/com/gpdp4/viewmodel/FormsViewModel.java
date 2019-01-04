@@ -106,16 +106,28 @@ public class FormsViewModel extends AndroidViewModel {
     }
 
 
-    public void loadNext() {
+    public int loadNext() {
         if (formNumber >= Constants.formSequence.size() - 1) {
             onFormsEnd();
+            return -1;
         } else {
             formNumber++;
             if (formNumber == 1) {
                 Constants.initFormList();
             }
             loadForm(Constants.formSequence.get(formNumber), formNumber);
+            return Constants.formSequence.get(formNumber);
         }
+    }
+
+    public boolean loadFormNumber(int form) {
+        if (!Constants.formSequence.contains(form))
+            return false;
+        formNumber = form;
+        if (formNumber == 0)
+            Constants.initFormList();
+        loadForm(formNumber, formNumber);
+        return true;
     }
 
     private void onFormsEnd() {
@@ -165,11 +177,12 @@ public class FormsViewModel extends AndroidViewModel {
         }
     }
 
-    public void loadPrev() {
+    public int loadPrev() {
         if (formNumber != 0) {
             formNumber--;
             loadForm(Constants.formSequence.get(formNumber), formNumber);
-        }
+            return Constants.formSequence.get(formNumber);
+        } else return -1;
     }
 
 

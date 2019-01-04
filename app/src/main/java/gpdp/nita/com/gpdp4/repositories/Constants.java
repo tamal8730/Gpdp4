@@ -60,14 +60,34 @@ public class Constants {
 
             "form_10_food_items",
 
+            "form_11_source_irrigation_water",
+            "form_11_12_14_18_source",
+            "form_12_question_set",
+
+            "form_13_delivery_place",
+            "form_13_reason_fr_delivery_in_home",
+
+            "form_14_diseases",
+            "form_14_type_of_treatment",
+
+            "form_16_question_set",
+
+            "form_17_question_set",
+            "form_17_reason",
+
+            "form_18_source_of_water",
+            "form_18_reason_for_poor_quality_of_water",
+            "form_18_reason_of_water_scarcity"
+
     };
-    static final String IMAGE_UPLOAD_PATH = "http://nakshakantha.com/beneficiary_images/";
-    private static final int NUMBER_OF_FORMS = 11;
+    public static final String IMAGE_UPLOAD_PATH = "http://nakshakantha.com/beneficiary_images/";
     static int NUMBER_DEFAULT = 0;
-    //public static ArrayList<Integer> formNumbers = new ArrayList<>();
     public static ArrayList<String> repeatedIndices = new ArrayList<>();
+    public static ArrayList<String> formNames = new ArrayList<>();
+
 
     public static void initFormList() {
+
         Iterator<String> iter = repeatedIndices.iterator();
         while (iter.hasNext()) {
             String str = iter.next();
@@ -83,7 +103,8 @@ public class Constants {
         }
 
         for (int i = 0; i < formSequence.size(); i++) {
-            Log.d("posxxx", formSequence.get(i) + " " + repeatedIndices.get(i));
+            Log.d("posxxx", formSequence.get(i) + " " + repeatedIndices);
         }
+
     }
 }

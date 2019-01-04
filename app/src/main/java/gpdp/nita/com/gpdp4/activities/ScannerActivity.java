@@ -20,6 +20,7 @@ public class ScannerActivity extends AppCompatActivity implements ZXingScannerVi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mScannerView = new ZXingScannerView(this);
+        setTitle("Scan");
         setContentView(mScannerView);
 
     }
