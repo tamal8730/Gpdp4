@@ -29,7 +29,7 @@
             style="?android:attr/borderlessButtonStyle"
             android:layout_width="0dp"
             android:layout_height="48dp"
-            android:background="@color/colorPrimaryDark"
+            android:background="@color/colorPrimary"
             android:text="@string/next"
             android:textColor="#ffffff"
             android:textSize="@dimen/button_text"

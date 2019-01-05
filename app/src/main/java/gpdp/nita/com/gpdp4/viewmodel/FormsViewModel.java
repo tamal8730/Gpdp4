@@ -139,7 +139,7 @@ public class FormsViewModel extends AndroidViewModel {
         return true;
     }
 
-    private void onFormsEnd() {
+    public void onFormsEnd() {
         SharedPreferences mAutoValues = getApplication().getSharedPreferences(Constants.AUTO_VALUES, Context.MODE_PRIVATE);
         JSONArray payload = mRepo.onFormsEnd();
         Upload upload = new Upload(getApplication());

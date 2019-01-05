@@ -26,6 +26,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -237,8 +239,12 @@ public class FormsActivity extends AppCompatActivity implements OnValuesEnteredL
                         }
                     });
                 }
-                dialog.show();
-                progressDialog.dismiss();
+                if (!dialog.isShowing()) {
+                    dialog.show();
+                }
+
+                if (progressDialog.isShowing())
+                    progressDialog.dismiss();
             }
         });
 
@@ -270,6 +276,7 @@ public class FormsActivity extends AppCompatActivity implements OnValuesEnteredL
 
     private void toMain() {
         Intent toMain = new Intent(this, MainActivity.class);
+        toMain.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(toMain);
         finish();
     }
@@ -288,6 +295,29 @@ public class FormsActivity extends AppCompatActivity implements OnValuesEnteredL
 
     private void benCodeError() {
 
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.options_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.opt_profile) {
+            toMain();
+            return true;
+        } else if (id == R.id.opt_sync) {
+            sync();
+            return true;
+        } else return false;
+    }
+
+    private void sync() {
+        formsViewModel.onFormsEnd();
     }
 
     private int getId(int pos) {

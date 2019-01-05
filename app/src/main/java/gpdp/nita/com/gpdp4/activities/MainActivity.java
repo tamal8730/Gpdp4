@@ -1,8 +1,11 @@
 package gpdp.nita.com.gpdp4.activities;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
@@ -10,6 +13,10 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.View;
+import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -48,6 +55,8 @@ public class MainActivity extends AppCompatActivity {
     LinearLayoutManager linearLayoutManager;
     Upload upload;
 
+    Dialog dialog;
+
     ArrayList<MainMenuModel> models;
 
     @Override
@@ -55,6 +64,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         setTitle("Surveyor profile");
+
+        dialog = new Dialog(this);
 
         recyclerView = findViewById(R.id.main_menu_recycler);
         models = new ArrayList<>();
@@ -166,7 +177,37 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void inputBencode() {
-        toScanner();
+
+        dialog.setContentView(R.layout.layout_ben_input);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialog.show();
+        ImageView qr = dialog.findViewById(R.id.qr_ben_code);
+        ImageButton go = dialog.findViewById(R.id.btn_go_ben);
+        final EditText editText = dialog.findViewById(R.id.edt_ben_code);
+
+        qr.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                toScanner();
+                dialog.dismiss();
+            }
+        });
+
+        go.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String benCode = editText.getText().toString().trim();
+                if (!benCode.equals(""))
+                    toMain(benCode);
+            }
+        });
+    }
+
+    private void toMain(String benCode) {
+        dialog.dismiss();
+        Intent toForms = new Intent(this, FormsActivity.class);
+        toForms.putExtra("ben_code", benCode);
+        startActivity(toForms);
     }
 
     private void toScanner() {
