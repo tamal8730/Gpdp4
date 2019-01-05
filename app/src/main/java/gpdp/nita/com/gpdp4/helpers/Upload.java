@@ -100,6 +100,30 @@ public class Upload {
         Volley.newRequestQueue(context).add(jsonArrayRequest);
     }
 
+    public JsonArrayRequest sendJSONArray(JSONArray payload) {
+
+        return new JsonArrayRequest(Request.Method.POST, Constants.HTTP_URL, payload,
+                new Response.Listener<JSONArray>() {
+                    @Override
+                    public void onResponse(JSONArray response) {
+                        try {
+                            String res = response.getString(0);
+                            onFormsEndListener.onFormsEnd(true);
+
+                        } catch (JSONException e) {
+                            onFormsEndListener.onFormsEnd(false);
+                            e.printStackTrace();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        onFormsEndListener.onFormsEnd(false);
+                    }
+                });
+    }
+
     private void showError() {
         onFormsEndListener.onFormsEnd(false);
     }

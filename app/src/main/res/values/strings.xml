@@ -26,4 +26,8 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="details_of_family_members">Details of family members</string>
     <string name="error_message">We could not sync your entry to our servers. A local backup has been created</string>
+    <string name="sync_failed_multiple_files">We could not sync your entries to our servers. Please try again later.</string>
+    <string name="sync_successful_multiple_files">All entries synced successfully.</string>
+    <string name="dismiss">DISMISS</string>
+    <string name="try_again">TRY AGAIN</string>
 </resources>

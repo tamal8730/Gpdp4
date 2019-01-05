@@ -20,7 +20,7 @@
             android:layout_marginTop="32dp"
             android:layout_marginEnd="16dp"
             android:layout_marginBottom="16dp"
-            android:text="Sync failed"
+            android:text="Partially synced"
             android:textColor="#8AFFFFFF"
             android:textSize="24sp"
             android:textStyle="bold"
@@ -37,12 +37,12 @@
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="16dp"
             android:src="@drawable/ic_error_black_24dp"
-            app:layout_constraintBottom_toTopOf="@+id/error_message"
+            app:layout_constraintBottom_toTopOf="@+id/txt_message_error"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
         <TextView
-            android:id="@+id/error_message"
+            android:id="@+id/txt_message_error"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
@@ -52,12 +52,12 @@
             android:text="@string/error_message"
             android:textColor="#8AFFFFFF"
             android:textSize="@dimen/paragraph"
-            app:layout_constraintBottom_toTopOf="@+id/error_tomain"
+            app:layout_constraintBottom_toTopOf="@+id/btn_error_partial"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
         <Button
-            android:id="@+id/error_tomain"
+            android:id="@+id/btn_error_partial"
             style="?attr/borderlessButtonStyle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"

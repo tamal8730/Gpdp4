@@ -1,6 +1,7 @@
 package gpdp.nita.com.gpdp4.activities;
 
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -14,18 +15,21 @@ import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -36,10 +40,10 @@ import java.util.ArrayList;
 import de.hdodenhof.circleimageview.CircleImageView;
 import gpdp.nita.com.gpdp4.R;
 import gpdp.nita.com.gpdp4.adapters.MenuAdapter;
-import gpdp.nita.com.gpdp4.helpers.DatabaseHelper;
 import gpdp.nita.com.gpdp4.helpers.InternetCheckAsync;
 import gpdp.nita.com.gpdp4.helpers.MyJson;
 import gpdp.nita.com.gpdp4.helpers.Upload;
+import gpdp.nita.com.gpdp4.interfaces.OnFormsEndListener;
 import gpdp.nita.com.gpdp4.interfaces.OnJsonsDownloaded;
 import gpdp.nita.com.gpdp4.interfaces.OnMenuItemSelected;
 import gpdp.nita.com.gpdp4.models.MainMenuModel;
@@ -56,8 +60,13 @@ public class MainActivity extends AppCompatActivity {
     Upload upload;
 
     Dialog dialog;
+    ProgressDialog progressDialog;
 
     ArrayList<MainMenuModel> models;
+
+    RequestQueue requestQueue;
+
+    int failedCount = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +75,7 @@ public class MainActivity extends AppCompatActivity {
         setTitle("Surveyor profile");
 
         dialog = new Dialog(this);
+        progressDialog = new ProgressDialog(this);
 
         recyclerView = findViewById(R.id.main_menu_recycler);
         models = new ArrayList<>();
@@ -90,6 +100,18 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onError(String errorMessage) {
                 Log.d("posxx", errorMessage);
+            }
+        });
+
+        upload.setOnFormsEndListener(new OnFormsEndListener() {
+            @Override
+            public void onSyncStarted() {
+
+            }
+
+            @Override
+            public void onFormsEnd(boolean isSuccessful) {
+                if (!isSuccessful) onError();
             }
         });
 
@@ -176,6 +198,10 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
     }
 
+    private void onError() {
+        failedCount++;
+    }
+
     private void inputBencode() {
 
         dialog.setContentView(R.layout.layout_ben_input);
@@ -216,10 +242,22 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void syncFromExternalStorage() {
+
+        final int[] c = {0};
+        failedCount = 0;
+
+        progressDialog.setMessage("Please wait while we sync your data with our servers.");
+        progressDialog.show();
+
         String surveyorId = mSharedPrefAuto.getString("surveyor_id", "unknown");
         String path = "gpdp/backups/" + surveyorId;
-        File root = new File(Environment.getExternalStorageDirectory(), path);
+        final File root = new File(Environment.getExternalStorageDirectory(), path);
         if (root.exists()) {
+
+            final int numberOfFiles = root.list().length;
+
+            requestQueue = Volley.newRequestQueue(this);
+
             for (String fileName : root.list()) {
                 StringBuilder text = new StringBuilder();
                 try {
@@ -233,12 +271,66 @@ public class MainActivity extends AppCompatActivity {
                 } catch (IOException e) {
                     Toast.makeText(this, "Error reading files", Toast.LENGTH_SHORT).show();
                 }
-                JSONArray payload = new JSONArray();
-                payload.put(text);
-                upload.sendJSONArray(payload, DatabaseHelper.ben_code, surveyorId);
+                JSONArray payload = null;
+                try {
+                    payload = new JSONArray(text.toString());
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                requestQueue.add(upload.sendJSONArray(payload));
             }
+            requestQueue.addRequestFinishedListener(new RequestQueue.RequestFinishedListener<JSONArray>() {
+                @Override
+                public void onRequestFinished(Request<JSONArray> request) {
+                    c[0]++;
+                    if (c[0] == numberOfFiles) {
+                        onSuccess(c[0]);
+                    }
+                }
+            });
         }
 
+
+    }
+
+    private void onSuccess(final int total) {
+
+        final Dialog dialog = new Dialog(this);
+        Button button;
+
+        if (failedCount == 0) {
+            dialog.setContentView(R.layout.layout_success);
+            button = dialog.findViewById(R.id.success_to_main);
+            TextView message = dialog.findViewById(R.id.success_message);
+            message.setText(R.string.sync_successful_multiple_files);
+            button.setText(R.string.dismiss);
+        } else if (failedCount == total) {
+            dialog.setContentView(R.layout.layout_error);
+            button = dialog.findViewById(R.id.error_tomain);
+            TextView message = dialog.findViewById(R.id.error_message);
+            message.setText(R.string.sync_failed_multiple_files);
+            button.setText(R.string.try_again);
+        } else {
+            dialog.setContentView(R.layout.layout_sync_all_dialog);
+            button = dialog.findViewById(R.id.btn_error_partial);
+            button.setText(R.string.try_again);
+            TextView message = dialog.findViewById(R.id.txt_message_error);
+            message.setText((total - failedCount) + " entries synced successfully. " + failedCount + " failed. Try again");
+        }
+
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (failedCount == 0) {
+                } else {
+                    syncFromExternalStorage();
+                }
+                dialog.dismiss();
+            }
+        });
+        progressDialog.dismiss();
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialog.show();
     }
 
     private void toForm() {
