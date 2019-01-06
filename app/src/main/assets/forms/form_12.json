@@ -18,7 +18,7 @@
       "heading": "Source",
       "data_type": 0,
       "options": "form_11_12_14_18_source",
-      "dependencies": "none"
+      "dependencies": "2:-1:2"
     },
     {
       "column_name": "government_subsidy",
@@ -26,7 +26,7 @@
       "heading": "Whether getting any government subsidy?",
       "data_type": 1,
       "options": "",
-      "dependencies": "0:-1:1:1:1:-1"
+      "dependencies": "none"
     },
     {
       "column_name": "quantity_sufficient",

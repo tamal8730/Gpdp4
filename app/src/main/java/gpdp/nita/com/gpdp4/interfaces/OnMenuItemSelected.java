@@ -6,4 +6,6 @@ public interface OnMenuItemSelected {
     void onAddBen();
 
     void onSync();
+
+    void onViewAll();
 }

@@ -90,7 +90,7 @@
       "category": 2,
       "data_type": 0,
       "options": "form_13_delivery_place",
-      "dependencies": "none"
+      "dependencies": "2:-1:2"
     },
     {
       "column_name": "get_transport_cost",
@@ -103,8 +103,8 @@
     {
       "column_name": "reason_for_home",
       "heading": "If delivery performed in home, then why",
-      "category": 0,
-      "data_type": 1,
+      "category": 2,
+      "data_type": 0,
       "options": "form_13_reason_fr_delivery_in_home",
       "dependencies": "none"
     }

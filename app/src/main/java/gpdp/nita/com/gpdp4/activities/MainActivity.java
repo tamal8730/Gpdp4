@@ -189,6 +189,11 @@ public class MainActivity extends AppCompatActivity {
             public void onSync() {
                 syncFromExternalStorage();
             }
+
+            @Override
+            public void onViewAll() {
+                toBenList();
+            }
         });
 
         linearLayoutManager = new LinearLayoutManager(this);
@@ -196,6 +201,11 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setHasFixedSize(true);
         recyclerView.setAdapter(adapter);
+    }
+
+    private void toBenList() {
+        Intent toBenList = new Intent(this, BenListActivity.class);
+        startActivity(toBenList);
     }
 
     private void onError() {

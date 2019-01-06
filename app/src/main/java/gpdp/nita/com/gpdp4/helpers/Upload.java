@@ -249,7 +249,6 @@ public class Upload {
                     public void onResponse(JSONObject response) {
                         try {
                             int error = response.getInt("error");
-                            Log.d("filexx", filename.split(" ")[0] + " " + error);
                             if (error == 1) {
                                 String s = response.getString("data");
                                 saveJsonOnExternalStorage(filename.split(" ")[0] + ".json", s, "data");
@@ -312,11 +311,12 @@ public class Upload {
                 }
             }
             File gpxfile = new File(root, sFileName);
+
             FileWriter writer = new FileWriter(gpxfile);
+
             writer.append(sBody);
             writer.flush();
             writer.close();
-            Toast.makeText(context, "Saved", Toast.LENGTH_SHORT).show();
         } catch (IOException e) {
             e.printStackTrace();
         }

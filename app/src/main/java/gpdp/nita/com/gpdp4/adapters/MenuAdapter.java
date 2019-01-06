@@ -74,7 +74,7 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     }
 
     private void onClickViewAll() {
-
+        onMenuItemSelected.onViewAll();
     }
 
     private void onClickAddBen() {

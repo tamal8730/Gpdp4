@@ -9,18 +9,24 @@ import java.util.Iterator;
 import gpdp.nita.com.gpdp4.helpers.DatabaseHelper;
 
 public class Constants {
+
+    public static final String BEN_NAMES_SHARED_PREFS = "gpdp.nita.com.gpdp.ben_names";
+    public static final String DATE_DEFAULT = "0000-00-00";
+    //nakshakantha.com
+
     public static final String DATABASE_NAME = "gpdp.db";
     public static final String[] TABLES_TO_BE_DOWNLOADED_AFTER_LOGIN = {
             "form_0_ward panchayat_name gp_vc_name", //request form_0_ward, send key panchayat_id with values from gp_vc_name row
     };
-    static final String DATE_DEFAULT = "0";
-    public static final String LOGIN_VALIDATOR = "http://nakshakantha.com/apis/serveyor_validator.php";
+    public static final String STRING_DEFAULT = "x";
+    public static final int YES_NO = -1;
     public static final String REMEMBER_LOGIN = "gpdp.nita.com.gpdp.remember_login";
     public static final String AUTO_VALUES = "gpdp.nita.com.gpdp.auto";
-    public static final String UPDATE_TABLES = "http://nakshakantha.com/apis/updates.php";
-    public static final String HTTP_URL = "http://nakshakantha.com/apis/sync.php";
-    public static final String UPLOAD_URL = "http://nakshakantha.com/apis/beneficiary_image_uploader.php";
-    static final String STRING_DEFAULT = "0";
+    private static final String BASE_URL = "164.100.127.82";
+    public static final String LOGIN_VALIDATOR = "http://" + BASE_URL + "/apis/serveyor_validator.php";
+    public static final String UPDATE_TABLES = "http://" + BASE_URL + "/apis/updates.php";
+    public static final String HTTP_URL = "http://" + BASE_URL + "/apis/sync.php";
+    public static final String UPLOAD_URL = "http://" + BASE_URL + "/apis/beneficiary_image_uploader.php";
     public static final String KEY_LOGGED_IN = "logged_in";
     public static final String KEY_SERVER_RESPONSE = "server_response";
     public static ArrayList<String> looplist;
@@ -112,8 +118,8 @@ public class Constants {
             "form_25_incident"
 
     };
-    static final String IMAGE_UPLOAD_PATH = "http://nakshakantha.com/beneficiary_images/";
-    static int NUMBER_DEFAULT = 0;
+    static final String IMAGE_UPLOAD_PATH = "http://" + BASE_URL + "/beneficiary_images/";
+    public static int NUMBER_DEFAULT = 0;
     public static ArrayList<String> repeatedIndices = new ArrayList<>();
     public static ArrayList<String> subTitles = new ArrayList<>();
 

@@ -85,6 +85,15 @@ public class FormsViewModel extends AndroidViewModel {
         //oneRowLiveData.postValue(oneRow);
     }
 
+    public Object[] onViewRemoved(int position, int category) {
+        if (category == 0) return mRepo.onViewRemoved(Constants.YES_NO, position);
+        else if (category == 1) {
+            return mRepo.onEditTextRemoved(position);
+        } else if (category == 2) return mRepo.onViewRemoved(Constants.NUMBER_DEFAULT, position);
+        else if (category == 3) return mRepo.onViewRemoved(Constants.DATE_DEFAULT, position);
+        else return mRepo.getAnswersList();
+    }
+
     public Object[] onTyping(String text, int position) {
         return mRepo.onTyping(text, position);
     }
@@ -221,16 +230,17 @@ public class FormsViewModel extends AndroidViewModel {
 
             FormsModel formsModel = formsModels.get(i);
             Object run;
-//            if (form0 != null)
-//                run = form0.run(i);
-
             run = oneRow.get(i);
 
             if (formsModel instanceof EditTextModel) {
                 if (run == null) ((EditTextModel) formsModel).setTextInEditText("");
-                else ((EditTextModel) formsModel).setTextInEditText(run.toString().trim());
+                else if (run.toString().equals(Constants.STRING_DEFAULT) || run.toString().equals(String.valueOf(Constants.YES_NO))) {
+                    ((EditTextModel) formsModel).setTextInEditText("");
+                } else ((EditTextModel) formsModel).setTextInEditText(run.toString().trim());
             } else if (formsModel instanceof DateModel) {
-                if (run == null) ((DateModel) formsModel).setDate("Date");
+                if (run == null) ((DateModel) formsModel).setDate("Tap to pick a date");
+                else if (run.toString().equals(Constants.DATE_DEFAULT))
+                    ((DateModel) formsModel).setDate("Tap to pick a date");
                 else ((DateModel) formsModel).setDate(run.toString().trim());
 
             } else if (formsModel instanceof RadioGroupModel) {
@@ -238,19 +248,30 @@ public class FormsViewModel extends AndroidViewModel {
                 RadioGroupModel radioGroupModel = (RadioGroupModel) formsModel;
 
                 int id = 0;
+
                 if (run != null && !run.toString().trim().equals("")) {
                     id = Integer.parseInt(run.toString().trim());
+                } else if (run == null) {
+                    id = -1;
+                } else if (run.toString().equals(String.valueOf(Constants.YES_NO))) {
+                    id = -1;
                 }
-                radioGroupModel.setId(id == 0 ? R.id.rb1_rbvh : R.id.rb0_rbvh);
+                if (id == -1) {
+                    radioGroupModel.setId(-1);
+                } else {
+                    radioGroupModel.setId(id == 0 ? R.id.rb1_rbvh : R.id.rb0_rbvh);
+                    onViewModifiedListener.onViewModified(i, id == 0 ? R.id.rb1_rbvh : R.id.rb0_rbvh, radioGroupModel.getTokens());
+                }
 
-                onViewModifiedListener.onViewModified(i, id == 0 ? R.id.rb1_rbvh : R.id.rb0_rbvh, radioGroupModel.getTokens());
 
             } else if (formsModel instanceof SpinnerModel) {
 
+                SpinnerModel spinnerModel = (SpinnerModel) formsModel;
+
                 int pos = 0;
                 if (run != null) {
-                    ArrayList<String> list = ((SpinnerModel) formsModel).getMenu();
-                    ArrayList<Object> keys = ((SpinnerModel) formsModel).getKeys();
+                    ArrayList<String> list = spinnerModel.getMenu();
+                    ArrayList<Object> keys = spinnerModel.getKeys();
                     for (int j = 0; j < list.size(); j++) {
                         if (run.toString().equals(keys.get(j).toString())) {
                             pos = j;
@@ -258,7 +279,7 @@ public class FormsViewModel extends AndroidViewModel {
                         }
                     }
 
-                    //onDependentSpinnerItemSelected.onDependentSpinnerItemSelected(i,);
+                    onDependentSpinnerItemSelected.onDependentSpinnerItemSelected(i, pos, spinnerModel.getTokens());
                 }
                 ((SpinnerModel) formsModel).setSelection(pos);
             } else if (formsModel instanceof ProfilePicModel) {
@@ -273,4 +294,5 @@ public class FormsViewModel extends AndroidViewModel {
     public void setOnDependentSpinnerItemSelected(OnDependentSpinnerItemSelected onDependentSpinnerItemSelected) {
         this.onDependentSpinnerItemSelected = onDependentSpinnerItemSelected;
     }
+
 }

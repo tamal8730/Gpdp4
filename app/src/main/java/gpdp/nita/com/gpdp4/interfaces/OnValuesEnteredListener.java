@@ -5,7 +5,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public interface OnValuesEnteredListener {
     void onDateSet(String date, int position);
 
-    void onViewRemoved(int position, int priority, String[] show, String[] hide);
+    void onViewRemoved(int position, int category);
 
     void onTyping(String text, int position);
 

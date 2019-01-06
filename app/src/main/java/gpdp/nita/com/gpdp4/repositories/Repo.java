@@ -4,6 +4,7 @@ import android.app.Application;
 import android.arch.lifecycle.MutableLiveData;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.SparseBooleanArray;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -11,7 +12,6 @@ import org.json.JSONException;
 import java.util.ArrayList;
 import java.util.List;
 
-import gpdp.nita.com.gpdp4.R;
 import gpdp.nita.com.gpdp4.helpers.DatabaseHelper;
 import gpdp.nita.com.gpdp4.helpers.MyJson;
 import gpdp.nita.com.gpdp4.models.DateModel;
@@ -29,6 +29,7 @@ public class Repo {
     private Object[] answersList;
     private OneFormJson oneFormJson;
     private DatabaseHelper databaseHelper;
+    private SparseBooleanArray isNumeric;
 
 
     public Repo(Application application, int formNumber) {
@@ -111,6 +112,9 @@ public class Repo {
     private void setFormsModel() {
 
         List<OneQuestionJson> oneQuestionJsons = oneFormJson.getWidgets();
+
+        isNumeric = new SparseBooleanArray();
+
         dataSet.clear();
         answersList = new Object[oneQuestionJsons.size()];
 
@@ -124,7 +128,9 @@ public class Repo {
 
             if (category == 0) {
 
-                int def = R.id.rb1_rbvh;
+                answersList[i] = Constants.YES_NO;
+
+                int def = -1;
                 RadioGroupModel radioGroupModel = new RadioGroupModel(title, def, i);
 
                 String depen = oneQuestionJsons.get(i).getDependencies();
@@ -140,13 +146,18 @@ public class Repo {
             } else if (category == 1) {
 
                 boolean enabled = true;
-                String def = null;
+                String def = "";
+
                 int datatype = oneQuestionJsons.get(i).getDataType();
 
-                if (datatype == 0)
-                    def = Constants.STRING_DEFAULT;
-                else if (datatype == 1 || datatype == 2)
-                    def = String.valueOf(Constants.NUMBER_DEFAULT);
+                if (datatype == 0) {
+                    answersList[i] = Constants.STRING_DEFAULT;
+
+                }
+                else if (datatype == 1 || datatype == 2) {
+                    answersList[i] = Constants.NUMBER_DEFAULT;
+                    isNumeric.put(i, true);
+                }
 
                 if (mAutoValues.contains(oneQuestionJsons.get(i).getColumnName())) {
                     def = mAutoValues.getString(oneQuestionJsons.get(i).getColumnName(), "");
@@ -156,6 +167,8 @@ public class Repo {
                 dataSet.add(new EditTextModel(title, def, enabled, datatype, i));
 
             } else if (category == 2) {
+
+                answersList[i] = Constants.STRING_DEFAULT;
 
                 SpinnerModel spinnerModel = new SpinnerModel(
                         title,
@@ -181,29 +194,19 @@ public class Repo {
                 dataSet.add(spinnerModel);
 
             } else if (category == 3) {
-//                answersList[i] = Constants.DATE_DEFAULT;
-                dataSet.add(new DateModel(title, Constants.DATE_DEFAULT, i));
+
+                answersList[i] = Constants.DATE_DEFAULT;
+
+                dataSet.add(new DateModel(title, "Tap to pick a date", i));
+
             } else if (category == 4) {
+
+                answersList[i] = Constants.STRING_DEFAULT;
                 dataSet.add(new ProfilePicModel(Constants.IMAGE_UPLOAD_PATH + DatabaseHelper.ben_code + ".jpeg",
                         DatabaseHelper.ben_code, i));
             }
         }
     }
-
-    private String toCamelCase(String columnName) {
-        StringBuilder s = new StringBuilder();
-        String[] parts = columnName.split("_");
-        for (String ss : parts) {
-            StringBuilder x = new StringBuilder(ss);
-            x.setCharAt(0, (char) (((int) x.charAt(0)) - 32));
-            s.append(x);
-        }
-        return s.toString().trim();
-    }
-
-//    public LiveData<ArrayList<Object>> getOneRowLive() {
-//        return myOneRow;
-//    }
 
 
     public void insert(Object[] answers) {
@@ -235,6 +238,10 @@ public class Repo {
         return answersList;
     }
 
+    public Object[] getAnswersList() {
+        return answersList;
+    }
+
     public JSONArray onFormsEnd() {
         try {
             return databaseHelper.createJsonFromLocalDatabase();
@@ -242,5 +249,17 @@ public class Repo {
             e.printStackTrace();
             return null;
         }
+    }
+
+    public Object[] onEditTextRemoved(int position) {
+        if (isNumeric.get(position, false))
+            answersList[position] = Constants.NUMBER_DEFAULT;
+        else answersList[position] = Constants.STRING_DEFAULT;
+        return answersList;
+    }
+
+    public Object[] onViewRemoved(Object def, int position) {
+        answersList[position] = def;
+        return answersList;
     }
 }

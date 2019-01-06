@@ -48,6 +48,7 @@ import gpdp.nita.com.gpdp4.adapters.FormsAdapter;
 import gpdp.nita.com.gpdp4.helpers.DatabaseHelper;
 import gpdp.nita.com.gpdp4.helpers.Upload;
 import gpdp.nita.com.gpdp4.helpers.Utility;
+import gpdp.nita.com.gpdp4.interfaces.OnDependentSpinnerItemSelected;
 import gpdp.nita.com.gpdp4.interfaces.OnFormsEndListener;
 import gpdp.nita.com.gpdp4.interfaces.OnValuesEnteredListener;
 import gpdp.nita.com.gpdp4.interfaces.OnViewModifiedListener;
@@ -82,7 +83,7 @@ public class FormsActivity extends AppCompatActivity implements OnValuesEnteredL
     CircleImageView drawerDp;
     TextView drawerSurveyorCode, drawerName;
 
-    SharedPreferences mAutoValuesSharedPref;
+    SharedPreferences mAutoValuesSharedPref, benList;
     ProgressDialog progressDialog;
 
     Object[] answersList;
@@ -93,6 +94,8 @@ public class FormsActivity extends AppCompatActivity implements OnValuesEnteredL
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_forms);
+
+        benList = this.getSharedPreferences(Constants.BEN_NAMES_SHARED_PREFS, Context.MODE_PRIVATE);
 
         dialog = new Dialog(FormsActivity.this);
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
@@ -222,6 +225,13 @@ public class FormsActivity extends AppCompatActivity implements OnValuesEnteredL
             }
         });
 
+        formsViewModel.setOnDependentSpinnerItemSelected(new OnDependentSpinnerItemSelected() {
+            @Override
+            public void onDependentSpinnerItemSelected(int anchorPosition, int selectionPosition, String[] tokens) {
+                adapter.onDependentSpinnerItemChosen(anchorPosition, selectionPosition, tokens);
+            }
+        });
+
         formsViewModel.getOneRow().observe(this, new Observer<ArrayList<Object>>() {
             @Override
             public void onChanged(@Nullable ArrayList<Object> list) {
@@ -242,6 +252,9 @@ public class FormsActivity extends AppCompatActivity implements OnValuesEnteredL
             @Override
             public void onFormsEnd(boolean isSuccessful) {
                 if (isSuccessful) {
+                    benList.edit()
+                            .putString(DatabaseHelper.ben_code, DatabaseHelper.getImageURL())
+                            .apply();
                     dialog.setContentView(R.layout.layout_success);
                     dialog.findViewById(R.id.success_to_main).setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -341,6 +354,7 @@ public class FormsActivity extends AppCompatActivity implements OnValuesEnteredL
     }
 
     private void sync() {
+        mNext.callOnClick();
         formsViewModel.onFormsEnd();
     }
 
@@ -443,8 +457,8 @@ public class FormsActivity extends AppCompatActivity implements OnValuesEnteredL
     }
 
     @Override
-    public void onViewRemoved(int position, int priority, String[] hide, String[] show) {
-
+    public void onViewRemoved(int position, int category) {
+        answersList = formsViewModel.onViewRemoved(position, category);
     }
 
     @Override

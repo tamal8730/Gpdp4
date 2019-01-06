@@ -177,9 +177,16 @@ public class FormsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
         spinner.setSelection(spinnerModel.getSelection());
 
+        final String[] tokens = spinnerModel.getTokens();
+        if (tokens != null)
+            onDependentSpinnerItemChosen(viewHolder.getAdapterPosition(), spinnerModel.getSelection(), tokens);
+
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                if (tokens != null)
+                    onDependentSpinnerItemChosen(viewHolder.getAdapterPosition(), position, tokens);
 
                 spinnerModel.setSelection(position);
                 onValuesEnteredListener.onSpinnerItemSelected
@@ -256,7 +263,11 @@ public class FormsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             onRadioButtonSelected(viewHolder.getAdapterPosition(), radioGroupModel.getId(), tokens);
 
         title.setText(radioGroupModel.getTile());
-        radioGroup.check(radioGroupModel.getId());
+        int id = radioGroupModel.getId();
+        if (id == -1)
+            radioGroup.clearCheck();
+        else
+            radioGroup.check(radioGroupModel.getId());
 
         radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
@@ -266,7 +277,6 @@ public class FormsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                 int id = -1;
                 if (checkedId == R.id.rb0_rbvh) id = 1;
                 else if (checkedId == R.id.rb1_rbvh) id = 0;
-                Log.d("rbxxx", id + "");
                 onValuesEnteredListener.onRadioButtonChecked(id, viewHolder.getAdapterPosition());
             }
         });
@@ -312,9 +322,22 @@ public class FormsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             if (cache.get((pos + position), null) == null && (pos + position) < models.size()) {
                 cache.put((pos + position), models.get(pos + position));
                 models.set(pos + position, new BlankModel("", -1));
+
+                onValuesEnteredListener.onViewRemoved(pos + position, getCategory(models.get(pos + position)));
+
                 notifyItemChanged(pos + position);
             }
         }
+    }
+
+    private int getCategory(FormsModel formsModel) {
+        if (formsModel instanceof RadioGroupModel) return 0;
+        else if (formsModel instanceof EditTextModel) return 1;
+        else if (formsModel instanceof SpinnerModel) return 2;
+        else if (formsModel instanceof DateModel) return 3;
+        else if (formsModel instanceof ProfilePicModel) return 4;
+        else if (formsModel instanceof BlankModel) return 5;
+        else return -1;
     }
 
 
@@ -340,7 +363,36 @@ public class FormsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         }
     }
 
-    public void onDependentSpinnerItemChosen(int anchor, int chosenPosition, String[] tokens) {
+    public void onDependentSpinnerItemChosen(final int anchor, int chosenPosition, String[] tokens) {
+
+        String[] hide = null;
+        String[] show = null;
+
+        Log.d("posixxx", chosenPosition + "");
+
+        if (tokens != null) {
+
+            if (chosenPosition == Integer.parseInt(tokens[0])) {
+                hide = tokens[1].split(" ");
+                show = tokens[2].split(" ");
+            } else {
+                hide = tokens[2].split(" ");
+                show = tokens[1].split(" ");
+            }
+        }
+
+        final String[] finalShow = show;
+        final String[] finalHide = hide;
+
+        recyclerView.post(new Runnable() {
+            @Override
+            public void run() {
+                if (finalShow != null && !finalShow[0].equals("-1"))
+                    showViews(finalShow, anchor);
+                if (finalHide != null && !finalHide[0].equals("-1"))
+                    hideViews(finalHide, anchor);
+            }
+        });
 
     }
 

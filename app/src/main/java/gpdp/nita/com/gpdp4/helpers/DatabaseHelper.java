@@ -67,6 +67,16 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     }
 
+    public static String getImageURL() {
+        Cursor c = instance.getReadableDatabase()
+                .rawQuery("select ben_image from gpdp_basic_info_1 where ben_code=?", new String[]{ben_code});
+        String url = "";
+        if (c.moveToFirst())
+            url = c.getString(0);
+        c.close();
+        return url;
+    }
+
 
     private String columnNamesConcat(ArrayList<String> columnNames, String loop, ArrayList<Integer> dataType, String tableName) {
 
@@ -81,7 +91,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             s.append(columnNames.get(i));
             switch (dataType.get(i)) {
                 case 0:
-                    s.append(" TEXT DEFAULT '' NOT NULL,");
+                    s.append(" TEXT DEFAULT 'x' NOT NULL,");
                     break;
                 case 1:
                     s.append(" INTEGER DEFAULT 0 NOT NULL,");

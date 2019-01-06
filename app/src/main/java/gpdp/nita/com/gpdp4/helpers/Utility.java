@@ -20,7 +20,7 @@ public class Utility {
     public static boolean checkPermission(final Context context, int code, String title, String message) {
         int currentAPIVersion = Build.VERSION.SDK_INT;
 
-        final String ctxcompat = code == 0 ? Manifest.permission.READ_EXTERNAL_STORAGE
+        final String ctxcompat = code == 0 ? Manifest.permission.WRITE_EXTERNAL_STORAGE
                 : Manifest.permission.CAMERA;
 
         final int permission_code = code == 0 ? MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE
