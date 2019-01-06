@@ -10,7 +10,7 @@
       "category": 0,
       "data_type": 1,
       "options": "",
-      "dependencies": "none"
+      "dependencies": "0:-1:1 2 3 4:1:1 2 3 4:-1"
     },
     {
       "column_name": "still_suffering",

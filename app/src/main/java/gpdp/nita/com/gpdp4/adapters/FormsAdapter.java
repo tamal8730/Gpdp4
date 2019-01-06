@@ -9,6 +9,7 @@ import android.text.InputType;
 import android.text.TextWatcher;
 import android.text.method.DigitsKeyListener;
 import android.util.Log;
+import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,12 +24,10 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 
-import java.util.HashMap;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import gpdp.nita.com.gpdp4.R;
-import gpdp.nita.com.gpdp4.helpers.DatabaseHelper;
 import gpdp.nita.com.gpdp4.interfaces.OnDateSet;
 import gpdp.nita.com.gpdp4.interfaces.OnValuesEnteredListener;
 import gpdp.nita.com.gpdp4.models.BlankModel;
@@ -51,14 +50,15 @@ public class FormsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     private Context context;
     private List<FormsModel> models;
     private OnValuesEnteredListener onValuesEnteredListener;
-    private HashMap<String, FormsModel> cache;
+    private SparseArray<FormsModel> cache;
     private RecyclerView recyclerView;
+
 
     public FormsAdapter(Context context, List<FormsModel> models, OnValuesEnteredListener onValuesEnteredListener) {
         this.context = context;
         this.models = models;
         this.onValuesEnteredListener = onValuesEnteredListener;
-        cache = new HashMap<>();
+        cache = new SparseArray<>();
     }
 
     @Override
@@ -252,8 +252,8 @@ public class FormsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         RadioGroup radioGroup = viewHolder.getRadioGroup();
 
         final String[] tokens = radioGroupModel.getTokens();
-//        if (tokens != null)
-//            onRadioButtonSelected(viewHolder.getAdapterPosition(),radioGroupModel.getId(), tokens);
+        if (tokens != null)
+            onRadioButtonSelected(viewHolder.getAdapterPosition(), radioGroupModel.getId(), tokens);
 
         title.setText(radioGroupModel.getTile());
         radioGroup.check(radioGroupModel.getId());
@@ -309,8 +309,8 @@ public class FormsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         for (String s : hide) {
             int pos = Integer.parseInt(s);
 
-            if (!cache.containsKey(DatabaseHelper.tableName + (pos + position))) {
-                cache.put(DatabaseHelper.tableName + (pos + position), models.get(pos + position));
+            if (cache.get((pos + position), null) == null && (pos + position) < models.size()) {
+                cache.put((pos + position), models.get(pos + position));
                 models.set(pos + position, new BlankModel("", -1));
                 notifyItemChanged(pos + position);
             }
@@ -321,9 +321,9 @@ public class FormsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     private void showViews(String[] show, int position) {
         for (String s : show) {
             int pos = Integer.parseInt(s);
-            if (cache.containsKey(DatabaseHelper.tableName + (pos + position))) {
-                models.set(pos + position, cache.get(DatabaseHelper.tableName + (pos + position)));
-                cache.remove(DatabaseHelper.tableName + (pos + position));
+            if (cache.get((pos + position)) != null) {
+                models.set(pos + position, cache.get((pos + position)));
+                cache.remove((pos + position));
                 notifyItemChanged(pos + position);
             }
         }
@@ -338,6 +338,10 @@ public class FormsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             default:
                 return -1;
         }
+    }
+
+    public void onDependentSpinnerItemChosen(int anchor, int chosenPosition, String[] tokens) {
+
     }
 
 

@@ -10,7 +10,7 @@
       "category": 0,
       "data_type": 1,
       "options": "",
-      "dependencies": "1 0"
+      "dependencies": "0:1:2 3:1:2 3:1"
     },
     {
       "column_name": "connection_no_reason",
@@ -22,11 +22,11 @@
     },
     {
       "column_name": "connection_status",
-      "heading": "Electricity connection status",
+      "heading": "Electricity connection illegal?",
       "category": 0,
       "data_type": 1,
       "options": "",
-      "dependencies": "1 0"
+      "dependencies": "0:-1:1:1:1:-1"
     },
     {
       "column_name": "connection_illegal_reason",
@@ -42,7 +42,7 @@
       "category": 0,
       "data_type": 1,
       "options": "",
-      "dependencies": "1 0"
+      "dependencies": "0:1:-1:1:-1:1"
     },
     {
       "column_name": "efficient_cooking_device_no_reason",
@@ -58,7 +58,7 @@
       "category": 0,
       "data_type": 1,
       "options": "",
-      "dependencies": "1 0"
+      "dependencies": "0:1:-1:1:-1:1"
     },
     {
       "column_name": "energy_efficient_pump_no_reason",

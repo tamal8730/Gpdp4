@@ -7,6 +7,7 @@ public class SpinnerModel extends FormsModel {
     private int selection;
     private ArrayList<String> menu;
     private ArrayList<Object> keys;
+    private String[] tokens;
 
     public SpinnerModel(String tile, int selection, ArrayList<String> menu, ArrayList<Object> keys, int priority) {
         super(tile, priority);
@@ -37,5 +38,13 @@ public class SpinnerModel extends FormsModel {
 
     public void setKeys(ArrayList<Object> keys) {
         this.keys = keys;
+    }
+
+    public String[] getTokens() {
+        return tokens;
+    }
+
+    public void setTokens(String[] tokens) {
+        this.tokens = tokens;
     }
 }

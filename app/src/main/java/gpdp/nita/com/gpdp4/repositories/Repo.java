@@ -156,13 +156,29 @@ public class Repo {
                 dataSet.add(new EditTextModel(title, def, enabled, datatype, i));
 
             } else if (category == 2) {
-                dataSet.add(new SpinnerModel(
+
+                SpinnerModel spinnerModel = new SpinnerModel(
                         title,
                         Constants.NUMBER_DEFAULT,
                         MyJson.getSpinnerList(oneQuestionJsons.get(i).getOptions()),
                         MyJson.getSpinnerKeys(oneQuestionJsons.get(i).getOptions(), oneQuestionJsons.get(i).getDataType()),
-                        i
-                ));
+                        i);
+
+                String depen = oneQuestionJsons.get(i).getDependencies();
+
+                String[] tokens;
+                if (depen.equals("none")) tokens = null;
+                else {
+                    if (depen.contains(":")) {
+                        tokens = depen.split(":");
+                    } else {
+                        tokens = null;
+                    }
+                }
+
+                spinnerModel.setTokens(tokens);
+
+                dataSet.add(spinnerModel);
 
             } else if (category == 3) {
 //                answersList[i] = Constants.DATE_DEFAULT;

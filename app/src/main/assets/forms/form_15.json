@@ -242,7 +242,7 @@
       "category": 0,
       "data_type": 1,
       "options": "",
-      "dependencies": "1 1"
+      "dependencies": "0:-1:1:1:1:-1"
     },
     {
       "column_name": "reason_fr_dropout_student",
@@ -258,11 +258,11 @@
       "category": 0,
       "data_type": 1,
       "options": "",
-      "dependencies": "1 1"
+      "dependencies": "0:-1:1:1:1:-1"
     },
     {
       "column_name": "kind_of_assistance_required",
-      "heading": "If Yes, what kind of assistance required for  his/her",
+      "heading": "If Yes, what kind of assistance required for him/her",
       "category": 2,
       "data_type": 0,
       "options": "form_15_type_of_assistance",

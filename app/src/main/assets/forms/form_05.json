@@ -10,7 +10,7 @@
       "category": 0,
       "data_type": 1,
       "options": "",
-      "dependencies": "9 1"
+      "dependencies": "0:-1:1 2 3 4 5 6 7 8 9:1:1 2 3 4 5 6 7 8 9:-1"
     },
     {
       "column_name": "source",

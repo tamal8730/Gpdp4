@@ -10,7 +10,7 @@
       "category": 0,
       "data_type": 1,
       "options": "",
-      "dependencies": "11 1"
+      "dependencies": "0:-1:1 2 3 4 5 6 7 8 9 10 11:1:1 2 3 4 5 6 7 8 9 10 11:-1"
     },
     {
       "column_name": "name_of_shg",
@@ -74,7 +74,7 @@
       "category": 0,
       "data_type": 1,
       "options": "",
-      "dependencies": "1 1"
+      "dependencies": "0:-1:1:1:1:-1"
     },
     {
       "column_name": "mention_activities_undertaken",

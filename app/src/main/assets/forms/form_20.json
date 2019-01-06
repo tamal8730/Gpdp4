@@ -10,7 +10,7 @@
       "category": 0,
       "data_type": 1,
       "options": "",
-      "dependencies": "1 0"
+      "dependencies": "0:1:2 3 4 5 6 7 8 9 10 11:1:2 3 4 5 6 7 8 9 10 11:1"
     },
     {
       "column_name": "unavailability_of_toilet_reason",
@@ -34,7 +34,7 @@
       "category": 0,
       "data_type": 1,
       "options": "",
-      "dependencies": "1 0"
+      "dependencies": "0:1:-1:1:-1:1"
     },
     {
       "column_name": "reason_fr_irregular_use_of_toilet",
@@ -90,7 +90,7 @@
       "category": 0,
       "data_type": 1,
       "options": "",
-      "dependencies": "1 0"
+      "dependencies": "0:1:-1:1:-1:1"
     },
     {
       "column_name": "irregular_use_of_soap_reason",
@@ -106,7 +106,7 @@
       "category": 0,
       "data_type": 1,
       "options": "",
-      "dependencies": "1 1"
+      "dependencies": "0:-1:1:1:1:-1"
     },
     {
       "column_name": "place_fr_unavailibility_of_toilet",

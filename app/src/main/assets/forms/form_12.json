@@ -10,7 +10,7 @@
       "heading": "Answer to the above",
       "data_type": 1,
       "options": "",
-      "dependencies": "1 1"
+      "dependencies": "0:-1:1:1:1:-1"
     },
     {
       "column_name": "source_id",
@@ -26,7 +26,7 @@
       "heading": "Whether getting any government subsidy?",
       "data_type": 1,
       "options": "",
-      "dependencies": "1 1"
+      "dependencies": "0:-1:1:1:1:-1"
     },
     {
       "column_name": "quantity_sufficient",

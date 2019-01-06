@@ -420,6 +420,9 @@ public class FormsActivity extends AppCompatActivity implements OnValuesEnteredL
     private boolean selectNavItem(int index, MenuItem menuItem) {
         boolean formPresent = formsViewModel.loadFormNumber(index);
         if (formPresent) {
+
+            adapter.clearCache();
+
             drawerLayout.closeDrawer(GravityCompat.START);
             setTitle(menuItem.getTitle());
             return true;
@@ -430,6 +433,7 @@ public class FormsActivity extends AppCompatActivity implements OnValuesEnteredL
         adapter = new FormsAdapter(this, formsViewModel.getFormsModel().getValue(), this);
         linearLayoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(linearLayoutManager);
+        recyclerView.setItemViewCacheSize(30);
         recyclerView.setAdapter(adapter);
     }
 

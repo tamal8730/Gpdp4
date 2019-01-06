@@ -7,7 +7,6 @@ import android.arch.lifecycle.MutableLiveData;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
-import android.util.SparseArray;
 
 import org.json.JSONArray;
 
@@ -18,6 +17,7 @@ import gpdp.nita.com.gpdp4.R;
 import gpdp.nita.com.gpdp4.helpers.DatabaseHelper;
 import gpdp.nita.com.gpdp4.helpers.MyJson;
 import gpdp.nita.com.gpdp4.helpers.Upload;
+import gpdp.nita.com.gpdp4.interfaces.OnDependentSpinnerItemSelected;
 import gpdp.nita.com.gpdp4.interfaces.OnFormsEndListener;
 import gpdp.nita.com.gpdp4.interfaces.OnViewModifiedListener;
 import gpdp.nita.com.gpdp4.models.DateModel;
@@ -38,8 +38,8 @@ public class FormsViewModel extends AndroidViewModel {
     private Repo mRepo;
     private MutableLiveData<ArrayList<Object>> oneRowLiveData;
     private OnFormsEndListener onFormsEndListener;
-    private ArrayList<FormsModel> tmp;
-    private SparseArray<ArrayList<FormsModel>> dump;
+
+    private OnDependentSpinnerItemSelected onDependentSpinnerItemSelected;
 
     private OnViewModifiedListener onViewModifiedListener;
 
@@ -48,8 +48,6 @@ public class FormsViewModel extends AndroidViewModel {
         if (mutableLiveData != null) {
             return;
         }
-        tmp = new ArrayList<>();
-        dump = new SparseArray<>();
 
         this.benCode = benCode;
         initDatabase(0, 0);
@@ -259,6 +257,8 @@ public class FormsViewModel extends AndroidViewModel {
                             break;
                         }
                     }
+
+                    //onDependentSpinnerItemSelected.onDependentSpinnerItemSelected(i,);
                 }
                 ((SpinnerModel) formsModel).setSelection(pos);
             } else if (formsModel instanceof ProfilePicModel) {
@@ -268,5 +268,9 @@ public class FormsViewModel extends AndroidViewModel {
         }
 
         mutableLiveData.postValue(formsModels);
+    }
+
+    public void setOnDependentSpinnerItemSelected(OnDependentSpinnerItemSelected onDependentSpinnerItemSelected) {
+        this.onDependentSpinnerItemSelected = onDependentSpinnerItemSelected;
     }
 }

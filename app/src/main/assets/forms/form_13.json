@@ -10,7 +10,7 @@
       "category": 0,
       "data_type": 1,
       "options": "",
-      "dependencies": "none"
+      "dependencies": "0:-1:1:1:1:-1"
     },
     {
       "column_name": "get_treatment",
@@ -34,7 +34,7 @@
       "category": 0,
       "data_type": 1,
       "options": "",
-      "dependencies": "none"
+      "dependencies": "0:-1:1:1:1:-1"
     },
     {
       "column_name": "treatment_frm_asha",
@@ -58,7 +58,7 @@
       "category": 0,
       "data_type": 1,
       "options": "",
-      "dependencies": "none"
+      "dependencies": "0:-1:1 2:1:1 2:-1"
     },
     {
       "column_name": "vaccines",
@@ -66,7 +66,7 @@
       "category": 0,
       "data_type": 1,
       "options": "",
-      "dependencies": "none"
+      "dependencies": "0:1:-1:1:-1:1"
     },
     {
       "column_name": "reason_no_vaccines",
@@ -82,7 +82,7 @@
       "category": 0,
       "data_type": 1,
       "options": "",
-      "dependencies": "none"
+      "dependencies": "0:-1:1 2 3:1:1 2 3:-1"
     },
     {
       "column_name": "delivery_place",
