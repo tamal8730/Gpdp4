@@ -98,7 +98,7 @@
       "category": 2,
       "data_type": 0,
       "options": "form_0_ward",
-      "dependencies": ""
+      "dependencies": "none"
     },
     {
       "column_name": "male_num",
@@ -123,6 +123,14 @@
       "data_type": 1,
       "options": "",
       "dependencies": "add"
+    },
+    {
+      "column_name": "number_of_students",
+      "heading": "Number of students",
+      "category": 1,
+      "data_type": 1,
+      "options": "",
+      "dependencies": "none"
     },
     {
       "column_name": "caste",
@@ -162,7 +170,7 @@
       "category": 0,
       "data_type": 1,
       "options": "",
-      "dependencies": "1 1"
+      "dependencies": "0:-1:1:1:1:-1"
     },
     {
       "column_name": "type_of_secc",

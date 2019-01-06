@@ -50,6 +50,7 @@ import gpdp.nita.com.gpdp4.helpers.Upload;
 import gpdp.nita.com.gpdp4.helpers.Utility;
 import gpdp.nita.com.gpdp4.interfaces.OnFormsEndListener;
 import gpdp.nita.com.gpdp4.interfaces.OnValuesEnteredListener;
+import gpdp.nita.com.gpdp4.interfaces.OnViewModifiedListener;
 import gpdp.nita.com.gpdp4.models.FormsModel;
 import gpdp.nita.com.gpdp4.repositories.Constants;
 import gpdp.nita.com.gpdp4.viewmodel.FormsViewModel;
@@ -175,6 +176,16 @@ public class FormsActivity extends AppCompatActivity implements OnValuesEnteredL
                     return selectNavItem(19, menuItem);
                 else if (id == R.id.form20)
                     return selectNavItem(20, menuItem);
+                else if (id == R.id.form21)
+                    return selectNavItem(21, menuItem);
+                else if (id == R.id.form22)
+                    return selectNavItem(22, menuItem);
+                else if (id == R.id.form23)
+                    return selectNavItem(23, menuItem);
+                else if (id == R.id.form24)
+                    return selectNavItem(24, menuItem);
+                else if (id == R.id.form25)
+                    return selectNavItem(25, menuItem);
 
                 return false;
             }
@@ -189,6 +200,7 @@ public class FormsActivity extends AppCompatActivity implements OnValuesEnteredL
         formsViewModel.getFormsModel().observe(this, new Observer<List<FormsModel>>() {
             @Override
             public void onChanged(@Nullable List<FormsModel> formsModels) {
+
                 mFormsModels = formsModels;
                 adapter.notifyDataSetChanged();
                 linearLayoutManager.scrollToPosition(0);
@@ -199,7 +211,14 @@ public class FormsActivity extends AppCompatActivity implements OnValuesEnteredL
                     subtitle.setVisibility(View.VISIBLE);
                     subtitle.setText(subT);
                 }
+            }
+        });
 
+        formsViewModel.setOnViewModifiedListener(new OnViewModifiedListener() {
+
+            @Override
+            public void onViewModified(int anchorPosition, int id, String[] tokens) {
+                adapter.onRadioButtonSelected(anchorPosition, id, tokens);
             }
         });
 
@@ -259,8 +278,11 @@ public class FormsActivity extends AppCompatActivity implements OnValuesEnteredL
                 if (i != -1)
                     navigationView.setCheckedItem(getId(i));
                 setTitle(navigationView.getCheckedItem().getTitle());
+
+                adapter.clearCache();
             }
         });
+
 
         mPrev.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -269,6 +291,8 @@ public class FormsActivity extends AppCompatActivity implements OnValuesEnteredL
                 if (i != -1)
                     navigationView.setCheckedItem(getId(i));
                 setTitle(navigationView.getCheckedItem().getTitle());
+
+                adapter.clearCache();
             }
         });
 
@@ -375,6 +399,19 @@ public class FormsActivity extends AppCompatActivity implements OnValuesEnteredL
             case 20:
                 return R.id.form20;
 
+            case 21:
+                return R.id.form21;
+            case 22:
+                return R.id.form22;
+
+            case 23:
+                return R.id.form23;
+            case 24:
+                return R.id.form24;
+
+            case 25:
+                return R.id.form25;
+
             default:
                 return -1;
         }
@@ -393,7 +430,6 @@ public class FormsActivity extends AppCompatActivity implements OnValuesEnteredL
         adapter = new FormsAdapter(this, formsViewModel.getFormsModel().getValue(), this);
         linearLayoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(linearLayoutManager);
-        recyclerView.setItemViewCacheSize(30);
         recyclerView.setAdapter(adapter);
     }
 
@@ -403,8 +439,8 @@ public class FormsActivity extends AppCompatActivity implements OnValuesEnteredL
     }
 
     @Override
-    public void onViewRemoved(int start, int batchSize) {
-        //formsViewModel.deleteViewAtRange(start,batchSize);
+    public void onViewRemoved(int position, int priority, String[] hide, String[] show) {
+
     }
 
     @Override

@@ -8,6 +8,7 @@ import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
 import android.text.method.DigitsKeyListener;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,18 +23,22 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 
+import java.util.HashMap;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import gpdp.nita.com.gpdp4.R;
+import gpdp.nita.com.gpdp4.helpers.DatabaseHelper;
 import gpdp.nita.com.gpdp4.interfaces.OnDateSet;
 import gpdp.nita.com.gpdp4.interfaces.OnValuesEnteredListener;
+import gpdp.nita.com.gpdp4.models.BlankModel;
 import gpdp.nita.com.gpdp4.models.DateModel;
 import gpdp.nita.com.gpdp4.models.EditTextModel;
 import gpdp.nita.com.gpdp4.models.FormsModel;
 import gpdp.nita.com.gpdp4.models.ProfilePicModel;
 import gpdp.nita.com.gpdp4.models.RadioGroupModel;
 import gpdp.nita.com.gpdp4.models.SpinnerModel;
+import gpdp.nita.com.gpdp4.viewholders.BlankViewHolder;
 import gpdp.nita.com.gpdp4.viewholders.DateViewHolder;
 import gpdp.nita.com.gpdp4.viewholders.EditTextViewHolder;
 import gpdp.nita.com.gpdp4.viewholders.ProfilePicViewHolder;
@@ -46,13 +51,26 @@ public class FormsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     private Context context;
     private List<FormsModel> models;
     private OnValuesEnteredListener onValuesEnteredListener;
+    private HashMap<String, FormsModel> cache;
+    private RecyclerView recyclerView;
 
     public FormsAdapter(Context context, List<FormsModel> models, OnValuesEnteredListener onValuesEnteredListener) {
         this.context = context;
         this.models = models;
         this.onValuesEnteredListener = onValuesEnteredListener;
+        cache = new HashMap<>();
     }
 
+    @Override
+    public void onAttachedToRecyclerView(@NonNull RecyclerView recyclerView) {
+        super.onAttachedToRecyclerView(recyclerView);
+        this.recyclerView = recyclerView;
+    }
+
+
+    public void clearCache() {
+        cache.clear();
+    }
 
     @NonNull
     @Override
@@ -70,6 +88,8 @@ public class FormsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             viewHolder = new DateViewHolder(inflater.inflate(R.layout.layout_date, viewGroup, false));
         } else if (category == 4) {
             viewHolder = new ProfilePicViewHolder(inflater.inflate(R.layout.layout_profile_pic, viewGroup, false));
+        } else if (category == 5) {
+            viewHolder = new BlankViewHolder(inflater.inflate(R.layout.layout_blank, viewGroup, false));
         }
 
         return viewHolder;
@@ -223,6 +243,7 @@ public class FormsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
     }
 
+
     private void bindRadioGroup(final RadioGroupViewHolder viewHolder, int position) {
 
         final RadioGroupModel radioGroupModel = (RadioGroupModel) models.get(position);
@@ -230,25 +251,92 @@ public class FormsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         TextView title = viewHolder.getTextView();
         RadioGroup radioGroup = viewHolder.getRadioGroup();
 
+        final String[] tokens = radioGroupModel.getTokens();
+//        if (tokens != null)
+//            onRadioButtonSelected(viewHolder.getAdapterPosition(),radioGroupModel.getId(), tokens);
+
         title.setText(radioGroupModel.getTile());
         radioGroup.check(radioGroupModel.getId());
-
 
         radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
-                onRadioButtonSelected(viewHolder.getAdapterPosition(), checkedId, radioGroupModel);
+                if (tokens != null)
+                    onRadioButtonSelected(viewHolder.getAdapterPosition(), checkedId, tokens);
                 int id = -1;
                 if (checkedId == R.id.rb0_rbvh) id = 1;
                 else if (checkedId == R.id.rb1_rbvh) id = 0;
+                Log.d("rbxxx", id + "");
                 onValuesEnteredListener.onRadioButtonChecked(id, viewHolder.getAdapterPosition());
             }
         });
     }
 
-    private void onRadioButtonSelected(int adapterPosition, int checkedId, RadioGroupModel radioGroupModel) {
-        if (checkedId == radioGroupModel.getSkipButtonId()) {
-//            onValuesEnteredListener.onViewRemoved(adapterPosition+1,radioGroupModel.getSkips());
+    public void onRadioButtonSelected(final int adapterPos, int checkedId, String[] tokens) {
+
+        String[] hide = null;
+        String[] show = null;
+
+        if (tokens != null) {
+
+            if (checkedId == getRadioButtonId(tokens[0])) {
+                hide = tokens[1].split(" ");
+                show = tokens[2].split(" ");
+            } else if (checkedId == getRadioButtonId(tokens[3])) {
+                hide = tokens[4].split(" ");
+                show = tokens[5].split(" ");
+            }
+        }
+
+
+        final String[] finalShow = show;
+        final String[] finalHide = hide;
+
+        recyclerView.post(new Runnable() {
+            @Override
+            public void run() {
+                if (finalShow != null && !finalShow[0].equals("-1"))
+                    showViews(finalShow, adapterPos);
+                if (finalHide != null && !finalHide[0].equals("-1"))
+                    hideViews(finalHide, adapterPos);
+            }
+        });
+
+
+    }
+
+    private void hideViews(String[] hide, int position) {
+        for (String s : hide) {
+            int pos = Integer.parseInt(s);
+
+            if (!cache.containsKey(DatabaseHelper.tableName + (pos + position))) {
+                cache.put(DatabaseHelper.tableName + (pos + position), models.get(pos + position));
+                models.set(pos + position, new BlankModel("", -1));
+                notifyItemChanged(pos + position);
+            }
+        }
+    }
+
+
+    private void showViews(String[] show, int position) {
+        for (String s : show) {
+            int pos = Integer.parseInt(s);
+            if (cache.containsKey(DatabaseHelper.tableName + (pos + position))) {
+                models.set(pos + position, cache.get(DatabaseHelper.tableName + (pos + position)));
+                cache.remove(DatabaseHelper.tableName + (pos + position));
+                notifyItemChanged(pos + position);
+            }
+        }
+    }
+
+    private int getRadioButtonId(String id) {
+        switch (id) {
+            case "0":
+                return R.id.rb0_rbvh;
+            case "1":
+                return R.id.rb1_rbvh;
+            default:
+                return -1;
         }
     }
 
@@ -265,6 +353,7 @@ public class FormsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         else if (models.get(position) instanceof SpinnerModel) return 2;
         else if (models.get(position) instanceof DateModel) return 3;
         else if (models.get(position) instanceof ProfilePicModel) return 4;
+        else if (models.get(position) instanceof BlankModel) return 5;
         else return -1;
     }
 

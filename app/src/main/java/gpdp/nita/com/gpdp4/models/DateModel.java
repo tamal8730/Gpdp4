@@ -4,8 +4,8 @@ public class DateModel extends FormsModel {
 
     private String date;
 
-    public DateModel(String tile, String date) {
-        super(tile);
+    public DateModel(String tile, String date, int priority) {
+        super(tile, priority);
         this.date = date;
     }
 

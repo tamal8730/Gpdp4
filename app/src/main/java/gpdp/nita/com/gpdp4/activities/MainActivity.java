@@ -369,7 +369,7 @@ public class MainActivity extends AppCompatActivity {
                 Constants.subTitles.add("");
             } else {
                 String[] tokens = loopList.get(i).split(" ");
-                if (tokens[0].equals("add")) {
+                if (tokens[0].equals("add") || tokens[0].equals("num_stu")) { //or num_stu
 
                 } else {
                     ArrayList<Object> keys = MyJson.getSpinnerKeys(tokens[0], 0);

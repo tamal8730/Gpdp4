@@ -56,6 +56,18 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return sum;
     }
 
+    public static int getNumberOfStudents() {
+        Cursor c = instance.getReadableDatabase()
+                .rawQuery("select number_of_students from gpdp_basic_info_1 where ben_code=?", new String[]{ben_code});
+        int numberOfStudents = 0;
+        if (c.moveToFirst())
+            numberOfStudents = c.getInt(0);
+        c.close();
+        return numberOfStudents;
+
+    }
+
+
     private String columnNamesConcat(ArrayList<String> columnNames, String loop, ArrayList<Integer> dataType, String tableName) {
 
         StringBuilder s = new StringBuilder(" (ben_code TEXT,");

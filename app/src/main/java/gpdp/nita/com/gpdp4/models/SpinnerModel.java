@@ -8,8 +8,8 @@ public class SpinnerModel extends FormsModel {
     private ArrayList<String> menu;
     private ArrayList<Object> keys;
 
-    public SpinnerModel(String tile, int selection, ArrayList<String> menu, ArrayList<Object> keys) {
-        super(tile);
+    public SpinnerModel(String tile, int selection, ArrayList<String> menu, ArrayList<Object> keys, int priority) {
+        super(tile, priority);
         this.selection = selection;
         this.menu = menu;
         this.keys = keys;

@@ -1,0 +1,32 @@
+{
+  "name": "Peace Justice Institution",
+  "table_name": "gpdp_peace_justice_institution_27",
+  "form_number": 26,
+  "loop": "form_25_incident incident_id I",
+  "widgets": [
+    {
+      "column_name": "y_n",
+      "heading": "Incidence occurred with / in your family",
+      "category": 0,
+      "data_type": 1,
+      "options": "",
+      "dependencies": "2 1"
+    },
+    {
+      "column_name": "received_justice",
+      "heading": "If yes, whether you get justice?",
+      "category": 0,
+      "data_type": 1,
+      "options": "",
+      "dependencies": "1 0"
+    },
+    {
+      "column_name": "reason_id",
+      "heading": "If not get justice, why?",
+      "category": 2,
+      "data_type": 0,
+      "options": "form_25_reason",
+      "dependencies": "none"
+    }
+  ]
+}

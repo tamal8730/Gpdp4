@@ -1,7 +1,7 @@
 {
-  "name": "Drinking water status",
-  "table_name": "gpdp_drinking_water_status_20",
-  "form_number": 19,
+  "name": "Domestic water status",
+  "table_name": "gpdp_domestic_water_status_21",
+  "form_number": 20,
   "loop": null,
   "widgets": [
     {

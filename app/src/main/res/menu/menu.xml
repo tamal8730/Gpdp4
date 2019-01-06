@@ -72,7 +72,7 @@
 
         <item
             android:id="@+id/form17"
-            android:title="Women empowerment status" />
+            android:title="Women empowerment" />
 
         <item
             android:id="@+id/form18"
@@ -85,6 +85,26 @@
         <item
             android:id="@+id/form20"
             android:title="Status of toilets" />
+
+        <item
+            android:id="@+id/form21"
+            android:title="Affordable and clean energy" />
+
+        <item
+            android:id="@+id/form22"
+            android:title="Climate action and protected condition" />
+
+        <item
+            android:id="@+id/form23"
+            android:title="Disaster Protected Center" />
+
+        <item
+            android:id="@+id/form24"
+            android:title="Life below water" />
+        <item
+            android:id="@+id/form25"
+            android:title="Peace Justice Institution" />
+
 
     </group>
 

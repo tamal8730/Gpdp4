@@ -1,0 +1,104 @@
+{
+  "name": "Life below water",
+  "table_name": "gpdp_life_below_water_26",
+  "form_number": 25,
+  "loop": null,
+  "widgets": [
+    {
+      "column_name": "pond_or_lake_y_n",
+      "heading": "Do you have any Pond/Lake?",
+      "category": 0,
+      "data_type": 1,
+      "options": "",
+      "dependencies": "11 1"
+    },
+    {
+      "column_name": "excavated_under_govt_y_n",
+      "heading": "Whether it has been excavated under any government scheme",
+      "category": 0,
+      "data_type": 1,
+      "options": "",
+      "dependencies": "none"
+    },
+    {
+      "column_name": "water_round_the_year_y_n",
+      "heading": "Whether Pond/Lake hold water round the year",
+      "category": 0,
+      "data_type": 1,
+      "options": "",
+      "dependencies": "none"
+    },
+    {
+      "column_name": "fishery_y_n",
+      "heading": "Whether it is used for Fishery",
+      "category": 0,
+      "data_type": 1,
+      "options": "",
+      "dependencies": "none"
+    },
+    {
+      "column_name": "drinking_y_n",
+      "heading": "Whether it is used for Drinking",
+      "category": 0,
+      "data_type": 1,
+      "options": "",
+      "dependencies": "none"
+    },
+    {
+      "column_name": "domestic_y_n",
+      "heading": "Whether it is used for Domestic",
+      "category": 0,
+      "data_type": 1,
+      "options": "",
+      "dependencies": "none"
+    },
+    {
+      "column_name": "irrigation_y_n",
+      "heading": "Whether it is used for Irrigation",
+      "category": 0,
+      "data_type": 1,
+      "options": "",
+      "dependencies": "none"
+    },
+    {
+      "column_name": "social_prog_y_n",
+      "heading": "Whether it is used for Social Programme",
+      "category": 0,
+      "data_type": 1,
+      "options": "",
+      "dependencies": "none"
+    },
+    {
+      "column_name": "flood_y_n",
+      "heading": "Affected by flood",
+      "category": 0,
+      "data_type": 1,
+      "options": "",
+      "dependencies": "none"
+    },
+    {
+      "column_name": "wastes_dumped_y_n",
+      "heading": "Solid/Liquid wastes are dumped",
+      "category": 0,
+      "data_type": 1,
+      "options": "",
+      "dependencies": "none"
+    },
+    {
+      "column_name": "required_reexcavation_y_n",
+      "heading": "Whether Pond/Lake required re-excavation",
+      "category": 0,
+      "data_type": 1,
+      "options": "",
+      "dependencies": "none"
+    },
+    {
+      "column_name": "pond_improvement_id",
+      "heading": "Any other requirements for the improvement of the Pond/Lake",
+      "category": 2,
+      "data_type": 0,
+      "options": "form_24_pond_improvement",
+      "dependencies": "none"
+    }
+  ]
+}

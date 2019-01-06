@@ -58,7 +58,7 @@
       "category": 0,
       "data_type": 1,
       "options": "",
-      "dependencies": "1 1"
+      "dependencies": "0:-1:1:1:1:-1"
     },
     {
       "column_name": "type_of_disability",

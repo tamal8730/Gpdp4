@@ -6,8 +6,8 @@ public class EditTextModel extends FormsModel {
     private boolean enabled;
     private int inputType;
 
-    public EditTextModel(String title, String textInEditText, boolean enabled, int inputType) {
-        super(title);
+    public EditTextModel(String title, String textInEditText, boolean enabled, int inputType, int priority) {
+        super(title, priority);
         this.textInEditText = textInEditText;
         this.enabled = enabled;
         this.inputType = inputType;

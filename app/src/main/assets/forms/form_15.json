@@ -1,103 +1,271 @@
 {
-  "name": "End poverty",
-  "table_name": "gpdp_end_poverty_3",
+  "name": "Quality Education",
+  "table_name": "gpdp_institution",
   "form_number": 16,
-  "loop": null,
+  "loop": "num_stu member_code",
   "widgets": [
     {
-      "column_name": "occupation_1",
-      "heading": "Main occupation of the family (1st Priority)",
+      "column_name": "institution_type",
+      "heading": "Institution Type",
       "category": 2,
       "data_type": 0,
-      "options": "form_1_2_occupation",
+      "options": "form_15_institution_type",
       "dependencies": "none"
     },
     {
-      "column_name": "occupation_2",
-      "heading": "Main occupation of the family (2nd Priority)",
-      "category": 2,
+      "column_name": "institution_name",
+      "heading": "Institution Name",
+      "category": 1,
       "data_type": 0,
-      "options": "form_1_2_occupation",
+      "options": "",
       "dependencies": "none"
     },
     {
-      "column_name": "occupation_3",
-      "heading": "Main occupation of the family (3rd Priority)",
+      "column_name": "Standard",
+      "heading": "Standard of Institution",
       "category": 2,
       "data_type": 0,
-      "options": "form_1_2_occupation",
+      "options": "form_15_institution_standard",
       "dependencies": "none"
     },
     {
-      "column_name": "getting_pension",
-      "heading": "Is any family member getting pension from Social Pension Scheme?",
+      "column_name": "medium_of_study",
+      "heading": "Medium of Study",
+      "category": 2,
+      "data_type": 0,
+      "options": "form_15_institution_medium",
+      "dependencies": "none"
+    },
+    {
+      "column_name": "building",
+      "heading": "Institution's Building",
+      "category": 2,
+      "data_type": 1,
+      "options": "form_15_answer",
+      "dependencies": "none"
+    },
+    {
+      "column_name": "electricity_connection",
+      "heading": "Electricity Connection",
+      "category": 2,
+      "data_type": 1,
+      "options": "form_15_answer",
+      "dependencies": "none"
+    },
+    {
+      "column_name": "fan",
+      "heading": "Fan",
+      "category": 2,
+      "data_type": 1,
+      "options": "form_15_answer",
+      "dependencies": "none"
+    },
+    {
+      "column_name": "light",
+      "heading": "Light",
+      "category": 2,
+      "data_type": 1,
+      "options": "form_15_answer",
+      "dependencies": "none"
+    },
+    {
+      "column_name": "sufficient_number_of_benches",
+      "heading": "Sufficient Number of Benches",
+      "category": 2,
+      "data_type": 1,
+      "options": "form_15_answer",
+      "dependencies": "none"
+    },
+    {
+      "column_name": "library_facility",
+      "heading": "Library facility",
+      "category": 2,
+      "data_type": 1,
+      "options": "form_15_answer",
+      "dependencies": "none"
+    },
+    {
+      "column_name": "sufficient_books_in_library",
+      "heading": "Sufficient Books are available in Library",
+      "category": 2,
+      "data_type": 1,
+      "options": "form_15_answer",
+      "dependencies": "none"
+    },
+    {
+      "column_name": "playground",
+      "heading": "Playground",
+      "category": 2,
+      "data_type": 1,
+      "options": "form_15_answer",
+      "dependencies": "none"
+    },
+    {
+      "column_name": "mid_day_meal",
+      "heading": "Mid day Meal",
+      "category": 2,
+      "data_type": 1,
+      "options": "form_15_answer",
+      "dependencies": "none"
+    },
+    {
+      "column_name": "drinking_water_source",
+      "heading": "Drinking Water Source",
+      "category": 2,
+      "data_type": 1,
+      "options": "form_15_answer",
+      "dependencies": "none"
+    },
+    {
+      "column_name": "quality_of_drinking_water",
+      "heading": "Quality of drinking water",
+      "category": 2,
+      "data_type": 1,
+      "options": "form_15_answer",
+      "dependencies": "none"
+    },
+    {
+      "column_name": "toilet_facility",
+      "heading": "Toilet Facility",
+      "category": 2,
+      "data_type": 1,
+      "options": "form_15_answer",
+      "dependencies": "none"
+    },
+    {
+      "column_name": "condition_of_toilet",
+      "heading": "Condition of Toilet is in good position",
       "category": 0,
       "data_type": 1,
       "options": "",
-      "dependencies": "1 1"
+      "dependencies": "none"
     },
     {
-      "column_name": "pension_type",
-      "heading": "Type of pension",
+      "column_name": "separate_toilet_boys_girls",
+      "heading": "Separate toilet for boys and girls",
+      "category": 2,
+      "data_type": 1,
+      "options": "form_15_answer",
+      "dependencies": "none"
+    },
+    {
+      "column_name": "sports_Items",
+      "heading": "Sports Items",
+      "category": 2,
+      "data_type": 1,
+      "options": "form_15_answer",
+      "dependencies": "none"
+    },
+    {
+      "column_name": "hostel_facility_fr_boys_girls",
+      "heading": "Hostel facility for boys and girls",
+      "category": 2,
+      "data_type": 1,
+      "options": "form_15_answer",
+      "dependencies": "none"
+    },
+    {
+      "column_name": "computer_availability",
+      "heading": "Computers are available",
+      "category": 2,
+      "data_type": 1,
+      "options": "form_15_answer",
+      "dependencies": "none"
+    },
+    {
+      "column_name": "sufficient_teacher",
+      "heading": "Sufficient number of Teachers are available",
+      "category": 2,
+      "data_type": 1,
+      "options": "form_15_answer",
+      "dependencies": "none"
+    },
+    {
+      "column_name": "free_book",
+      "heading": "Free Books",
+      "category": 2,
+      "data_type": 1,
+      "options": "form_15_answer",
+      "dependencies": "none"
+    },
+    {
+      "column_name": "free_uniform",
+      "heading": "Free Uniforms",
+      "category": 2,
+      "data_type": 1,
+      "options": "form_15_answer",
+      "dependencies": "none"
+    },
+    {
+      "column_name": "stipend",
+      "heading": "Stipend",
+      "category": 2,
+      "data_type": 1,
+      "options": "form_15_answer",
+      "dependencies": "none"
+    },
+    {
+      "column_name": "mode_of_transportation",
+      "heading": "Mode of transportation for going to Institution",
       "category": 2,
       "data_type": 0,
-      "options": "form_2_type_of_pension",
+      "options": "form_15_mode_of_transportation",
       "dependencies": "none"
     },
     {
-      "column_name": "not_getting_pension",
-      "heading": "Is there any eligible family member, who is / are not getting pension from Social Pension Scheme?",
-      "category": 0,
-      "data_type": 1,
-      "options": "",
-      "dependencies": "1 1"
-    },
-    {
-      "column_name": "reason",
-      "heading": "Reason of not getting pension",
+      "column_name": "present_condition",
+      "heading": "Present condition of the Institution (From last five year)",
       "category": 2,
       "data_type": 0,
-      "options": "form_2_not_getting_pension_reason",
+      "options": "form_15_condition_of_institution",
       "dependencies": "none"
     },
     {
-      "column_name": "earning_male",
-      "heading": "Number of earning Males",
-      "category": 1,
-      "data_type": 1,
-      "options": "",
-      "dependencies": "none"
-    },
-    {
-      "column_name": "earning_female",
-      "heading": "Number of earning Females",
-      "category": 1,
-      "data_type": 1,
-      "options": "",
-      "dependencies": "none"
-    },
-    {
-      "column_name": "earning_transgender",
-      "heading": "Number of earning Transgenders",
-      "category": 1,
-      "data_type": 1,
-      "options": "",
-      "dependencies": "none"
-    },
-    {
-      "column_name": "expenditure",
-      "heading": "Monthly family expenditure",
+      "column_name": "distance_of_nearest_institution",
+      "heading": "Distance of Nearest School from your house",
       "category": 1,
       "data_type": 2,
       "options": "",
       "dependencies": "none"
     },
     {
-      "column_name": "savings",
-      "heading": "Monthly family savings",
-      "category": 1,
-      "data_type": 2,
+      "column_name": "reason_not_studying_in_nearest_institution",
+      "heading": "If not studying in nearest school then why?",
+      "category": 2,
+      "data_type": 0,
+      "options": "form_15_reason_not_studying_in_nearest_institution",
+      "dependencies": "none"
+    },
+    {
+      "column_name": "dropout_student_in_family",
+      "heading": "Is there any drop out student in family?",
+      "category": 0,
+      "data_type": 1,
       "options": "",
+      "dependencies": "1 1"
+    },
+    {
+      "column_name": "reason_fr_dropout_student",
+      "heading": "If yes, then why?",
+      "category": 2,
+      "data_type": 0,
+      "options": "form_15_reason_for_dropout",
+      "dependencies": "none"
+    },
+    {
+      "column_name": "special_need_fr_student",
+      "heading": "Is there any special need student in family?",
+      "category": 0,
+      "data_type": 1,
+      "options": "",
+      "dependencies": "1 1"
+    },
+    {
+      "column_name": "kind_of_assistance_required",
+      "heading": "If Yes, what kind of assistance required for  his/her",
+      "category": 2,
+      "data_type": 0,
+      "options": "form_15_type_of_assistance",
       "dependencies": "none"
     }
   ]

@@ -38,4 +38,5 @@ public class RadioGroupViewHolder extends RecyclerView.ViewHolder {
     public RadioButton getNo() {
         return no;
     }
+
 }

@@ -1,0 +1,72 @@
+{
+  "name": "Affordable and clean energy",
+  "table_name": "gpdp_affordable_clean_energy_23",
+  "form_number": 22,
+  "loop": null,
+  "widgets": [
+    {
+      "column_name": "electricity_connection",
+      "heading": "Whether the family has electricity connection",
+      "category": 0,
+      "data_type": 1,
+      "options": "",
+      "dependencies": "1 0"
+    },
+    {
+      "column_name": "connection_no_reason",
+      "heading": "Reason",
+      "category": 2,
+      "data_type": 0,
+      "options": "form_21_no_electricity_reason",
+      "dependencies": "none"
+    },
+    {
+      "column_name": "connection_status",
+      "heading": "Electricity connection status",
+      "category": 0,
+      "data_type": 1,
+      "options": "",
+      "dependencies": "1 0"
+    },
+    {
+      "column_name": "connection_illegal_reason",
+      "heading": "Reason",
+      "category": 2,
+      "data_type": 0,
+      "options": "form_21_no_electricity_reason",
+      "dependencies": "none"
+    },
+    {
+      "column_name": "energy_efficient_cooking_device",
+      "heading": "Whether the family adopted energy efficient cooking devices like smokeless chulhas",
+      "category": 0,
+      "data_type": 1,
+      "options": "",
+      "dependencies": "1 0"
+    },
+    {
+      "column_name": "efficient_cooking_device_no_reason",
+      "heading": "Reason",
+      "category": 2,
+      "data_type": 0,
+      "options": "form_21_reason",
+      "dependencies": "none"
+    },
+    {
+      "column_name": "energy_efficient_pump",
+      "heading": "Whether the family adopted energy efficient pumps for irrigation (like solar pumps)",
+      "category": 0,
+      "data_type": 1,
+      "options": "",
+      "dependencies": "1 0"
+    },
+    {
+      "column_name": "energy_efficient_pump_no_reason",
+      "heading": "Reason",
+      "category": 2,
+      "data_type": 0,
+      "options": "form_21_reason",
+      "dependencies": "none"
+    }
+  ]
+}

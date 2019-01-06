@@ -5,8 +5,8 @@ public class ProfilePicModel extends FormsModel {
     private String imgUrl;
     private String benCode;
 
-    public ProfilePicModel(String imgUrl, String benCode) {
-        super("");
+    public ProfilePicModel(String imgUrl, String benCode, int priority) {
+        super("", priority);
         this.imgUrl = imgUrl;
         this.benCode = benCode;
     }

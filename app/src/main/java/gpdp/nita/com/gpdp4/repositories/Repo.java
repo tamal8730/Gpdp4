@@ -124,20 +124,15 @@ public class Repo {
 
             if (category == 0) {
 
-                int def = 0;
-                RadioGroupModel radioGroupModel = new RadioGroupModel(title, def);
+                int def = R.id.rb1_rbvh;
+                RadioGroupModel radioGroupModel = new RadioGroupModel(title, def, i);
 
                 String depen = oneQuestionJsons.get(i).getDependencies();
-                int skips, skipButtonId;
-                if (depen.contains(" ")) {
-
-                    String[] tokens = depen.split(" ");
-                    skips = Integer.parseInt(tokens[0]);
-                    skipButtonId = Integer.parseInt(tokens[1]);
-                    if (skipButtonId == 0) radioGroupModel.setSkipButtonId(R.id.rb0_rbvh);
-                    else if (skipButtonId == 1) radioGroupModel.setSkipButtonId(R.id.rb1_rbvh);
-
-                    radioGroupModel.setSkips(skips);
+                if (depen.contains(":")) {
+                    String[] tokens = depen.split(":");
+                    radioGroupModel.setTokens(tokens);
+                } else {
+                    radioGroupModel.setTokens(null);
                 }
 
                 dataSet.add(radioGroupModel);
@@ -158,22 +153,23 @@ public class Repo {
                     enabled = false;
                 }
 
-                dataSet.add(new EditTextModel(title, def, enabled, datatype));
+                dataSet.add(new EditTextModel(title, def, enabled, datatype, i));
 
             } else if (category == 2) {
                 dataSet.add(new SpinnerModel(
                         title,
                         Constants.NUMBER_DEFAULT,
                         MyJson.getSpinnerList(oneQuestionJsons.get(i).getOptions()),
-                        MyJson.getSpinnerKeys(oneQuestionJsons.get(i).getOptions(), oneQuestionJsons.get(i).getDataType())
+                        MyJson.getSpinnerKeys(oneQuestionJsons.get(i).getOptions(), oneQuestionJsons.get(i).getDataType()),
+                        i
                 ));
 
             } else if (category == 3) {
 //                answersList[i] = Constants.DATE_DEFAULT;
-                dataSet.add(new DateModel(title, Constants.DATE_DEFAULT));
+                dataSet.add(new DateModel(title, Constants.DATE_DEFAULT, i));
             } else if (category == 4) {
                 dataSet.add(new ProfilePicModel(Constants.IMAGE_UPLOAD_PATH + DatabaseHelper.ben_code + ".jpeg",
-                        DatabaseHelper.ben_code));
+                        DatabaseHelper.ben_code, i));
             }
         }
     }

@@ -1,0 +1,48 @@
+{
+  "name": "Climate Action and Protected condition",
+  "table_name": "gpdp_climate_action_24",
+  "form_number": 23,
+  "loop": "form_22_hazard_list hazard_id H",
+  "widgets": [
+    {
+      "column_name": "earthquake",
+      "heading": "Earthquake",
+      "category": 0,
+      "data_type": 1,
+      "options": "",
+      "dependencies": "none"
+    },
+    {
+      "column_name": "flood",
+      "heading": "Flood",
+      "category": 0,
+      "data_type": 1,
+      "options": "",
+      "dependencies": "none"
+    },
+    {
+      "column_name": "hurricane",
+      "heading": "Tornado",
+      "category": 0,
+      "data_type": 1,
+      "options": "",
+      "dependencies": "none"
+    },
+    {
+      "column_name": "forest_fire",
+      "heading": "Forest Fire",
+      "category": 0,
+      "data_type": 1,
+      "options": "",
+      "dependencies": "none"
+    },
+    {
+      "column_name": "drought",
+      "heading": "Drought",
+      "category": 0,
+      "data_type": 1,
+      "options": "",
+      "dependencies": "none"
+    }
+  ]
+}

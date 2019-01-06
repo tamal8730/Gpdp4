@@ -1,0 +1,88 @@
+{
+  "name": "Status of Disaster Protected Center",
+  "table_name": "gpdp_disaster_protected_center_25",
+  "form_number": 24,
+  "loop": null,
+  "widgets": [
+    {
+      "column_name": "proper_knowledge_of_dm",
+      "heading": "Whether the family receive proper knowledge of disaster management",
+      "category": 0,
+      "data_type": 1,
+      "options": "",
+      "dependencies": "1 1"
+    },
+    {
+      "column_name": "source_id",
+      "heading": "From whom",
+      "category": 2,
+      "data_type": 0,
+      "options": "form_23_knowledge_source",
+      "dependencies": "none"
+    },
+    {
+      "column_name": "proper_news_before_natural_disaster",
+      "heading": "Whether the family receive proper news before natural disaster",
+      "category": 0,
+      "data_type": 1,
+      "options": "",
+      "dependencies": "1 1"
+    },
+    {
+      "column_name": "media_id",
+      "heading": "Media of information",
+      "category": 2,
+      "data_type": 0,
+      "options": "form_23_media",
+      "dependencies": "none"
+    },
+    {
+      "column_name": "shelter_during_disaster",
+      "heading": "Whether family take shelter during disaster",
+      "category": 0,
+      "data_type": 1,
+      "options": "",
+      "dependencies": "1 1"
+    },
+    {
+      "column_name": "disaster_protected_shelter_distance",
+      "heading": "Distance of disaster protected shelter",
+      "category": 1,
+      "data_type": 2,
+      "options": "",
+      "dependencies": "none"
+    },
+    {
+      "column_name": "disaster_protected_shelter",
+      "heading": "Whether Disaster protected shelter house is available at the GP?",
+      "category": 0,
+      "data_type": 1,
+      "options": "",
+      "dependencies": "1 1"
+    },
+    {
+      "column_name": "condition_of_shelter",
+      "heading": "Condition of shelter?",
+      "category": 2,
+      "data_type": 0,
+      "options": "form_23_shelter_condition",
+      "dependencies": "none"
+    },
+    {
+      "column_name": "availability_rapid_response_team",
+      "heading": "Whether Rapid Response Team is available in the village",
+      "category": 0,
+      "data_type": 1,
+      "options": "",
+      "dependencies": "1 1"
+    },
+    {
+      "column_name": "performance_rapid_response_team",
+      "heading": "If Yes then they have actively performed in any emergency situation happened in earlier",
+      "category": 0,
+      "data_type": 1,
+      "options": "",
+      "dependencies": "none"
+    }
+  ]
+}

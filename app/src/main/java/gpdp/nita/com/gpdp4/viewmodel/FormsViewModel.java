@@ -7,16 +7,19 @@ import android.arch.lifecycle.MutableLiveData;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
+import android.util.SparseArray;
 
 import org.json.JSONArray;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import gpdp.nita.com.gpdp4.R;
 import gpdp.nita.com.gpdp4.helpers.DatabaseHelper;
 import gpdp.nita.com.gpdp4.helpers.MyJson;
 import gpdp.nita.com.gpdp4.helpers.Upload;
 import gpdp.nita.com.gpdp4.interfaces.OnFormsEndListener;
+import gpdp.nita.com.gpdp4.interfaces.OnViewModifiedListener;
 import gpdp.nita.com.gpdp4.models.DateModel;
 import gpdp.nita.com.gpdp4.models.EditTextModel;
 import gpdp.nita.com.gpdp4.models.FormsModel;
@@ -35,15 +38,26 @@ public class FormsViewModel extends AndroidViewModel {
     private Repo mRepo;
     private MutableLiveData<ArrayList<Object>> oneRowLiveData;
     private OnFormsEndListener onFormsEndListener;
+    private ArrayList<FormsModel> tmp;
+    private SparseArray<ArrayList<FormsModel>> dump;
+
+    private OnViewModifiedListener onViewModifiedListener;
 
     FormsViewModel(@NonNull Application application, String benCode) {
         super(application);
         if (mutableLiveData != null) {
             return;
         }
+        tmp = new ArrayList<>();
+        dump = new SparseArray<>();
+
         this.benCode = benCode;
         initDatabase(0, 0);
         loadForm(application, formNumber);
+    }
+
+    public void setOnViewModifiedListener(OnViewModifiedListener onViewModifiedListener) {
+        this.onViewModifiedListener = onViewModifiedListener;
     }
 
     public void setOnFormsEndListener(OnFormsEndListener onFormsEndListener) {
@@ -60,18 +74,6 @@ public class FormsViewModel extends AndroidViewModel {
     public MutableLiveData<ArrayList<Object>> getOneRow() {
         oneRowLiveData = mRepo.getOneRowLive();
         return oneRowLiveData;
-    }
-
-
-    public void deleteViewAtRange(int start, int batchSize) {
-
-        List<FormsModel> formsModels = mutableLiveData.getValue();
-        for (int i = 0; i < batchSize; i++) {
-            if (formsModels != null) {
-                formsModels.remove(start + i);
-            }
-        }
-        mutableLiveData.postValue(formsModels);
     }
 
 
@@ -232,11 +234,19 @@ public class FormsViewModel extends AndroidViewModel {
             } else if (formsModel instanceof DateModel) {
                 if (run == null) ((DateModel) formsModel).setDate("Date");
                 else ((DateModel) formsModel).setDate(run.toString().trim());
+
             } else if (formsModel instanceof RadioGroupModel) {
-                int id;
-                if (run == null) id = 0;
-                else id = Integer.parseInt(run.toString().trim());
-                ((RadioGroupModel) formsModel).setId(id == 0 ? 1 : 0);
+
+                RadioGroupModel radioGroupModel = (RadioGroupModel) formsModel;
+
+                int id = 0;
+                if (run != null && !run.toString().trim().equals("")) {
+                    id = Integer.parseInt(run.toString().trim());
+                }
+                radioGroupModel.setId(id == 0 ? R.id.rb1_rbvh : R.id.rb0_rbvh);
+
+                onViewModifiedListener.onViewModified(i, id == 0 ? R.id.rb1_rbvh : R.id.rb0_rbvh, radioGroupModel.getTokens());
+
             } else if (formsModel instanceof SpinnerModel) {
 
                 int pos = 0;
@@ -250,7 +260,6 @@ public class FormsViewModel extends AndroidViewModel {
                         }
                     }
                 }
-
                 ((SpinnerModel) formsModel).setSelection(pos);
             } else if (formsModel instanceof ProfilePicModel) {
                 if (run != null) ((ProfilePicModel) formsModel).setImgUrl(run.toString());
