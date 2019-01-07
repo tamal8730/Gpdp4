@@ -141,8 +141,14 @@ public class FormsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         TextView date = viewHolder.getDateField();
         ConstraintLayout root = viewHolder.getRoot();
 
+        String dateStr = dateModel.getDate();
+
+
         title.setText(dateModel.getTile());
         date.setText(dateModel.getDate());
+
+        if (!dateStr.equals(""))
+            onValuesEnteredListener.onDateSet(dateStr, viewHolder.getAdapterPosition());
 
         root.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -175,7 +181,16 @@ public class FormsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(arrayAdapter);
 
-        spinner.setSelection(spinnerModel.getSelection());
+        int pos = spinnerModel.getSelection();
+
+        if (pos >= 0) {
+            spinner.setSelection(spinnerModel.getSelection());
+            onValuesEnteredListener.onSpinnerItemSelected
+                    (
+                            pos,
+                            viewHolder.getAdapterPosition()
+                    );
+        }
 
         final String[] tokens = spinnerModel.getTokens();
         if (tokens != null)
@@ -259,15 +274,22 @@ public class FormsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         RadioGroup radioGroup = viewHolder.getRadioGroup();
 
         final String[] tokens = radioGroupModel.getTokens();
+
         if (tokens != null)
             onRadioButtonSelected(viewHolder.getAdapterPosition(), radioGroupModel.getId(), tokens);
 
         title.setText(radioGroupModel.getTile());
         int id = radioGroupModel.getId();
+
+        Log.d("rbxxx", id + "");
+
         if (id == -1)
             radioGroup.clearCheck();
-        else
+
+        else {
             radioGroup.check(radioGroupModel.getId());
+            onValuesEnteredListener.onRadioButtonChecked(radioGroupModel.getId(), viewHolder.getAdapterPosition());
+        }
 
         radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
@@ -277,6 +299,7 @@ public class FormsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                 int id = -1;
                 if (checkedId == R.id.rb0_rbvh) id = 1;
                 else if (checkedId == R.id.rb1_rbvh) id = 0;
+
                 onValuesEnteredListener.onRadioButtonChecked(id, viewHolder.getAdapterPosition());
             }
         });
@@ -311,7 +334,6 @@ public class FormsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                     hideViews(finalHide, adapterPos);
             }
         });
-
 
     }
 

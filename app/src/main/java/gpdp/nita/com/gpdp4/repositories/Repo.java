@@ -12,6 +12,7 @@ import org.json.JSONException;
 import java.util.ArrayList;
 import java.util.List;
 
+import gpdp.nita.com.gpdp4.R;
 import gpdp.nita.com.gpdp4.helpers.DatabaseHelper;
 import gpdp.nita.com.gpdp4.helpers.MyJson;
 import gpdp.nita.com.gpdp4.models.DateModel;
@@ -229,9 +230,45 @@ public class Repo {
     }
 
     public Object[] onRadioButtonSelected(int id, int position) {
-        answersList[position] = id;
+        answersList[position] = getIdFromButtonId(id);
         return answersList;
     }
+
+
+    private Integer getIdFromButtonId(int id) {
+        if (id == -1) return -1;
+        else if (id == R.id.rb0_rbvh) return 1;
+        else return 0;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     public Object[] onProfilePicTapped(int position) {
         answersList[position] = Constants.IMAGE_UPLOAD_PATH + DatabaseHelper.ben_code + ".jpeg";

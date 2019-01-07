@@ -22,7 +22,12 @@ public class Constants {
     public static final int YES_NO = -1;
     public static final String REMEMBER_LOGIN = "gpdp.nita.com.gpdp.remember_login";
     public static final String AUTO_VALUES = "gpdp.nita.com.gpdp.auto";
-    private static final String BASE_URL = "164.100.127.82";
+
+
+    private static final String BASE_URL = "nakshakantha.com";
+    //"164.100.127.82";
+
+
     public static final String LOGIN_VALIDATOR = "http://" + BASE_URL + "/apis/serveyor_validator.php";
     public static final String UPDATE_TABLES = "http://" + BASE_URL + "/apis/updates.php";
     public static final String HTTP_URL = "http://" + BASE_URL + "/apis/sync.php";

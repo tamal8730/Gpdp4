@@ -193,7 +193,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             if (hasUniqueIdentifier)
                 contentValues.put(unique_identifier_name, unique_identifier_val);
             for (int i = 0; i < answers.length; i++) {
-                populateContentValue(answers[i], columnNames.get(i), contentValues);
+                try {
+                    populateContentValue(answers[i], columnNames.get(i), contentValues);
+                } catch (Exception e) {
+                    Log.d("datxx", columnNames + "");
+                }
+
             }
             if (tableName.equals("gpdp_basic_info_1"))
                 contentValues.put("survey_date", getDateAndTime());
@@ -219,8 +224,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         Cursor c = db.rawQuery("select ben_code from " + tableName + " where " + query, selectArgs);
 
         if (c == null) return false;
-        if (!c.moveToFirst()) return false;
+        if (!c.moveToFirst()) {
+
+            c.close();
+            return false;
+
+        }
         boolean f = !c.isNull(0);
+
         c.close();
         return f;
     }
@@ -260,11 +271,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
 
         Cursor cursor = getCursor(code);
+
         if (cursor == null) {
             return list;
         }
         if (cursor.moveToFirst()) {
+
             int columnCount = cursor.getColumnCount();
+
             if (columnCount > 0) {
                 for (int i = 0; i < columnCount; i++) {
                     int type = cursor.getType(i);
@@ -282,12 +296,21 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     }
                 }
 
+                cursor.close();
+
                 return list;
+
             } else {
+
+                cursor.close();
                 return list;
+
             }
         } else {
+
+            cursor.close();
             return list;
+
         }
     }
 
