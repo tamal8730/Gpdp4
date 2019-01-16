@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -28,7 +29,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static ArrayList<String> columnNames;
     public static ArrayList<Integer> dataTypes;
     private static DatabaseHelper instance = null;
+
     private MyJson myJson;
+    private boolean dateTimeSet = false;
+
+    //private String memberId=null;
+
 
     private DatabaseHelper(Context context) {
         super(context, Constants.DATABASE_NAME, null, 1);
@@ -67,9 +73,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     }
 
-    public static String getImageURL() {
+    public static String getImageURL(String benCode) {
         Cursor c = instance.getReadableDatabase()
-                .rawQuery("select ben_image from gpdp_basic_info_1 where ben_code=?", new String[]{ben_code});
+                .rawQuery("select ben_image from gpdp_basic_info_1 where ben_code=?", new String[]{benCode});
         String url = "";
         if (c.moveToFirst())
             url = c.getString(0);
@@ -78,7 +84,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
 
-    private String columnNamesConcat(ArrayList<String> columnNames, String loop, ArrayList<Integer> dataType, String tableName) {
+    private String columnNamesConcat(ArrayList<String> columnNames,
+                                     String loop, ArrayList<Integer> dataType,
+                                     String tableName,
+                                     ArrayList<Integer> categories ) {
 
         StringBuilder s = new StringBuilder(" (ben_code TEXT,");
 
@@ -89,19 +98,24 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         for (int i = 0; i < columnNames.size(); i++) {
             s.append(columnNames.get(i));
-            switch (dataType.get(i)) {
-                case 0:
-                    s.append(" TEXT DEFAULT 'x' NOT NULL,");
-                    break;
-                case 1:
-                    s.append(" INTEGER DEFAULT 0 NOT NULL,");
-                    break;
-                case 2:
-                    s.append(" DOUBLE DEFAULT 0.0 NOT NULL,");
-                    break;
-                case 3:
-                    s.append(" DATE DEFAULT '0000-00-00' NOT NULL,");
-                    break;
+            if(categories.get(i)==0){
+                s.append(" INTEGER DEFAULT -1 NOT NULL,");
+            }
+            else {
+                switch (dataType.get(i)) {
+                    case 0:
+                        s.append(" TEXT DEFAULT 'x' NOT NULL,");
+                        break;
+                    case 1:
+                        s.append(" INTEGER DEFAULT 0 NOT NULL,");
+                        break;
+                    case 2:
+                        s.append(" DOUBLE DEFAULT 0.0 NOT NULL,");
+                        break;
+                    case 3:
+                        s.append(" DATE DEFAULT '0000-00-00' NOT NULL,");
+                        break;
+                }
             }
         }
         s.deleteCharAt(s.length() - 1);
@@ -124,6 +138,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         ArrayList<ArrayList<String>> columnList = myJson.getColumnsListList();
         ArrayList<String> loopList = myJson.getLoopList();
         ArrayList<ArrayList<Integer>> dataTypes = myJson.getDataTypes();
+        ArrayList<ArrayList<Integer>> categories = myJson.getCategories();
 
         for (int i = 0; i < tableNames.size(); i++) {
 
@@ -132,7 +147,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                             columnList.get(i),
                             loopList.get(i),
                             dataTypes.get(i),
-                            tableNames.get(i)
+                            tableNames.get(i),
+                            categories.get(i)
                     )
             );
         }
@@ -160,6 +176,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private String getDateAndTime() {
 
         SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd H:m:s", Locale.getDefault());
+        Log.d("timexx", fmt.format(Calendar.getInstance().getTime()));
         return fmt.format(Calendar.getInstance().getTime());
     }
 
@@ -172,7 +189,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             selectArgs = new String[]{ben_code, code};
         } else {
             query = "ben_code = ?";
-            selectArgs = new String[]{ben_code};
+            selectArgs = new String[]{code};
         }
         ContentValues contentValues = new ContentValues();
         for (int i = 0; i < answers.length; i++) {
@@ -200,6 +217,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 }
 
             }
+
             if (tableName.equals("gpdp_basic_info_1"))
                 contentValues.put("survey_date", getDateAndTime());
 
@@ -209,7 +227,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     private boolean rowExist() {
         SQLiteDatabase db = this.getReadableDatabase();
-
 
         String query;
         String[] selectArgs;
@@ -222,7 +239,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
 
         Cursor c = db.rawQuery("select ben_code from " + tableName + " where " + query, selectArgs);
-
         if (c == null) return false;
         if (!c.moveToFirst()) {
 

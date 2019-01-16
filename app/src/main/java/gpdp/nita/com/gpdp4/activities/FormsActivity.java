@@ -30,6 +30,8 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.AnimationUtils;
+import android.view.animation.LayoutAnimationController;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -77,7 +79,7 @@ public class FormsActivity extends AppCompatActivity implements OnValuesEnteredL
     DrawerLayout drawerLayout;
     NavigationView navigationView;
 
-    CircleImageView circleImageView;
+    CircleImageView mCircleImageView;
     String benCode;
 
     CircleImageView drawerDp;
@@ -205,8 +207,51 @@ public class FormsActivity extends AppCompatActivity implements OnValuesEnteredL
             public void onChanged(@Nullable List<FormsModel> formsModels) {
 
                 mFormsModels = formsModels;
-                adapter.notifyDataSetChanged();
+                adapter=null;
+                linearLayoutManager=null;
+                adapter=new FormsAdapter(FormsActivity.this, mFormsModels, new OnValuesEnteredListener() {
+                    @Override
+                    public void onDateSet(String date, int position) {
+                        answersList = formsViewModel.onDateSet(date, position);
+                    }
+
+                    @Override
+                    public void onViewRemoved(int position, int category) {
+                        answersList = formsViewModel.onViewRemoved(position, category);
+                    }
+
+                    @Override
+                    public void onTyping(String text, int position) {
+                        answersList = formsViewModel.onTyping(text, position);
+                    }
+
+                    @Override
+                    public void onRadioButtonChecked(int checkId, int position) {
+                        answersList = formsViewModel.onRadioButtonSelected(checkId, position);
+                    }
+
+                    @Override
+                    public void onSpinnerItemSelected(Object key, int position) {
+                        answersList = formsViewModel.onSpinnerItemSelected(key, position);
+                    }
+
+                    @Override
+                    public void onProfilePicTapped(CircleImageView circleImageView, int position) {
+                        selectImage();
+                        mCircleImageView = circleImageView;
+                        answersList = formsViewModel.onProfilePictureTapped(position);
+                    }
+                });
+
+                linearLayoutManager=new LinearLayoutManager(FormsActivity.this);
+
+                recyclerView.setAdapter(adapter);
+                recyclerView.setLayoutManager(linearLayoutManager);
+
+                runLayoutAnimation(recyclerView);
+
                 linearLayoutManager.scrollToPosition(0);
+
                 String subT = formsViewModel.getSubTitle();
                 if (subT.trim().equals(""))
                     subtitle.setVisibility(View.GONE);
@@ -253,7 +298,7 @@ public class FormsActivity extends AppCompatActivity implements OnValuesEnteredL
             public void onFormsEnd(boolean isSuccessful) {
                 if (isSuccessful) {
                     benList.edit()
-                            .putString(DatabaseHelper.ben_code, DatabaseHelper.getImageURL())
+                            .putString(DatabaseHelper.ben_code, DatabaseHelper.getImageURL(DatabaseHelper.ben_code))
                             .apply();
                     dialog.setContentView(R.layout.layout_success);
                     dialog.findViewById(R.id.success_to_main).setOnClickListener(new View.OnClickListener() {
@@ -479,7 +524,7 @@ public class FormsActivity extends AppCompatActivity implements OnValuesEnteredL
     @Override
     public void onProfilePicTapped(CircleImageView circleImageView, int position) {
         selectImage();
-        this.circleImageView = circleImageView;
+        this.mCircleImageView = circleImageView;
         answersList = formsViewModel.onProfilePictureTapped(position);
     }
 
@@ -581,7 +626,7 @@ public class FormsActivity extends AppCompatActivity implements OnValuesEnteredL
                                 .diskCacheStrategy(DiskCacheStrategy.NONE)
                                 .skipMemoryCache(true))
                         .load(bm)
-                        .into(circleImageView);
+                        .into(mCircleImageView);
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -610,7 +655,7 @@ public class FormsActivity extends AppCompatActivity implements OnValuesEnteredL
                         .diskCacheStrategy(DiskCacheStrategy.NONE)
                         .skipMemoryCache(true))
                 .load(thumbnail)
-                .into(circleImageView);
+                .into(mCircleImageView);
     }
 
     @Override
@@ -620,5 +665,14 @@ public class FormsActivity extends AppCompatActivity implements OnValuesEnteredL
         } else {
             super.onBackPressed();
         }
+    }
+
+    private void runLayoutAnimation(final RecyclerView recyclerView) {
+        final Context context = recyclerView.getContext();
+        final LayoutAnimationController controller =
+                AnimationUtils.loadLayoutAnimation(context, R.anim.layout_animation_show_up);
+
+        recyclerView.setLayoutAnimation(controller);
+        recyclerView.scheduleLayoutAnimation();
     }
 }

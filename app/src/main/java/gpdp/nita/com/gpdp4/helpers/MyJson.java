@@ -24,6 +24,7 @@ public class MyJson {
     private ArrayList<ArrayList<String>> columnsListList;
     private ArrayList<String> loopList;
     private ArrayList<ArrayList<Integer>> dataTypes;
+    private ArrayList<ArrayList<Integer>> categories;
 
     private Context context;
 
@@ -103,6 +104,7 @@ public class MyJson {
         columnsListList = new ArrayList<>();
         loopList = new ArrayList<>();
         dataTypes = new ArrayList<>();
+        categories=new ArrayList<>();
         return this;
     }
 
@@ -144,6 +146,7 @@ public class MyJson {
 
                 ArrayList<String> cols = new ArrayList<>();
                 ArrayList<Integer> dt = new ArrayList<>();
+                ArrayList<Integer> cat=new ArrayList<>();
 
                 for (int j = 0; j < oneFormJson.getWidgets().size(); j++) {
 
@@ -151,9 +154,11 @@ public class MyJson {
 
                     cols.add(oneQuestionJson.getColumnName());
                     dt.add(oneQuestionJson.getDataType());
+                    cat.add(oneQuestionJson.getCategory());
                 }
                 columnsListList.add(cols);
                 dataTypes.add(dt);
+                categories.add(cat);
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -178,5 +183,9 @@ public class MyJson {
 
     public ArrayList<String> getColumns(int formNumber) {
         return columnsListList.get(formNumber);
+    }
+
+    public ArrayList<ArrayList<Integer>> getCategories() {
+        return categories;
     }
 }

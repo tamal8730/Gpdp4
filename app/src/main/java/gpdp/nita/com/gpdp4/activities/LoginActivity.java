@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -86,18 +87,29 @@ public class LoginActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(String ServerResponse) {
                         dialog.dismiss();
-                        if ((ServerResponse.trim()).equals("invalid")) {
-                            Toast.makeText(LoginActivity.this, "Invalid credentials", Toast.LENGTH_SHORT).show();
-                        } else {
-                            if (checkBox.isChecked()) {
+
+                        Log.d("loginxxx",ServerResponse.trim());
+
+                        switch ((ServerResponse.trim())) {
+                            case "invalid":
+                                Toast.makeText(LoginActivity.this, "Invalid credentials", Toast.LENGTH_SHORT).show();
+                                break;
+                            case "false":
+                                Toast.makeText(LoginActivity.this,
+                                        "Invalid credentials",
+                                        Toast.LENGTH_LONG).show();
+                                break;
+                            default:
+                                if (checkBox.isChecked()) {
+                                    mSharedPrefLogin.edit()
+                                            .putBoolean(Constants.KEY_LOGGED_IN, true)
+                                            .apply();
+                                }
                                 mSharedPrefLogin.edit()
-                                        .putBoolean(Constants.KEY_LOGGED_IN, true)
+                                        .putString(Constants.KEY_SERVER_RESPONSE, ServerResponse.trim())
                                         .apply();
-                            }
-                            mSharedPrefLogin.edit()
-                                    .putString(Constants.KEY_SERVER_RESPONSE, ServerResponse.trim())
-                                    .apply();
-                            toMain();
+                                toMain();
+                                break;
                         }
                     }
                 },
@@ -111,8 +123,8 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<>();
-                params.put("serveyor_code_sender", id);
-                params.put("password_sender", password);
+                params.put("code", id);
+                params.put("password", password);
 
                 return params;
             }

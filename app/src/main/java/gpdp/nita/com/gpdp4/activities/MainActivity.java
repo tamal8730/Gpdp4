@@ -30,16 +30,19 @@ import com.bumptech.glide.request.RequestOptions;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import gpdp.nita.com.gpdp4.R;
 import gpdp.nita.com.gpdp4.adapters.MenuAdapter;
+import gpdp.nita.com.gpdp4.helpers.DatabaseHelper;
 import gpdp.nita.com.gpdp4.helpers.InternetCheckAsync;
 import gpdp.nita.com.gpdp4.helpers.MyJson;
 import gpdp.nita.com.gpdp4.helpers.Upload;
@@ -58,6 +61,8 @@ public class MainActivity extends AppCompatActivity {
     RecyclerView recyclerView;
     LinearLayoutManager linearLayoutManager;
     Upload upload;
+
+    HashMap<String,String> benData;
 
     Dialog dialog;
     ProgressDialog progressDialog;
@@ -124,19 +129,24 @@ public class MainActivity extends AppCompatActivity {
         surveyorImg = findViewById(R.id.surveyor_img);
         gpVcType = findViewById(R.id.gp_vc_type);
 
-        String[] tokens = mSharedPrefLogin.getString(Constants.KEY_SERVER_RESPONSE, "")
-                .split("#");
+        try {
+            JSONObject response=new JSONObject(mSharedPrefLogin.getString(Constants.KEY_SERVER_RESPONSE, ""));
 
-        mSharedPrefAuto.edit()
-                .putString("surveyor_name", tokens[1])
-                .putString("district", tokens[3])
-                .putString("subdivision", tokens[4])
-                .putString("block_name", tokens[5])
-                .putString("gp_vc_name", tokens[6])
-                .putString("surveyor_id", tokens[2])
-                .putString("gp_vc_type", tokens[7])
-                .putString("surveyor_img_url", tokens[0].trim())
-                .apply();
+            mSharedPrefAuto.edit()
+                    .putString("surveyor_name", response.getString("sv_name"))
+                    .putString("district", response.getString("sv_district"))
+                    .putString("subdivision", response.getString("sv_subdivision"))
+                    .putString("block_name", response.getString("sv_block"))
+                    .putString("gp_vc_name", response.getString("sv_gp_vc_name"))
+                    .putString("surveyor_id", response.getString("sv_code"))
+                    .putString("gp_vc_type", response.getString("sv_gp_vc_type"))
+                    .putString("surveyor_img_url", response.getString("sv_image_link"))
+                    .apply();
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
 
         new InternetCheckAsync(new InternetCheckAsync.Consumer() {
             @Override
@@ -155,7 +165,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
-        String imgUrl = tokens[0].trim();
+        String imgUrl = mSharedPrefAuto.getString("surveyor_img_url","").trim();
 
         Glide
                 .with(this)
@@ -165,13 +175,13 @@ public class MainActivity extends AppCompatActivity {
                 .load(imgUrl)
                 .into(surveyorImg);
 
-        surveyorName.setText(tokens[1]);
-        surveyorCode.setText(tokens[2]);
-        district.setText(tokens[3]);
-        subdivision.setText(tokens[4]);
-        block.setText(tokens[5]);
-        gpvc.setText(tokens[6]);
-        gpVcType.setText(tokens[7]);
+        surveyorName.setText(mSharedPrefAuto.getString("surveyor_name",""));
+        surveyorCode.setText(mSharedPrefAuto.getString("surveyor_id",""));
+        district.setText(mSharedPrefAuto.getString("district",""));
+        subdivision.setText(mSharedPrefAuto.getString("subdivision",""));
+        block.setText(mSharedPrefAuto.getString("block_name",""));
+        gpvc.setText(mSharedPrefAuto.getString("gp_vc_name",""));
+        gpVcType.setText(mSharedPrefAuto.getString("gp_vc_type",""));
 
 
         MenuAdapter adapter = new MenuAdapter(this, models, new OnMenuItemSelected() {
@@ -264,7 +274,13 @@ public class MainActivity extends AppCompatActivity {
         final File root = new File(Environment.getExternalStorageDirectory(), path);
         if (root.exists()) {
 
+            benData=new HashMap<>();
+
             final int numberOfFiles = root.list().length;
+            if (numberOfFiles == 0) {
+                progressDialog.dismiss();
+                Toast.makeText(MainActivity.this, "No backup files found", Toast.LENGTH_SHORT).show();
+            }
 
             requestQueue = Volley.newRequestQueue(this);
 
@@ -278,12 +294,22 @@ public class MainActivity extends AppCompatActivity {
                         text.append('\n');
                     }
                     br.close();
+
                 } catch (IOException e) {
                     Toast.makeText(this, "Error reading files", Toast.LENGTH_SHORT).show();
                 }
                 JSONArray payload = null;
                 try {
+
                     payload = new JSONArray(text.toString());
+                    JSONObject jsonObj = payload.getJSONObject(0);
+                    JSONArray jsonArray = jsonObj.getJSONArray("gpdp_basic_info_1");
+                    JSONObject obj = jsonArray.getJSONObject(0);
+
+                    String img_url = obj.getString("ben_image");
+
+                    benData.put(fileName.replace(".json",""),img_url);
+
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -298,9 +324,10 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
             });
+        } else {
+            progressDialog.dismiss();
+            Toast.makeText(MainActivity.this, "No backup files found", Toast.LENGTH_SHORT).show();
         }
-
-
     }
 
     private void onSuccess(final int total) {
@@ -309,6 +336,15 @@ public class MainActivity extends AppCompatActivity {
         Button button;
 
         if (failedCount == 0) {
+
+            for(String ben:benData.keySet()){
+
+                this.getSharedPreferences(Constants.BEN_NAMES_SHARED_PREFS, Context.MODE_PRIVATE)
+                        .edit()
+                        .putString(ben, benData.get(ben))
+                        .apply();
+            }
+
             dialog.setContentView(R.layout.layout_success);
             button = dialog.findViewById(R.id.success_to_main);
             TextView message = dialog.findViewById(R.id.success_message);

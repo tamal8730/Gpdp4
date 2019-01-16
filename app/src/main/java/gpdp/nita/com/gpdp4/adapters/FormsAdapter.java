@@ -297,8 +297,8 @@ public class FormsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                 if (tokens != null)
                     onRadioButtonSelected(viewHolder.getAdapterPosition(), checkedId, tokens);
                 int id = -1;
-                if (checkedId == R.id.rb0_rbvh) id = 1;
-                else if (checkedId == R.id.rb1_rbvh) id = 0;
+                if (checkedId == R.id.rb0_rbvh) id = R.id.rb0_rbvh;
+                else if (checkedId == R.id.rb1_rbvh) id = R.id.rb1_rbvh;
 
                 onValuesEnteredListener.onRadioButtonChecked(id, viewHolder.getAdapterPosition());
             }
