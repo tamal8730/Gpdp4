@@ -32,11 +32,11 @@ import gpdp.nita.com.gpdp4.repositories.Repo;
 
 public class FormsViewModel extends AndroidViewModel {
 
-    public static int formNumber = 0;
+    private int formNumber = 0;
     private MutableLiveData<List<FormsModel>> mutableLiveData;
     private String benCode;
     private Repo mRepo;
-    private MutableLiveData<ArrayList<Object>> oneRowLiveData;
+//    private MutableLiveData<ArrayList<Object>> oneRowLiveData;
     private OnFormsEndListener onFormsEndListener;
 
     private OnDependentSpinnerItemSelected onDependentSpinnerItemSelected;
@@ -64,15 +64,15 @@ public class FormsViewModel extends AndroidViewModel {
 
     private void loadForm(Application application, int formNumber) {
 
-        mRepo = new Repo(application, formNumber);
+        mRepo =new Repo(application, formNumber);
         //form0MutableLiveData = mRepo.getLiveAnswers(benCode);
         mutableLiveData = mRepo.getFormsModel();
     }
 
-    public MutableLiveData<ArrayList<Object>> getOneRow() {
-        oneRowLiveData = mRepo.getOneRowLive();
-        return oneRowLiveData;
-    }
+//    public MutableLiveData<ArrayList<Object>> getOneRow() {
+//        oneRowLiveData = mRepo.getOneRowLive();
+//        return oneRowLiveData;
+//    }
 
 
     public void setBenCode(String benCode) {
@@ -85,13 +85,20 @@ public class FormsViewModel extends AndroidViewModel {
         //oneRowLiveData.postValue(oneRow);
     }
 
+    public void insert(){
+        mRepo.insert();
+    }
+
     public Object[] onViewRemoved(int position, int category) {
         if (category == 0) return mRepo.onViewRemoved(Constants.YES_NO, position);
         else if (category == 1) {
             return mRepo.onEditTextRemoved(position);
         } else if (category == 2) return mRepo.onViewRemoved(Constants.NUMBER_DEFAULT, position);
         else if (category == 3) return mRepo.onViewRemoved(Constants.DATE_DEFAULT, position);
-        else return mRepo.getAnswersList();
+        else {
+
+            return mRepo.getAnswersList();
+        }
     }
 
     public Object[] onTyping(String text, int position) {
@@ -178,7 +185,7 @@ public class FormsViewModel extends AndroidViewModel {
         mutableLiveData.postValue(mRepo.getFormsModel().getValue());
 
         ArrayList<Object> oneRow = mRepo.getOneRow();
-        oneRowLiveData.postValue(oneRow);
+        //oneRowLiveData.postValue(oneRow);
     }
 
     private void initDatabase(int formNumber, int index) {
@@ -200,7 +207,10 @@ public class FormsViewModel extends AndroidViewModel {
 
     private boolean uniqueIdentifierResolver(OneFormJson form) {
         String loop = form.getLoop();
-        if (loop == null) return false;
+        if (loop == null) {
+            DatabaseHelper.unique_identifier_name = null;
+            return false;
+        }
         else {
             String[] tokens = loop.split(" ");
             DatabaseHelper.unique_identifier_name = tokens[1];
@@ -238,9 +248,9 @@ public class FormsViewModel extends AndroidViewModel {
                     ((EditTextModel) formsModel).setTextInEditText("");
                 } else ((EditTextModel) formsModel).setTextInEditText(run.toString().trim());
             } else if (formsModel instanceof DateModel) {
-                if (run == null) ((DateModel) formsModel).setDate("Tap to pick a date");
+                if (run == null) ((DateModel) formsModel).setDate("Date");
                 else if (run.toString().equals(Constants.DATE_DEFAULT))
-                    ((DateModel) formsModel).setDate("Tap to pick a date");
+                    ((DateModel) formsModel).setDate("Date");
                 else ((DateModel) formsModel).setDate(run.toString().trim());
 
             } else if (formsModel instanceof RadioGroupModel) {
@@ -259,8 +269,15 @@ public class FormsViewModel extends AndroidViewModel {
                 if (id == -1) {
                     radioGroupModel.setId(-1);
                 } else {
-                    radioGroupModel.setId(id == 0 ? R.id.rb1_rbvh : R.id.rb0_rbvh);
-                    onViewModifiedListener.onViewModified(i, id == 0 ? R.id.rb1_rbvh : R.id.rb0_rbvh, radioGroupModel.getTokens());
+                    if(id==0)
+                        radioGroupModel.setId(R.id.rb1_rbvh);
+                    else if(id==1)
+                        radioGroupModel.setId(R.id.rb0_rbvh);
+
+                    if(id==0)
+                        onViewModifiedListener.onViewModified(i,R.id.rb1_rbvh, radioGroupModel.getTokens());
+                    else if(id==1)
+                        onViewModifiedListener.onViewModified(i,R.id.rb0_rbvh, radioGroupModel.getTokens());
                 }
 
 
@@ -295,4 +312,8 @@ public class FormsViewModel extends AndroidViewModel {
         this.onDependentSpinnerItemSelected = onDependentSpinnerItemSelected;
     }
 
+    public void closeDatabase() {
+        formNumber=0;
+        mRepo.closeDatabase();
+    }
 }

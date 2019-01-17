@@ -59,7 +59,7 @@ import gpdp.nita.com.gpdp4.repositories.Constants;
 import gpdp.nita.com.gpdp4.viewmodel.FormsViewModel;
 import gpdp.nita.com.gpdp4.viewmodel.MyCustomViewModelFactory;
 
-public class FormsActivity extends AppCompatActivity implements OnValuesEnteredListener {
+public class FormsActivity extends AppCompatActivity{
 
 
     private static final int GALLERY_REQUEST_CODE = 130;
@@ -88,7 +88,7 @@ public class FormsActivity extends AppCompatActivity implements OnValuesEnteredL
     SharedPreferences mAutoValuesSharedPref, benList;
     ProgressDialog progressDialog;
 
-    Object[] answersList;
+//    Object[] answersList;
 
     Dialog dialog;
 
@@ -110,7 +110,6 @@ public class FormsActivity extends AppCompatActivity implements OnValuesEnteredL
         } else {
             benCodeError();
         }
-        FormsViewModel.formNumber = 0;
 
         recyclerView = findViewById(R.id.recycler);
         mNext = findViewById(R.id.btn_next);
@@ -197,6 +196,7 @@ public class FormsActivity extends AppCompatActivity implements OnValuesEnteredL
         });
 
 
+
         formsViewModel = ViewModelProviders.of(this, new MyCustomViewModelFactory(this.getApplication(), benCode))
                 .get(FormsViewModel.class);
 
@@ -209,42 +209,41 @@ public class FormsActivity extends AppCompatActivity implements OnValuesEnteredL
                 mFormsModels = formsModels;
                 adapter=null;
                 linearLayoutManager=null;
-                adapter=new FormsAdapter(FormsActivity.this, mFormsModels, new OnValuesEnteredListener() {
+                adapter=new FormsAdapter(mFormsModels, new OnValuesEnteredListener() {
                     @Override
                     public void onDateSet(String date, int position) {
-                        answersList = formsViewModel.onDateSet(date, position);
+                       formsViewModel.onDateSet(date, position);
                     }
 
                     @Override
                     public void onViewRemoved(int position, int category) {
-                        answersList = formsViewModel.onViewRemoved(position, category);
+                        formsViewModel.onViewRemoved(position, category);
                     }
 
                     @Override
                     public void onTyping(String text, int position) {
-                        answersList = formsViewModel.onTyping(text, position);
+                        formsViewModel.onTyping(text, position);
                     }
 
                     @Override
                     public void onRadioButtonChecked(int checkId, int position) {
-                        answersList = formsViewModel.onRadioButtonSelected(checkId, position);
+                        formsViewModel.onRadioButtonSelected(checkId, position);
                     }
 
                     @Override
                     public void onSpinnerItemSelected(Object key, int position) {
-                        answersList = formsViewModel.onSpinnerItemSelected(key, position);
+                         formsViewModel.onSpinnerItemSelected(key, position);
                     }
 
                     @Override
                     public void onProfilePicTapped(CircleImageView circleImageView, int position) {
                         selectImage();
                         mCircleImageView = circleImageView;
-                        answersList = formsViewModel.onProfilePictureTapped(position);
+                        formsViewModel.onProfilePictureTapped(position);
                     }
                 });
 
                 linearLayoutManager=new LinearLayoutManager(FormsActivity.this);
-
                 recyclerView.setAdapter(adapter);
                 recyclerView.setLayoutManager(linearLayoutManager);
 
@@ -277,14 +276,14 @@ public class FormsActivity extends AppCompatActivity implements OnValuesEnteredL
             }
         });
 
-        formsViewModel.getOneRow().observe(this, new Observer<ArrayList<Object>>() {
-            @Override
-            public void onChanged(@Nullable ArrayList<Object> list) {
-                if (list != null && list.size() > 0) {
-                    formsViewModel.modify(list);
-                }
-            }
-        });
+//        formsViewModel.getOneRow().observe(this, new Observer<ArrayList<Object>>() {
+//            @Override
+//            public void onChanged(@Nullable ArrayList<Object> list) {
+//                if (list != null && list.size() > 0) {
+//                    formsViewModel.modify(list);
+//                }
+//            }
+//        });
 
         formsViewModel.setOnFormsEndListener(new OnFormsEndListener() {
             @Override
@@ -331,7 +330,8 @@ public class FormsActivity extends AppCompatActivity implements OnValuesEnteredL
         mNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                formsViewModel.insert(answersList);
+                //formsViewModel.insert(answersList);
+                formsViewModel.insert();
                 int i = formsViewModel.loadNext();
                 if (i != -1)
                     navigationView.setCheckedItem(getId(i));
@@ -354,6 +354,12 @@ public class FormsActivity extends AppCompatActivity implements OnValuesEnteredL
             }
         });
 
+    }
+
+    @Override
+    protected void onDestroy() {
+        formsViewModel.closeDatabase();
+        super.onDestroy();
     }
 
     private void toMain() {
@@ -489,44 +495,9 @@ public class FormsActivity extends AppCompatActivity implements OnValuesEnteredL
     }
 
     private void initRecyclerView() {
-        adapter = new FormsAdapter(this, formsViewModel.getFormsModel().getValue(), this);
-        linearLayoutManager = new LinearLayoutManager(this);
-        recyclerView.setLayoutManager(linearLayoutManager);
-        recyclerView.setItemViewCacheSize(30);
-        recyclerView.setAdapter(adapter);
+
     }
 
-    @Override
-    public void onDateSet(String date, int position) {
-        answersList = formsViewModel.onDateSet(date, position);
-    }
-
-    @Override
-    public void onViewRemoved(int position, int category) {
-        answersList = formsViewModel.onViewRemoved(position, category);
-    }
-
-    @Override
-    public void onTyping(String text, int position) {
-        answersList = formsViewModel.onTyping(text, position);
-    }
-
-    @Override
-    public void onRadioButtonChecked(int checkId, int position) {
-        answersList = formsViewModel.onRadioButtonSelected(checkId, position);
-    }
-
-    @Override
-    public void onSpinnerItemSelected(Object key, int position) {
-        answersList = formsViewModel.onSpinnerItemSelected(key, position);
-    }
-
-    @Override
-    public void onProfilePicTapped(CircleImageView circleImageView, int position) {
-        selectImage();
-        this.mCircleImageView = circleImageView;
-        answersList = formsViewModel.onProfilePictureTapped(position);
-    }
 
 
     private void selectImage() {

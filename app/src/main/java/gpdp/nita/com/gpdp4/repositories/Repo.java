@@ -4,6 +4,7 @@ import android.app.Application;
 import android.arch.lifecycle.MutableLiveData;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 import android.util.SparseBooleanArray;
 
 import org.json.JSONArray;
@@ -27,10 +28,12 @@ import gpdp.nita.com.gpdp4.models.SpinnerModel;
 public class Repo {
     SharedPreferences mAutoValues;
     private ArrayList<FormsModel> dataSet = new ArrayList<>();
-    private Object[] answersList;
+//    private Object[] answersList;
     private OneFormJson oneFormJson;
     private DatabaseHelper databaseHelper;
     private SparseBooleanArray isNumeric;
+    private Object[] answers;
+
 
 
     public Repo(Application application, int formNumber) {
@@ -66,6 +69,8 @@ public class Repo {
         databaseHelper = DatabaseHelper.getInstance(application);
 
     }
+
+
 
     public MutableLiveData<ArrayList<Object>> getOneRowLive() {
         MutableLiveData<ArrayList<Object>> oneRowLiveData = new MutableLiveData<>();
@@ -106,33 +111,65 @@ public class Repo {
         return data;
     }
 
-    private void setAnswers(String benCode) {
-        //  formMutableLiveData = ((Form0Dao)baseDao).getBeneficiaryDetails(benCode);
+    private Object getDatabaseValueOrThrow(int category,
+                                           ArrayList<Object> oneRow,
+                                           int position,
+                                           int dataType) {
+        if (oneRow.size() == 0) {
+
+            if (category == 0) {
+                answers[position] = Constants.RADIO_GROUP_DEFAULT;
+            } else {
+                if (dataType == 0) {
+                    answers[position] = Constants.STRING_DEFAULT;
+                } else if (dataType == 1 || dataType == 2) {
+                    answers[position] = Constants.NUMBER_DEFAULT;
+                } else if (dataType == 3) {
+                    answers[position] = Constants.DATE_DEFAULT;
+                } else {
+                    answers[position] = null;
+                }
+            }
+
+        } else {
+            answers[position] = oneRow.get(position);
+        }
+
+        return answers[position];
     }
 
     private void setFormsModel() {
 
         List<OneQuestionJson> oneQuestionJsons = oneFormJson.getWidgets();
+        ArrayList<Object> oneRow=databaseHelper.getOneRow(DatabaseHelper.hasUniqueIdentifier?
+                DatabaseHelper.unique_identifier_val:DatabaseHelper.ben_code);
+
+        answers=new Object[oneQuestionJsons.size()];
 
         isNumeric = new SparseBooleanArray();
 
         dataSet.clear();
-        answersList = new Object[oneQuestionJsons.size()];
+//        answersList = new Object[oneQuestionJsons.size()];
 
         for (int i = 0; i < oneQuestionJsons.size(); i++) {
 
-            answersList[i] = null;
+//            answersList[i] = null;
 
             int category = oneQuestionJsons.get(i).getCategory();
             String title = oneQuestionJsons.get(i).getQuestion();
+            int dataType = oneQuestionJsons.get(i).getDataType();
+
+            Object ans = getDatabaseValueOrThrow(category, oneRow, i, dataType);
 
 
             if (category == 0) {
 
-                answersList[i] = Constants.YES_NO;
+                //answersList[i] = Constants.YES_NO;
 
                 int def = -1;
-                RadioGroupModel radioGroupModel = new RadioGroupModel(title, def, i);
+                RadioGroupModel radioGroupModel = new RadioGroupModel(title,
+                        Integer.parseInt(ans.toString()),
+                        i);
 
                 String depen = oneQuestionJsons.get(i).getDependencies();
                 if (depen.contains(":")) {
@@ -147,16 +184,16 @@ public class Repo {
             } else if (category == 1) {
 
                 boolean enabled = true;
-                String def = "";
+                String def = ans.toString();
 
                 int datatype = oneQuestionJsons.get(i).getDataType();
 
                 if (datatype == 0) {
-                    answersList[i] = Constants.STRING_DEFAULT;
+                    //answersList[i] = Constants.STRING_DEFAULT;
 
                 }
                 else if (datatype == 1 || datatype == 2) {
-                    answersList[i] = Constants.NUMBER_DEFAULT;
+                    //answersList[i] = Constants.NUMBER_DEFAULT;
                     isNumeric.put(i, true);
                 }
 
@@ -169,13 +206,23 @@ public class Repo {
 
             } else if (category == 2) {
 
-                answersList[i] = Constants.STRING_DEFAULT;
+                //answersList[i] = Constants.STRING_DEFAULT;
+
+                ArrayList<Object> spinnerKeys= MyJson.getSpinnerKeys(oneQuestionJsons.get(i).getOptions(),
+                        oneQuestionJsons.get(i).getDataType());
+
+                int selectionPos;
+
+                selectionPos=spinnerKeys.indexOf(ans);
+
+                if(selectionPos==-1)
+                    selectionPos=0;
 
                 SpinnerModel spinnerModel = new SpinnerModel(
                         title,
-                        Constants.NUMBER_DEFAULT,
+                        selectionPos,
                         MyJson.getSpinnerList(oneQuestionJsons.get(i).getOptions()),
-                        MyJson.getSpinnerKeys(oneQuestionJsons.get(i).getOptions(), oneQuestionJsons.get(i).getDataType()),
+                        spinnerKeys,
                         i);
 
                 String depen = oneQuestionJsons.get(i).getDependencies();
@@ -196,13 +243,13 @@ public class Repo {
 
             } else if (category == 3) {
 
-                answersList[i] = Constants.DATE_DEFAULT;
+                //answersList[i] = Constants.DATE_DEFAULT;
 
-                dataSet.add(new DateModel(title, "Tap to pick a date", i));
+                dataSet.add(new DateModel(title, ans.toString(), i));
 
             } else if (category == 4) {
 
-                answersList[i] = Constants.STRING_DEFAULT;
+                //answersList[i] = Constants.STRING_DEFAULT;
                 dataSet.add(new ProfilePicModel(Constants.IMAGE_UPLOAD_PATH + DatabaseHelper.ben_code + ".jpeg",
                         DatabaseHelper.ben_code, i));
             }
@@ -214,24 +261,31 @@ public class Repo {
         databaseHelper.insert(answers);
     }
 
+    public void insert(){
+        databaseHelper.insert(answers);
+    }
+
     public Object[] onTyping(String text, int position) {
-        answersList[position] = text;
-        return answersList;
+        answers[position] = text;
+        return answers;
     }
 
     public Object[] onDateSet(String date, int position) {
-        answersList[position] = date;
-        return answersList;
+        if(date.equals("Tap to pick a date"))
+            answers[position] = Constants.DATE_DEFAULT;
+        else
+            answers[position]=date;
+        return answers;
     }
 
     public Object[] onSpinnerItemSelected(Object key, int position) {
-        answersList[position] = key;
-        return answersList;
+        answers[position] = key;
+        return answers;
     }
 
     public Object[] onRadioButtonSelected(int id, int position) {
-        answersList[position] = getIdFromButtonId(id);
-        return answersList;
+        answers[position] = id;
+        return answers;
     }
 
 
@@ -271,12 +325,12 @@ public class Repo {
 
 
     public Object[] onProfilePicTapped(int position) {
-        answersList[position] = Constants.IMAGE_UPLOAD_PATH + DatabaseHelper.ben_code + ".jpeg";
-        return answersList;
+        answers[position] = Constants.IMAGE_UPLOAD_PATH + DatabaseHelper.ben_code + ".jpeg";
+        return answers;
     }
 
     public Object[] getAnswersList() {
-        return answersList;
+        return answers;
     }
 
     public JSONArray onFormsEnd() {
@@ -290,13 +344,18 @@ public class Repo {
 
     public Object[] onEditTextRemoved(int position) {
         if (isNumeric.get(position, false))
-            answersList[position] = Constants.NUMBER_DEFAULT;
-        else answersList[position] = Constants.STRING_DEFAULT;
-        return answersList;
+            answers[position] = Constants.NUMBER_DEFAULT;
+        else answers[position] = Constants.STRING_DEFAULT;
+        return answers;
     }
 
     public Object[] onViewRemoved(Object def, int position) {
-        answersList[position] = def;
-        return answersList;
+        answers[position] = def;
+        return answers;
+    }
+
+    public void closeDatabase() {
+        databaseHelper.close();
+        Log.d("datxxx","closed");
     }
 }

@@ -18,10 +18,11 @@ public class Constants {
     public static final String[] TABLES_TO_BE_DOWNLOADED_AFTER_LOGIN = {
             "form_0_ward panchayat_name gp_vc_name", //request form_0_ward, send key panchayat_id with values from gp_vc_name row
     };
-    public static final String STRING_DEFAULT = "x";
+    public static final String STRING_DEFAULT = "";
     public static final int YES_NO = -1;
     public static final String REMEMBER_LOGIN = "gpdp.nita.com.gpdp.remember_login";
     public static final String AUTO_VALUES = "gpdp.nita.com.gpdp.auto";
+    public static final int RADIO_GROUP_DEFAULT = -1;
 
 
     private static final String BASE_URL = "nakshakantha.com";

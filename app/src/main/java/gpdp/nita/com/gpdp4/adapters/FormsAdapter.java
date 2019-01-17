@@ -37,6 +37,7 @@ import gpdp.nita.com.gpdp4.models.FormsModel;
 import gpdp.nita.com.gpdp4.models.ProfilePicModel;
 import gpdp.nita.com.gpdp4.models.RadioGroupModel;
 import gpdp.nita.com.gpdp4.models.SpinnerModel;
+import gpdp.nita.com.gpdp4.repositories.Constants;
 import gpdp.nita.com.gpdp4.viewholders.BlankViewHolder;
 import gpdp.nita.com.gpdp4.viewholders.DateViewHolder;
 import gpdp.nita.com.gpdp4.viewholders.EditTextViewHolder;
@@ -47,15 +48,13 @@ import gpdp.nita.com.gpdp4.viewholders.SpinnerViewHolder;
 
 public class FormsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private Context context;
     private List<FormsModel> models;
     private OnValuesEnteredListener onValuesEnteredListener;
     private SparseArray<FormsModel> cache;
     private RecyclerView recyclerView;
 
 
-    public FormsAdapter(Context context, List<FormsModel> models, OnValuesEnteredListener onValuesEnteredListener) {
-        this.context = context;
+    public FormsAdapter(List<FormsModel> models, OnValuesEnteredListener onValuesEnteredListener) {
         this.models = models;
         this.onValuesEnteredListener = onValuesEnteredListener;
         cache = new SparseArray<>();
@@ -75,7 +74,7 @@ public class FormsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int category) {
-        LayoutInflater inflater = LayoutInflater.from(context);
+        LayoutInflater inflater = LayoutInflater.from(viewGroup.getContext());
         RecyclerView.ViewHolder viewHolder = null;
 
         if (category == 0) {
@@ -114,7 +113,7 @@ public class FormsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         benCode.setText(profilePicModel.getBenCode());
 
         Glide
-                .with(context)
+                .with(recyclerView.getContext())
                 .setDefaultRequestOptions(new RequestOptions()
                         .placeholder(R.drawable.ic_default_avatar)
                         .error(R.drawable.ic_default_avatar)
@@ -145,7 +144,13 @@ public class FormsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
 
         title.setText(dateModel.getTile());
-        date.setText(dateModel.getDate());
+
+        if(dateStr.equals(Constants.DATE_DEFAULT)){
+            date.setText("Tap to pick a date");
+        }
+        else {
+            date.setText(dateModel.getDate());
+        }
 
         if (!dateStr.equals(""))
             onValuesEnteredListener.onDateSet(dateStr, viewHolder.getAdapterPosition());
@@ -153,7 +158,7 @@ public class FormsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         root.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                viewHolder.linkPicker(context, new OnDateSet() {
+                viewHolder.linkPicker(recyclerView.getContext(), new OnDateSet() {
                     @Override
                     public void onDateSet(String date) {
                         onValuesEnteredListener.onDateSet(date, viewHolder.getAdapterPosition());
@@ -174,7 +179,7 @@ public class FormsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
         title.setText(spinnerModel.getTile());
 
-        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(context,
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(recyclerView.getContext(),
                 android.R.layout.simple_spinner_item,
                 spinnerModel.getMenu());
 
@@ -236,6 +241,7 @@ public class FormsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             editText.setKeyListener(DigitsKeyListener.getInstance("0123456789."));
         }
 
+
         editText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -265,6 +271,22 @@ public class FormsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
     }
 
+    private int getButtonIdFromPosition(int pos) {
+        if(pos==0)
+            return R.id.rb0_rbvh;
+        else if(pos==1)
+            return R.id.rb1_rbvh;
+        else
+            return -1;
+    }
+    private int getPositionFromButtonId(int checkId){
+        if(checkId==R.id.rb1_rbvh)
+            return 1;
+        else if(checkId==R.id.rb0_rbvh)
+            return 0;
+        else
+            return -1;
+    }
 
     private void bindRadioGroup(final RadioGroupViewHolder viewHolder, int position) {
 
@@ -287,20 +309,21 @@ public class FormsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             radioGroup.clearCheck();
 
         else {
-            radioGroup.check(radioGroupModel.getId());
-            onValuesEnteredListener.onRadioButtonChecked(radioGroupModel.getId(), viewHolder.getAdapterPosition());
+            radioGroup.check(getButtonIdFromPosition(radioGroupModel.getId()));
+//            onValuesEnteredListener.onRadioButtonChecked(radioGroupModel.getId(), viewHolder.getAdapterPosition());
         }
 
         radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 if (tokens != null)
-                    onRadioButtonSelected(viewHolder.getAdapterPosition(), checkedId, tokens);
+                    onRadioButtonSelected(viewHolder.getAdapterPosition(), getPositionFromButtonId(checkedId), tokens);
                 int id = -1;
                 if (checkedId == R.id.rb0_rbvh) id = R.id.rb0_rbvh;
                 else if (checkedId == R.id.rb1_rbvh) id = R.id.rb1_rbvh;
 
-                onValuesEnteredListener.onRadioButtonChecked(id, viewHolder.getAdapterPosition());
+                onValuesEnteredListener.onRadioButtonChecked(getPositionFromButtonId(checkedId),
+                        viewHolder.getAdapterPosition());
             }
         });
     }
@@ -312,10 +335,10 @@ public class FormsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
         if (tokens != null) {
 
-            if (checkedId == getRadioButtonId(tokens[0])) {
+            if (checkedId == Integer.parseInt(tokens[0])) {
                 hide = tokens[1].split(" ");
                 show = tokens[2].split(" ");
-            } else if (checkedId == getRadioButtonId(tokens[3])) {
+            } else if (checkedId == Integer.parseInt(tokens[3])) {
                 hide = tokens[4].split(" ");
                 show = tokens[5].split(" ");
             }

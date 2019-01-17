@@ -304,12 +304,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                         list.add(cursor.getInt(i));
                     else if (type == Cursor.FIELD_TYPE_FLOAT)
                         list.add(cursor.getDouble(i));
-                    else if (type == Cursor.FIELD_TYPE_NULL) {
-                        if (dataTypes.get(i) == 0)
-                            list.add("x");
-                        else if (dataTypes.get(i) == 1)
-                            list.add(0);
-                    }
                 }
 
                 cursor.close();
