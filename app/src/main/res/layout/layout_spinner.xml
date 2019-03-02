@@ -19,6 +19,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <Spinner
+        android:spinnerMode="dialog"
         android:id="@+id/spinner_spinnervh"
         android:layout_width="0dp"
         android:layout_height="wrap_content"

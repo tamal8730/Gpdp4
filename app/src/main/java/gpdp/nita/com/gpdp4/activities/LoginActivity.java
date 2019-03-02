@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.constraint.ConstraintLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -12,7 +14,6 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -35,6 +36,7 @@ public class LoginActivity extends AppCompatActivity {
     EditText surveyorId, password;
     SharedPreferences mSharedPrefLogin;
     CheckBox checkBox;
+    ConstraintLayout root;
 
 
     @Override
@@ -52,6 +54,7 @@ public class LoginActivity extends AppCompatActivity {
         surveyorId = findViewById(R.id.edt_surveyor_code);
         password = findViewById(R.id.edt_password);
         checkBox = findViewById(R.id.remember_password);
+        root = findViewById(R.id.root);
 
         setTitle("Login");
 
@@ -92,12 +95,20 @@ public class LoginActivity extends AppCompatActivity {
 
                         switch ((ServerResponse.trim())) {
                             case "invalid":
-                                Toast.makeText(LoginActivity.this, "Invalid credentials", Toast.LENGTH_SHORT).show();
+
+                                Snackbar
+                                        .make(root, "Invalid credentials", Snackbar.LENGTH_LONG).show();
+
+                                //Toast.makeText(LoginActivity.this, "Invalid credentials", Toast.LENGTH_SHORT).show();
                                 break;
                             case "false":
-                                Toast.makeText(LoginActivity.this,
-                                        "Invalid credentials",
-                                        Toast.LENGTH_LONG).show();
+
+                                Snackbar
+                                        .make(root, "Invalid credentials", Snackbar.LENGTH_LONG).show();
+
+//                                Toast.makeText(LoginActivity.this,
+//                                        "Invalid credentials",
+//                                        Toast.LENGTH_LONG).show();
                                 break;
                             default:
                                 if (checkBox.isChecked()) {
@@ -117,7 +128,16 @@ public class LoginActivity extends AppCompatActivity {
                     @Override
                     public void onErrorResponse(VolleyError volleyError) {
                         dialog.dismiss();
-                        Toast.makeText(LoginActivity.this, volleyError.toString(), Toast.LENGTH_LONG).show();
+                        String errorMessage = volleyError.toString();
+                        if (errorMessage.contains("Unable to resolve host")) {
+                            Snackbar
+                                    .make(root, "No internet connection", Snackbar.LENGTH_LONG).show();
+                        } else {
+                            Snackbar
+                                    .make(root, "Unknown error", Snackbar.LENGTH_LONG).show();
+                        }
+
+                        //Toast.makeText(LoginActivity.this, volleyError.toString(), Toast.LENGTH_LONG).show();
                     }
                 }) {
             @Override
