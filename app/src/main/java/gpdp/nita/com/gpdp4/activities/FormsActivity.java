@@ -35,6 +35,7 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LayoutAnimationController;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -57,6 +58,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -82,6 +84,7 @@ public class FormsActivity extends AppCompatActivity {
     int cameraOrGallery = 0;  //0-cam
     int profilePicPosition = -1;
 
+    private final HashMap<String, String> tableFormMap = new HashMap<>();
 
     RecyclerView recyclerView;
     MyLinearLayoutManager linearLayoutManager;
@@ -107,15 +110,68 @@ public class FormsActivity extends AppCompatActivity {
     ProgressDialog progressDialog;
 
     Animation scaleUp, scaleDown;
+    ArrayList<String> incompleteTableNames = null;
 
 //    Object[] answersList;
 
     Dialog dialog;
 
+
+    private void getFilteredFormsList(ArrayList<String> tableNames, ArrayList<String> buffer) {
+        buffer.clear();
+        for (int i = 0; i < tableNames.size(); i++) {
+            buffer.add(tableFormMap.get(tableNames.get(i)));
+        }
+    }
+
+    private void initTableFormMap() {
+
+        tableFormMap.put("gpdp_basic_info_1", "1. Basic info");
+        tableFormMap.put("gpdp_desc_family_2", "2. Details of family members");
+        tableFormMap.put("gpdp_end_poverty_3", "3. End poverty");
+        tableFormMap.put("gpdp_income_generation_4", "4. Income generation");
+        tableFormMap.put("gpdp_shg_5", "SHG");
+        tableFormMap.put("gpdp_loan_status_6", "6. Loan status");
+        tableFormMap.put("gpdp_mgnrega_7", "7. MGNREGA");
+        tableFormMap.put("gpdp_skill_development_8", "8. Skill development");
+        tableFormMap.put("gpdp_zero_hunger_9", "9. Zero hunger");
+        tableFormMap.put("gpdp_status_icds_10", "10. ICDS enrollment");
+        tableFormMap.put("gpdp_food_source_11", "11. Food items");
+        tableFormMap.put("gpdp_agriculture_issues_12", "12. Agricultural issues");
+        tableFormMap.put("gpdp_agriculture_issues_extra_14", "13. Agricultural issues extra");
+        tableFormMap.put("gpdp_good_health_15", "14. Health and well being");
+        tableFormMap.put("gpdp_health_status_16", "15. Health status of last year");
+        tableFormMap.put("gpdp_institution", "16. Quality education");
+        tableFormMap.put("gpdp_gender_equality_18", "17. Gender equality");
+        tableFormMap.put("gpdp_women_empowerment_19", "18. Women empowerment");
+        tableFormMap.put("gpdp_drinking_water_status_20", "19. Drinking water status");
+        tableFormMap.put("gpdp_domestic_water_status_21", "20. Domestic water status");
+        tableFormMap.put("gpdp_toilet_facility_22", "21. Status of toilets");
+        tableFormMap.put("gpdp_affordable_clean_energy_23", "22. Affordable and clean energy");
+        tableFormMap.put("gpdp_climate_action_24", "23. Climate action and protected condition");
+        tableFormMap.put("gpdp_disaster_protected_center_25", "24. Disaster protected center");
+        tableFormMap.put("gpdp_life_below_water_26", "25. Life below water");
+        tableFormMap.put("gpdp_peace_justice_institution_27", "26. Peace justice institution");
+
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_forms);
+
+        initTableFormMap();
+
+        final ArrayList<String> incompleteFormsName = new ArrayList<>();
+
+        final AlertDialog.Builder unfilledFormsDialog = new AlertDialog.Builder(this);
+        unfilledFormsDialog.setTitle("Forms not filled");
+        unfilledFormsDialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
 
         benList = this.getSharedPreferences(Constants.BEN_NAMES_SHARED_PREFS, Context.MODE_PRIVATE);
 
@@ -123,6 +179,39 @@ public class FormsActivity extends AppCompatActivity {
         scaleUp = AnimationUtils.loadAnimation(this, R.anim.scale_up);
 
         fillStatus = findViewById(R.id.fill_status);
+
+        navigationView = findViewById(R.id.nav_view);
+        navigationView.setCheckedItem(R.id.form0);
+        setTitle(navigationView.getCheckedItem().getTitle());
+
+        fillStatus.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (incompleteTableNames != null) {
+                    if (incompleteTableNames.size() != 0) {
+                        getFilteredFormsList(incompleteTableNames, incompleteFormsName);
+                        ArrayAdapter<String> adapter = new ArrayAdapter<>(FormsActivity.this,
+                                android.R.layout.simple_list_item_1, incompleteFormsName);
+                        unfilledFormsDialog.setAdapter(adapter, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                int formNumber = Integer.parseInt(incompleteFormsName.get(which).split("\\.")[0].trim()) - 1;
+                                boolean formPresent = formsViewModel.loadFormNumber(formNumber);
+                                if (formPresent) {
+                                    navigationView.setCheckedItem(getId(formNumber));
+                                    setTitle(navigationView.getCheckedItem().getTitle());
+                                    dialog.dismiss();
+                                }
+                            }
+                        });
+
+                        unfilledFormsDialog.show();
+                    } else {
+                        //Toast.makeText(FormsActivity.this,"You have filled all the forms",Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+        });
 
         dialog = new Dialog(FormsActivity.this);
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
@@ -147,7 +236,7 @@ public class FormsActivity extends AppCompatActivity {
 
         drawerLayout = findViewById(R.id.drawer);
 
-        navigationView = findViewById(R.id.nav_view);
+
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar,
                 R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawerLayout.addDrawerListener(toggle);
@@ -158,9 +247,6 @@ public class FormsActivity extends AppCompatActivity {
         drawerSurveyorCode = navigationView.getHeaderView(0).findViewById(R.id.drawer_surveyor_code);
 
         setDrawerHeader();
-
-        navigationView.setCheckedItem(R.id.form0);
-        setTitle(navigationView.getCheckedItem().getTitle());
 
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -235,9 +321,9 @@ public class FormsActivity extends AppCompatActivity {
 
                 recyclerView.stopScroll();
 
-                ArrayList<String> incompleteForms = formsViewModel.setIncompleteForms();
+                incompleteTableNames = formsViewModel.setIncompleteForms();
 
-                setFillStatus(incompleteForms.size());
+                setFillStatus(incompleteTableNames.size());
 
                 mFormsModels = formsModels;
                 adapter = null;
@@ -461,6 +547,7 @@ public class FormsActivity extends AppCompatActivity {
         });
 
     }
+
 
     private void setFillStatus(int size) {
         if (size == 0) {

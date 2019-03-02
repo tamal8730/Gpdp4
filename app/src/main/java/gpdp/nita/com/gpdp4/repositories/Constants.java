@@ -10,8 +10,6 @@ import gpdp.nita.com.gpdp4.helpers.DatabaseHelper;
 
 public class Constants {
 
-    public static final String VERSION = "1.0.2.5";
-
     public static final String BEN_NAMES_SHARED_PREFS = "gpdp.nita.com.gpdp.ben_names";
     public static final String DATE_DEFAULT = "0000-00-00";
     //nakshakantha.com
