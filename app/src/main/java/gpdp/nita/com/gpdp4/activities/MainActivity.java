@@ -15,8 +15,8 @@ import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -34,15 +34,19 @@ import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import gpdp.nita.com.gpdp4.R;
 import gpdp.nita.com.gpdp4.adapters.MenuAdapter;
-import gpdp.nita.com.gpdp4.helpers.DatabaseHelper;
+import gpdp.nita.com.gpdp4.helpers.CustomAutoCompleteTextView;
 import gpdp.nita.com.gpdp4.helpers.InternetCheckAsync;
 import gpdp.nita.com.gpdp4.helpers.MyJson;
 import gpdp.nita.com.gpdp4.helpers.Upload;
@@ -62,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
     LinearLayoutManager linearLayoutManager;
     Upload upload;
 
-    HashMap<String,String> benData;
+    HashMap<String, String> benData;
 
     Dialog dialog;
     ProgressDialog progressDialog;
@@ -115,7 +119,7 @@ public class MainActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFormsEnd(boolean isSuccessful) {
+            public void onFormsEnd(boolean isSuccessful, String errorMessage) {
                 if (!isSuccessful) onError();
             }
         });
@@ -130,7 +134,7 @@ public class MainActivity extends AppCompatActivity {
         gpVcType = findViewById(R.id.gp_vc_type);
 
         try {
-            JSONObject response=new JSONObject(mSharedPrefLogin.getString(Constants.KEY_SERVER_RESPONSE, ""));
+            JSONObject response = new JSONObject(mSharedPrefLogin.getString(Constants.KEY_SERVER_RESPONSE, ""));
 
             mSharedPrefAuto.edit()
                     .putString("surveyor_name", response.getString("sv_name"))
@@ -154,6 +158,7 @@ public class MainActivity extends AppCompatActivity {
                 if (isConnected) {
                     RequestQueue queue = Volley.newRequestQueue(MainActivity.this);
                     queue.add(upload.requestJSONForUpdates(Constants.TABLES_TO_BE_DOWNLOADED_AFTER_LOGIN[0], true));
+                    queue.add(upload.requestJSONForUpdates(Constants.TABLES_TO_BE_DOWNLOADED_AFTER_LOGIN[1], true));
                 } else {
                     if (!upload.allFilesExist(Constants.TABLES_TO_BE_DOWNLOADED_AFTER_LOGIN)) {
                         Toast.makeText(MainActivity.this, "Cannot proceed", Toast.LENGTH_SHORT).show();
@@ -165,7 +170,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
-        String imgUrl = mSharedPrefAuto.getString("surveyor_img_url","").trim();
+        String imgUrl = mSharedPrefAuto.getString("surveyor_img_url", "").trim();
 
         Glide
                 .with(this)
@@ -175,13 +180,13 @@ public class MainActivity extends AppCompatActivity {
                 .load(imgUrl)
                 .into(surveyorImg);
 
-        surveyorName.setText(mSharedPrefAuto.getString("surveyor_name",""));
-        surveyorCode.setText(mSharedPrefAuto.getString("surveyor_id",""));
-        district.setText(mSharedPrefAuto.getString("district",""));
-        subdivision.setText(mSharedPrefAuto.getString("subdivision",""));
-        block.setText(mSharedPrefAuto.getString("block_name",""));
-        gpvc.setText(mSharedPrefAuto.getString("gp_vc_name",""));
-        gpVcType.setText(mSharedPrefAuto.getString("gp_vc_type",""));
+        surveyorName.setText(mSharedPrefAuto.getString("surveyor_name", ""));
+        surveyorCode.setText(mSharedPrefAuto.getString("surveyor_id", ""));
+        district.setText(mSharedPrefAuto.getString("district", ""));
+        subdivision.setText(mSharedPrefAuto.getString("subdivision", ""));
+        block.setText(mSharedPrefAuto.getString("block_name", ""));
+        gpvc.setText(mSharedPrefAuto.getString("gp_vc_name", ""));
+        gpVcType.setText(mSharedPrefAuto.getString("gp_vc_type", ""));
 
 
         MenuAdapter adapter = new MenuAdapter(this, models, new OnMenuItemSelected() {
@@ -229,7 +234,16 @@ public class MainActivity extends AppCompatActivity {
         dialog.show();
         ImageView qr = dialog.findViewById(R.id.qr_ben_code);
         ImageButton go = dialog.findViewById(R.id.btn_go_ben);
-        final EditText editText = dialog.findViewById(R.id.edt_ben_code);
+        final CustomAutoCompleteTextView editText = dialog.findViewById(R.id.edt_ben_code);
+
+        final ArrayList<String> suggestionsArray = new MyJson(this).getSuggestionsList("ben_list");
+
+        ArrayAdapter<String> suggestions = new ArrayAdapter<>(this,
+                android.R.layout.simple_list_item_1, suggestionsArray);
+
+
+        editText.setThreshold(0);
+        editText.setAdapter(suggestions);
 
         qr.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -243,7 +257,12 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 String benCode = editText.getText().toString().trim();
-                if (!benCode.equals(""))
+
+                if (benCode.trim().equals("")) {
+                    Toast.makeText(MainActivity.this, "Enter a beneficiary code first", Toast.LENGTH_SHORT).show();
+                } else if (!suggestionsArray.contains(benCode)) {
+                    Toast.makeText(MainActivity.this, "Invalid beneficiary code", Toast.LENGTH_SHORT).show();
+                } else
                     toMain(benCode);
             }
         });
@@ -271,10 +290,15 @@ public class MainActivity extends AppCompatActivity {
 
         String surveyorId = mSharedPrefAuto.getString("surveyor_id", "unknown");
         String path = "gpdp/backups/" + surveyorId;
+
+
+        uploadImages(surveyorId);
+
+
         final File root = new File(Environment.getExternalStorageDirectory(), path);
         if (root.exists()) {
 
-            benData=new HashMap<>();
+            benData = new HashMap<>();
 
             final int numberOfFiles = root.list().length;
             if (numberOfFiles == 0) {
@@ -308,12 +332,12 @@ public class MainActivity extends AppCompatActivity {
 
                     String img_url = obj.getString("ben_image");
 
-                    benData.put(fileName.replace(".json",""),img_url);
+                    benData.put(fileName.replace(".json", ""), img_url);
 
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                requestQueue.add(upload.sendJSONArray(payload));
+                requestQueue.add(upload.sendJSONArray(payload, mSharedPrefAuto.getString("surveyor_id", "")));
             }
             requestQueue.addRequestFinishedListener(new RequestQueue.RequestFinishedListener<JSONArray>() {
                 @Override
@@ -330,6 +354,56 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+
+    private String convertStreamToString(InputStream is) throws Exception {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+        StringBuilder sb = new StringBuilder();
+        String line;
+        while ((line = reader.readLine()) != null) {
+            sb.append(line).append("\n");
+        }
+        reader.close();
+        return sb.toString();
+    }
+
+    private String getStringFromFile(String filePath) throws Exception {
+        File fl = new File(filePath);
+        FileInputStream fin = new FileInputStream(fl);
+        String ret = convertStreamToString(fin);
+        //Make sure to close all streams.
+        fin.close();
+        return ret;
+    }
+
+    private ArrayList<String> getAllFileNames(String surveyorId) {
+
+        File root = new File(Environment.getExternalStorageDirectory(), "gpdp/images/" + surveyorId);
+
+        if (!root.exists()) return null;
+        String[] files = root.list();
+        if (files.length == 0) return null;
+
+        return new ArrayList<>(Arrays.asList(files));
+    }
+
+
+    private boolean uploadImages(String surveyorId) {
+
+        ArrayList<String> fileNames = getAllFileNames(surveyorId);
+        if (fileNames == null) return false;
+        String path = Environment.getExternalStorageDirectory() + "/gpdp/images/" + surveyorId;
+        for (String fileName : fileNames) {
+            try {
+                upload.sendImage(getStringFromFile(path + "/" + fileName), fileName.replace(".txt", ""));
+            } catch (Exception e) {
+                e.printStackTrace();
+                return false;
+            }
+        }
+
+        return true;
+    }
+
     private void onSuccess(final int total) {
 
         final Dialog dialog = new Dialog(this);
@@ -337,7 +411,7 @@ public class MainActivity extends AppCompatActivity {
 
         if (failedCount == 0) {
 
-            for(String ben:benData.keySet()){
+            for (String ben : benData.keySet()) {
 
                 this.getSharedPreferences(Constants.BEN_NAMES_SHARED_PREFS, Context.MODE_PRIVATE)
                         .edit()
@@ -349,7 +423,7 @@ public class MainActivity extends AppCompatActivity {
             button = dialog.findViewById(R.id.success_to_main);
             TextView message = dialog.findViewById(R.id.success_message);
             message.setText(R.string.sync_successful_multiple_files);
-            button.setText(R.string.dismiss);
+            button.setText(R.string.ok);
         } else if (failedCount == total) {
             dialog.setContentView(R.layout.layout_error);
             button = dialog.findViewById(R.id.error_tomain);

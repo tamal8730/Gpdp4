@@ -12,98 +12,98 @@
 
         <item
             android:id="@+id/form2"
-            android:title="End poverty" />
+            android:title="3. End poverty" />
 
         <item
             android:id="@+id/form3"
-            android:title="Income generation" />
+            android:title="4. Income generation" />
 
         <item
             android:id="@+id/form4"
-            android:title="SHG" />
+            android:title="5. SHG" />
 
         <item
             android:id="@+id/form5"
-            android:title="Loan status" />
+            android:title="6. Loan status" />
 
         <item
             android:id="@+id/form6"
-            android:title="MGNREGA" />
+            android:title="7. MGNREGA" />
 
         <item
             android:id="@+id/form7"
-            android:title="Skill development" />
+            android:title="8. Skill development" />
 
         <item
             android:id="@+id/form8"
-            android:title="Zero hunger" />
+            android:title="9. Zero hunger" />
 
         <item
             android:id="@+id/form9"
-            android:title="ICDS enrollment" />
+            android:title="10. ICDS enrollment" />
 
         <item
             android:id="@+id/form10"
-            android:title="Food items" />
+            android:title="11. Food items" />
 
         <item
             android:id="@+id/form11"
-            android:title="Agricultural issues" />
+            android:title="12. Agricultural issues" />
 
         <item
             android:id="@+id/form12"
-            android:title="Agricultural issues extra" />
+            android:title="13. Agricultural issues extra" />
 
         <item
             android:id="@+id/form13"
-            android:title="Health and well-being" />
+            android:title="14. Health and well-being" />
 
         <item
             android:id="@+id/form14"
-            android:title="Health status of last year" />
+            android:title="15. Health status of last year" />
 
         <item
             android:id="@+id/form15"
-            android:title="Quality education" />
+            android:title="16. Quality education" />
 
         <item
             android:id="@+id/form16"
-            android:title="Gender equality" />
+            android:title="17. Gender equality" />
 
         <item
             android:id="@+id/form17"
-            android:title="Women empowerment" />
+            android:title="18. Women empowerment" />
 
         <item
             android:id="@+id/form18"
-            android:title="Drinking water status" />
+            android:title="19. Drinking water status" />
 
         <item
             android:id="@+id/form19"
-            android:title="Domestic water status" />
+            android:title="20. Domestic water status" />
 
         <item
             android:id="@+id/form20"
-            android:title="Status of toilets" />
+            android:title="21. Status of toilets" />
 
         <item
             android:id="@+id/form21"
-            android:title="Affordable and clean energy" />
+            android:title="22. Affordable and clean energy" />
 
         <item
             android:id="@+id/form22"
-            android:title="Climate action and protected condition" />
+            android:title="23. Climate action and protected condition" />
 
         <item
             android:id="@+id/form23"
-            android:title="Disaster Protected Center" />
+            android:title="24. Disaster Protected Center" />
 
         <item
             android:id="@+id/form24"
-            android:title="Life below water" />
+            android:title="25. Life below water" />
         <item
             android:id="@+id/form25"
-            android:title="Peace Justice Institution" />
+            android:title="26. Peace Justice Institution" />
 
 
     </group>

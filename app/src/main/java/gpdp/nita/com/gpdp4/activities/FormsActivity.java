@@ -13,7 +13,9 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -23,24 +25,37 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Base64;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LayoutAnimationController;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.Target;
 
+import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,7 +63,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import gpdp.nita.com.gpdp4.R;
 import gpdp.nita.com.gpdp4.adapters.FormsAdapter;
 import gpdp.nita.com.gpdp4.helpers.DatabaseHelper;
-import gpdp.nita.com.gpdp4.helpers.Upload;
+import gpdp.nita.com.gpdp4.helpers.MyLinearLayoutManager;
 import gpdp.nita.com.gpdp4.helpers.Utility;
 import gpdp.nita.com.gpdp4.interfaces.OnDependentSpinnerItemSelected;
 import gpdp.nita.com.gpdp4.interfaces.OnFormsEndListener;
@@ -59,21 +74,24 @@ import gpdp.nita.com.gpdp4.repositories.Constants;
 import gpdp.nita.com.gpdp4.viewmodel.FormsViewModel;
 import gpdp.nita.com.gpdp4.viewmodel.MyCustomViewModelFactory;
 
-public class FormsActivity extends AppCompatActivity{
+public class FormsActivity extends AppCompatActivity {
 
 
     private static final int GALLERY_REQUEST_CODE = 130;
     private static final int CAMERA_REQUEST_CODE = 140;
     int cameraOrGallery = 0;  //0-cam
+    int profilePicPosition = -1;
 
 
     RecyclerView recyclerView;
-    LinearLayoutManager linearLayoutManager;
+    MyLinearLayoutManager linearLayoutManager;
     FormsAdapter adapter;
     FormsViewModel formsViewModel;
     Button mNext, mPrev;
     List<FormsModel> mFormsModels;
     TextView subtitle;
+
+    Button fillStatus;
 
     Toolbar toolbar;
     DrawerLayout drawerLayout;
@@ -88,6 +106,8 @@ public class FormsActivity extends AppCompatActivity{
     SharedPreferences mAutoValuesSharedPref, benList;
     ProgressDialog progressDialog;
 
+    Animation scaleUp, scaleDown;
+
 //    Object[] answersList;
 
     Dialog dialog;
@@ -98,6 +118,11 @@ public class FormsActivity extends AppCompatActivity{
         setContentView(R.layout.activity_forms);
 
         benList = this.getSharedPreferences(Constants.BEN_NAMES_SHARED_PREFS, Context.MODE_PRIVATE);
+
+        scaleDown = AnimationUtils.loadAnimation(this, R.anim.scale_down);
+        scaleUp = AnimationUtils.loadAnimation(this, R.anim.scale_up);
+
+        fillStatus = findViewById(R.id.fill_status);
 
         dialog = new Dialog(FormsActivity.this);
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
@@ -112,6 +137,8 @@ public class FormsActivity extends AppCompatActivity{
         }
 
         recyclerView = findViewById(R.id.recycler);
+        recyclerView.setItemViewCacheSize(20);
+
         mNext = findViewById(R.id.btn_next);
         mPrev = findViewById(R.id.btn_prev);
         toolbar = findViewById(R.id.toolbar);
@@ -119,6 +146,7 @@ public class FormsActivity extends AppCompatActivity{
         setSupportActionBar(toolbar);
 
         drawerLayout = findViewById(R.id.drawer);
+
         navigationView = findViewById(R.id.nav_view);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar,
                 R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -196,7 +224,6 @@ public class FormsActivity extends AppCompatActivity{
         });
 
 
-
         formsViewModel = ViewModelProviders.of(this, new MyCustomViewModelFactory(this.getApplication(), benCode))
                 .get(FormsViewModel.class);
 
@@ -206,13 +233,19 @@ public class FormsActivity extends AppCompatActivity{
             @Override
             public void onChanged(@Nullable List<FormsModel> formsModels) {
 
+                recyclerView.stopScroll();
+
+                ArrayList<String> incompleteForms = formsViewModel.setIncompleteForms();
+
+                setFillStatus(incompleteForms.size());
+
                 mFormsModels = formsModels;
-                adapter=null;
-                linearLayoutManager=null;
-                adapter=new FormsAdapter(mFormsModels, new OnValuesEnteredListener() {
+                adapter = null;
+                linearLayoutManager = null;
+                adapter = new FormsAdapter(mFormsModels, new OnValuesEnteredListener() {
                     @Override
                     public void onDateSet(String date, int position) {
-                       formsViewModel.onDateSet(date, position);
+                        formsViewModel.onDateSet(date, position);
                     }
 
                     @Override
@@ -232,20 +265,87 @@ public class FormsActivity extends AppCompatActivity{
 
                     @Override
                     public void onSpinnerItemSelected(Object key, int position) {
-                         formsViewModel.onSpinnerItemSelected(key, position);
+                        formsViewModel.onSpinnerItemSelected(key, position);
                     }
 
                     @Override
                     public void onProfilePicTapped(CircleImageView circleImageView, int position) {
+
                         selectImage();
                         mCircleImageView = circleImageView;
                         formsViewModel.onProfilePictureTapped(position);
+                        profilePicPosition = position;
+                    }
+
+                    @Override
+                    public void onProfilePictureFetchOffline(final CircleImageView circleImageView,
+                                                             final String imageURL,
+                                                             final ProgressBar loading) {
+
+                        byte[] imgBytes = null;
+
+                        String surveyorId = mAutoValuesSharedPref.getString("surveyor_id", "");
+                        String path = Environment.getExternalStorageDirectory() + "/gpdp/images/" + surveyorId + "/" + DatabaseHelper.ben_code + ".txt";
+                        try {
+                            String base64EncodedImage = getStringFromFile(path);
+                            imgBytes = Base64.decode(base64EncodedImage, Base64.DEFAULT);
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        if (imgBytes != null) {
+
+                            circleImageView.setBorderColor(Color.parseColor("#e67e22"));
+
+                            Glide
+                                    .with(recyclerView.getContext())
+                                    .load(imgBytes)
+                                    .apply(new RequestOptions()
+                                            .error(R.drawable.ic_default_avatar)
+                                            .placeholder(R.drawable.ic_default_avatar)
+                                            .centerCrop()
+                                            .diskCacheStrategy(DiskCacheStrategy.NONE)
+                                            .skipMemoryCache(true))
+                                    .listener(new RequestListener<Drawable>() {
+                                        @Override
+                                        public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                                            adapter.fetchProfilePicOnline(circleImageView, imageURL, loading);
+                                            return false;
+                                        }
+
+                                        @Override
+                                        public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                                            loading.setVisibility(View.GONE);
+                                            return false;
+                                        }
+                                    })
+                                    .into(circleImageView);
+
+                        } else {
+                            adapter.fetchProfilePicOnline(circleImageView, imageURL, loading);
+                        }
                     }
                 });
 
-                linearLayoutManager=new LinearLayoutManager(FormsActivity.this);
+                linearLayoutManager = new MyLinearLayoutManager(FormsActivity.this);
                 recyclerView.setAdapter(adapter);
                 recyclerView.setLayoutManager(linearLayoutManager);
+
+
+                recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+                    @Override
+                    public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                        super.onScrolled(recyclerView, dx, dy);
+                        if (dy > 0 && fillStatus.getVisibility() == View.VISIBLE) {
+                            fillStatus.startAnimation(scaleDown);
+                            fillStatus.setVisibility(View.GONE);
+                        } else if (dy < 0 && fillStatus.getVisibility() != View.VISIBLE) {
+                            fillStatus.startAnimation(scaleUp);
+                            fillStatus.setVisibility(View.VISIBLE);
+                        }
+                    }
+                });
+
 
                 runLayoutAnimation(recyclerView);
 
@@ -294,7 +394,7 @@ public class FormsActivity extends AppCompatActivity{
             }
 
             @Override
-            public void onFormsEnd(boolean isSuccessful) {
+            public void onFormsEnd(boolean isSuccessful, String errorMessage) {
                 if (isSuccessful) {
                     benList.edit()
                             .putString(DatabaseHelper.ben_code, DatabaseHelper.getImageURL(DatabaseHelper.ben_code))
@@ -308,6 +408,10 @@ public class FormsActivity extends AppCompatActivity{
                     });
                 } else {
                     dialog.setContentView(R.layout.layout_error);
+                    if (!errorMessage.trim().equals("")) {
+                        TextView message = dialog.findViewById(R.id.error_message);
+                        message.setText(errorMessage);
+                    }
                     dialog.findViewById(R.id.error_tomain).setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -331,6 +435,7 @@ public class FormsActivity extends AppCompatActivity{
             @Override
             public void onClick(View v) {
                 //formsViewModel.insert(answersList);
+                recyclerView.stopScroll();
                 formsViewModel.insert();
                 int i = formsViewModel.loadNext();
                 if (i != -1)
@@ -345,6 +450,7 @@ public class FormsActivity extends AppCompatActivity{
         mPrev.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                recyclerView.stopScroll();
                 int i = formsViewModel.loadPrev();
                 if (i != -1)
                     navigationView.setCheckedItem(getId(i));
@@ -354,6 +460,16 @@ public class FormsActivity extends AppCompatActivity{
             }
         });
 
+    }
+
+    private void setFillStatus(int size) {
+        if (size == 0) {
+            fillStatus.setText("All forms filled");
+        } else if (size == 1) {
+            fillStatus.setText("1 form unfilled");
+        } else {
+            fillStatus.setText(size + " forms unfilled");
+        }
     }
 
     @Override
@@ -499,7 +615,6 @@ public class FormsActivity extends AppCompatActivity{
     }
 
 
-
     private void selectImage() {
 
         final CharSequence[] items = {"Take Photo", "Choose from gallery"};
@@ -587,7 +702,8 @@ public class FormsActivity extends AppCompatActivity{
             try {
                 bm = MediaStore.Images.Media.getBitmap(getApplicationContext().getContentResolver(), data.getData());
 
-                sendBitmap(bm);
+                //sendBitmap(bm);
+                String base64 = bitmapToBase64(bm);
 
                 Glide
                         .with(FormsActivity.this)
@@ -605,8 +721,42 @@ public class FormsActivity extends AppCompatActivity{
         }
     }
 
+    private void writeToFile(String sFileName, String sBody, String subFolder) {
+        try {
+            File root = new File(Environment.getExternalStorageDirectory(), "gpdp/" + subFolder + "/");
+            if (!root.exists()) {
+                if (!root.mkdirs()) {
+                    //cannotCreateDirs();
+                }
+            }
+            File gpxfile = new File(root, sFileName);
+
+            FileWriter writer = new FileWriter(gpxfile);
+
+            writer.append(sBody);
+            writer.flush();
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private String bitmapToBase64(Bitmap bitmap) {
+
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
+        byte[] byteArray = byteArrayOutputStream.toByteArray();
+
+        String encoded = Base64.encodeToString(byteArray, Base64.DEFAULT);
+
+        writeToFile(DatabaseHelper.ben_code + ".txt", encoded, "images/" + mAutoValuesSharedPref
+                .getString("surveyor_id", ""));
+
+        return encoded;
+    }
+
     private void sendBitmap(Bitmap bm) {
-        new Upload(this).sendImage(bm, DatabaseHelper.ben_code);
+        //new Upload(this).sendImage(bm, DatabaseHelper.ben_code);
     }
 
     private void onCaptureImageResult(Intent data) {
@@ -616,7 +766,8 @@ public class FormsActivity extends AppCompatActivity{
             thumbnail = (Bitmap) data.getExtras().get("data");
         }
 
-        sendBitmap(thumbnail);
+        //sendBitmap(thumbnail);
+        bitmapToBase64(thumbnail);
 
         Glide
                 .with(FormsActivity.this)
@@ -646,4 +797,25 @@ public class FormsActivity extends AppCompatActivity{
         recyclerView.setLayoutAnimation(controller);
         recyclerView.scheduleLayoutAnimation();
     }
+
+    private String convertStreamToString(InputStream is) throws Exception {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+        StringBuilder sb = new StringBuilder();
+        String line;
+        while ((line = reader.readLine()) != null) {
+            sb.append(line).append("\n");
+        }
+        reader.close();
+        return sb.toString();
+    }
+
+    private String getStringFromFile(String filePath) throws Exception {
+        File fl = new File(filePath);
+        FileInputStream fin = new FileInputStream(fl);
+        String ret = convertStreamToString(fin);
+        //Make sure to close all streams.
+        fin.close();
+        return ret;
+    }
+
 }

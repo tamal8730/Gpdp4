@@ -10,33 +10,25 @@ import gpdp.nita.com.gpdp4.helpers.DatabaseHelper;
 
 public class Constants {
 
+    public static final String VERSION = "1.0.2.5";
+
     public static final String BEN_NAMES_SHARED_PREFS = "gpdp.nita.com.gpdp.ben_names";
     public static final String DATE_DEFAULT = "0000-00-00";
     //nakshakantha.com
 
     public static final String DATABASE_NAME = "gpdp.db";
     public static final String[] TABLES_TO_BE_DOWNLOADED_AFTER_LOGIN = {
-            "form_0_ward panchayat_name gp_vc_name", //request form_0_ward, send key panchayat_id with values from gp_vc_name row
+            "form_0_ward panchayat_name gp_vc_name",//request form_0_ward, send key panchayat_id with values from gp_vc_name row
+            "ben_list sv_code surveyor_id"
     };
     public static final String STRING_DEFAULT = "";
     public static final int YES_NO = -1;
     public static final String REMEMBER_LOGIN = "gpdp.nita.com.gpdp.remember_login";
     public static final String AUTO_VALUES = "gpdp.nita.com.gpdp.auto";
     public static final int RADIO_GROUP_DEFAULT = -1;
-
-
-    private static final String BASE_URL = "nakshakantha.com";
-    //"164.100.127.82";
-
-
-    public static final String LOGIN_VALIDATOR = "http://" + BASE_URL + "/apis/sv_validator.php";
-    public static final String UPDATE_TABLES = "http://" + BASE_URL + "/apis/updates.php";
-    public static final String HTTP_URL = "http://" + BASE_URL + "/apis/sync.php";
-    public static final String UPLOAD_URL = "http://" + BASE_URL + "/apis/beneficiary_image_uploader.php";
     public static final String KEY_LOGGED_IN = "logged_in";
+    //    "164.100.127.82";
     public static final String KEY_SERVER_RESPONSE = "server_response";
-    public static ArrayList<String> looplist;
-    public static ArrayList<Integer> formSequence = new ArrayList<>();
     public static final String[] master_tables = {
 
             "form_0_caste",
@@ -124,7 +116,15 @@ public class Constants {
             "form_25_incident"
 
     };
+    private static final String BASE_URL =
+            "nakshakantha.com";
+    public static final String LOGIN_VALIDATOR = "http://" + BASE_URL + "/apis/sv_validator.php";
+    public static final String UPDATE_TABLES = "http://" + BASE_URL + "/apis/updates.php";
+    public static final String HTTP_URL = "http://" + BASE_URL + "/apis/sync.php";
+    public static final String UPLOAD_URL = "http://" + BASE_URL + "/apis/beneficiary_image_uploader.php";
     static final String IMAGE_UPLOAD_PATH = "http://" + BASE_URL + "/beneficiary_images/";
+    public static ArrayList<String> looplist;
+    public static ArrayList<Integer> formSequence = new ArrayList<>();
     public static int NUMBER_DEFAULT = 0;
     public static ArrayList<String> repeatedIndices = new ArrayList<>();
     public static ArrayList<String> subTitles = new ArrayList<>();

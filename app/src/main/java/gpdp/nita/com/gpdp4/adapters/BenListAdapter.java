@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 
 import java.util.ArrayList;
@@ -42,7 +43,9 @@ public class BenListAdapter extends RecyclerView.Adapter<BenListAdapter.BenListV
         Glide.with(context)
                 .setDefaultRequestOptions(new RequestOptions()
                         .placeholder(R.drawable.ic_default_avatar)
-                        .error(R.drawable.ic_default_avatar))
+                        .error(R.drawable.ic_default_avatar)
+                        .diskCacheStrategy(DiskCacheStrategy.NONE)
+                        .skipMemoryCache(true))
                 .load(models.get(i).getImageUrl())
                 .into(dp);
 

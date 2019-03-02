@@ -1,7 +1,9 @@
 package gpdp.nita.com.gpdp4.adapters;
 
-import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
@@ -16,13 +18,18 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.Target;
 
 import java.util.List;
 
@@ -52,7 +59,6 @@ public class FormsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     private OnValuesEnteredListener onValuesEnteredListener;
     private SparseArray<FormsModel> cache;
     private RecyclerView recyclerView;
-
 
     public FormsAdapter(List<FormsModel> models, OnValuesEnteredListener onValuesEnteredListener) {
         this.models = models;
@@ -104,24 +110,49 @@ public class FormsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         else if (category == 4) bindProfilePic((ProfilePicViewHolder) viewHolder, position);
     }
 
+
+    public void fetchProfilePicOnline(CircleImageView circleImageView, String imageURL, final ProgressBar loading) {
+
+        circleImageView.setBorderColor(Color.parseColor("#27ae60"));
+
+        Glide
+                .with(recyclerView.getContext())
+                .load(imageURL)
+                .apply(new RequestOptions()
+                        .error(R.drawable.ic_default_avatar)
+                        .placeholder(R.drawable.ic_default_avatar)
+                        .centerCrop()
+                        .diskCacheStrategy(DiskCacheStrategy.NONE)
+                        .skipMemoryCache(true))
+                .listener(new RequestListener<Drawable>() {
+                    @Override
+                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                        loading.setVisibility(View.GONE);
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                        loading.setVisibility(View.GONE);
+                        return false;
+                    }
+                })
+                .into(circleImageView);
+
+    }
+
     private void bindProfilePic(final ProfilePicViewHolder viewHolder, int position) {
+
         ProfilePicModel profilePicModel = (ProfilePicModel) models.get(position);
 
         final CircleImageView dp = viewHolder.getProfilePic();
         TextView benCode = viewHolder.getBenCode();
 
+        ProgressBar loading = viewHolder.getImageLoading();
+
         benCode.setText(profilePicModel.getBenCode());
 
-        Glide
-                .with(recyclerView.getContext())
-                .setDefaultRequestOptions(new RequestOptions()
-                        .placeholder(R.drawable.ic_default_avatar)
-                        .error(R.drawable.ic_default_avatar)
-                        .diskCacheStrategy(DiskCacheStrategy.NONE)
-                        .skipMemoryCache(true))
-                .load(profilePicModel.getImgUrl())
-                .into(dp);
-
+        onValuesEnteredListener.onProfilePictureFetchOffline(dp, profilePicModel.getImgUrl(), loading);
 
         dp.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -129,7 +160,6 @@ public class FormsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                 onValuesEnteredListener.onProfilePicTapped(dp, viewHolder.getAdapterPosition());
             }
         });
-
     }
 
     private void bindDate(final DateViewHolder viewHolder, int position) {
@@ -145,10 +175,9 @@ public class FormsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
         title.setText(dateModel.getTile());
 
-        if(dateStr.equals(Constants.DATE_DEFAULT)){
+        if (dateStr.equals(Constants.DATE_DEFAULT)) {
             date.setText("Tap to pick a date");
-        }
-        else {
+        } else {
             date.setText(dateModel.getDate());
         }
 
@@ -272,17 +301,18 @@ public class FormsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     }
 
     private int getButtonIdFromPosition(int pos) {
-        if(pos==0)
+        if (pos == 0)
             return R.id.rb0_rbvh;
-        else if(pos==1)
+        else if (pos == 1)
             return R.id.rb1_rbvh;
         else
             return -1;
     }
-    private int getPositionFromButtonId(int checkId){
-        if(checkId==R.id.rb1_rbvh)
+
+    private int getPositionFromButtonId(int checkId) {
+        if (checkId == R.id.rb1_rbvh)
             return 1;
-        else if(checkId==R.id.rb0_rbvh)
+        else if (checkId == R.id.rb0_rbvh)
             return 0;
         else
             return -1;
@@ -457,5 +487,4 @@ public class FormsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         else if (models.get(position) instanceof BlankModel) return 5;
         else return -1;
     }
-
 }

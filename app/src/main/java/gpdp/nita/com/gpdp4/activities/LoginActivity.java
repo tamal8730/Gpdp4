@@ -88,7 +88,7 @@ public class LoginActivity extends AppCompatActivity {
                     public void onResponse(String ServerResponse) {
                         dialog.dismiss();
 
-                        Log.d("loginxxx",ServerResponse.trim());
+                        Log.d("loginxxx", ServerResponse.trim());
 
                         switch ((ServerResponse.trim())) {
                             case "invalid":

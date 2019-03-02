@@ -5,12 +5,14 @@ import android.os.Environment;
 
 import com.google.gson.Gson;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -49,7 +51,7 @@ public class MyJson {
             int read = is.read(buffer);
             is.close();
 
-            json = new String(buffer, "UTF-8");
+            json = new String(buffer, Charset.forName("UTF-8"));
 
             JSONObject jsonObject = new JSONObject(json);
             Iterator<String> iterator = jsonObject.keys();
@@ -80,7 +82,7 @@ public class MyJson {
             int read = is.read(buffer);
             is.close();
 
-            json = new String(buffer, "UTF-8");
+            json = new String(buffer, Charset.forName("UTF-8"));
 
             JSONObject jsonObject = new JSONObject(json);
             Iterator<String> iterator = jsonObject.keys();
@@ -99,12 +101,44 @@ public class MyJson {
         return list;
     }
 
+    public ArrayList<String> getSuggestionsList(String filename) {
+
+        ArrayList<String> suggestions = null;
+
+        String json;
+        try {
+            String fileName = "gpdp/data/" + filename + ".json";
+            String path = Environment.getExternalStorageDirectory() + "/" + fileName;
+            File file = new File(path);
+
+            InputStream is = new FileInputStream(file);
+            int size = is.available();
+            byte[] buffer = new byte[size];
+            int read = is.read(buffer);
+            is.close();
+
+            json = new String(buffer, Charset.forName("UTF-8"));
+
+            JSONArray jsonArray = new JSONArray(json);
+
+            suggestions = new ArrayList<>();
+
+            for (int i = 0; i < jsonArray.length(); i++) {
+                suggestions.add(jsonArray.getString(i));
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return suggestions;
+    }
+
     public MyJson initLists() {
         tableList = new ArrayList<>();
         columnsListList = new ArrayList<>();
         loopList = new ArrayList<>();
         dataTypes = new ArrayList<>();
-        categories=new ArrayList<>();
+        categories = new ArrayList<>();
         return this;
     }
 
@@ -116,7 +150,7 @@ public class MyJson {
             int read = is.read(buffer);
             is.close();
 
-            return new String(buffer, "UTF-8");
+            return new String(buffer, Charset.forName("UTF-8"));
 
         } catch (IOException e) {
             return null;
@@ -146,7 +180,7 @@ public class MyJson {
 
                 ArrayList<String> cols = new ArrayList<>();
                 ArrayList<Integer> dt = new ArrayList<>();
-                ArrayList<Integer> cat=new ArrayList<>();
+                ArrayList<Integer> cat = new ArrayList<>();
 
                 for (int j = 0; j < oneFormJson.getWidgets().size(); j++) {
 

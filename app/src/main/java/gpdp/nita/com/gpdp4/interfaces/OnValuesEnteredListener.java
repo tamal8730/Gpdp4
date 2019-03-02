@@ -1,5 +1,7 @@
 package gpdp.nita.com.gpdp4.interfaces;
 
+import android.widget.ProgressBar;
+
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public interface OnValuesEnteredListener {
@@ -14,4 +16,6 @@ public interface OnValuesEnteredListener {
     void onSpinnerItemSelected(Object key, int position);
 
     void onProfilePicTapped(CircleImageView circleImageView, int position);
+
+    void onProfilePictureFetchOffline(CircleImageView circleImageView, String imageURL, ProgressBar loading);
 }

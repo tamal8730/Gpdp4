@@ -30,6 +30,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static ArrayList<Integer> dataTypes;
     private static DatabaseHelper instance = null;
 
+
     private MyJson myJson;
     private boolean dateTimeSet = false;
 
@@ -83,11 +84,46 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return url;
     }
 
+    public ArrayList<String> getAllBeneficiaries(String surveyorCode) {
+        ArrayList<String> bens = new ArrayList<>();
+        Cursor c = getReadableDatabase()
+                .rawQuery("select ben_code from gpdp_basic_info_1 where surveyor_id=?", new String[]{surveyorCode});
+        if (c.moveToFirst()) {
+            do {
+                bens.add(c.getString(0));
+            } while (c.moveToNext());
+        }
+        c.close();
+        return bens;
+    }
+
+    public ArrayList<String> getUnfilledFormNumbers(String benCode) {
+
+        ArrayList<String> incompleteForm = new ArrayList<>();
+
+        Cursor c = getReadableDatabase()
+                .rawQuery("SELECT name FROM sqlite_master WHERE type ='table' AND name LIKE 'gpdp_%'", null);
+
+
+        if (c.moveToFirst()) {
+            do {
+                String tableName = c.getString(0);
+                Cursor c2 = getReadableDatabase()
+                        .rawQuery("select ben_code from " + tableName + " where ben_code=?", new String[]{benCode});
+                if (!c2.moveToFirst()) {
+                    incompleteForm.add(tableName);
+                }
+                c2.close();
+            } while (c.moveToNext());
+        }
+        c.close();
+        return incompleteForm;
+    }
 
     private String columnNamesConcat(ArrayList<String> columnNames,
                                      String loop, ArrayList<Integer> dataType,
                                      String tableName,
-                                     ArrayList<Integer> categories ) {
+                                     ArrayList<Integer> categories) {
 
         StringBuilder s = new StringBuilder(" (ben_code TEXT,");
 
@@ -98,10 +134,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         for (int i = 0; i < columnNames.size(); i++) {
             s.append(columnNames.get(i));
-            if(categories.get(i)==0){
+            if (categories.get(i) == 0) {
                 s.append(" INTEGER DEFAULT -1 NOT NULL,");
-            }
-            else {
+            } else {
                 switch (dataType.get(i)) {
                     case 0:
                         s.append(" TEXT DEFAULT 'x' NOT NULL,");

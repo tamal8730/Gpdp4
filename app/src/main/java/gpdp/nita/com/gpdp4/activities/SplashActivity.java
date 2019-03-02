@@ -46,7 +46,7 @@ public class SplashActivity extends AppCompatActivity {
 
             @Override
             public void onError(String errorMessage) {
-                Toast.makeText(SplashActivity.this, errorMessage, Toast.LENGTH_SHORT).show();
+                Toast.makeText(SplashActivity.this, "errorMessage", Toast.LENGTH_SHORT).show();
             }
         });
 

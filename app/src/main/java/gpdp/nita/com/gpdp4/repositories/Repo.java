@@ -28,12 +28,11 @@ import gpdp.nita.com.gpdp4.models.SpinnerModel;
 public class Repo {
     SharedPreferences mAutoValues;
     private ArrayList<FormsModel> dataSet = new ArrayList<>();
-//    private Object[] answersList;
+    //    private Object[] answersList;
     private OneFormJson oneFormJson;
     private DatabaseHelper databaseHelper;
     private SparseBooleanArray isNumeric;
     private Object[] answers;
-
 
 
     public Repo(Application application, int formNumber) {
@@ -69,7 +68,6 @@ public class Repo {
         databaseHelper = DatabaseHelper.getInstance(application);
 
     }
-
 
 
     public MutableLiveData<ArrayList<Object>> getOneRowLive() {
@@ -141,10 +139,10 @@ public class Repo {
     private void setFormsModel() {
 
         List<OneQuestionJson> oneQuestionJsons = oneFormJson.getWidgets();
-        ArrayList<Object> oneRow=databaseHelper.getOneRow(DatabaseHelper.hasUniqueIdentifier?
-                DatabaseHelper.unique_identifier_val:DatabaseHelper.ben_code);
+        ArrayList<Object> oneRow = databaseHelper.getOneRow(DatabaseHelper.hasUniqueIdentifier ?
+                DatabaseHelper.unique_identifier_val : DatabaseHelper.ben_code);
 
-        answers=new Object[oneQuestionJsons.size()];
+        answers = new Object[oneQuestionJsons.size()];
 
         isNumeric = new SparseBooleanArray();
 
@@ -191,8 +189,7 @@ public class Repo {
                 if (datatype == 0) {
                     //answersList[i] = Constants.STRING_DEFAULT;
 
-                }
-                else if (datatype == 1 || datatype == 2) {
+                } else if (datatype == 1 || datatype == 2) {
                     //answersList[i] = Constants.NUMBER_DEFAULT;
                     isNumeric.put(i, true);
                 }
@@ -208,15 +205,15 @@ public class Repo {
 
                 //answersList[i] = Constants.STRING_DEFAULT;
 
-                ArrayList<Object> spinnerKeys= MyJson.getSpinnerKeys(oneQuestionJsons.get(i).getOptions(),
+                ArrayList<Object> spinnerKeys = MyJson.getSpinnerKeys(oneQuestionJsons.get(i).getOptions(),
                         oneQuestionJsons.get(i).getDataType());
 
                 int selectionPos;
 
-                selectionPos=spinnerKeys.indexOf(ans);
+                selectionPos = spinnerKeys.indexOf(ans);
 
-                if(selectionPos==-1)
-                    selectionPos=0;
+                if (selectionPos == -1)
+                    selectionPos = 0;
 
                 SpinnerModel spinnerModel = new SpinnerModel(
                         title,
@@ -261,7 +258,7 @@ public class Repo {
         databaseHelper.insert(answers);
     }
 
-    public void insert(){
+    public void insert() {
         databaseHelper.insert(answers);
     }
 
@@ -271,10 +268,10 @@ public class Repo {
     }
 
     public Object[] onDateSet(String date, int position) {
-        if(date.equals("Tap to pick a date"))
+        if (date.equals("Tap to pick a date"))
             answers[position] = Constants.DATE_DEFAULT;
         else
-            answers[position]=date;
+            answers[position] = date;
         return answers;
     }
 
@@ -294,34 +291,6 @@ public class Repo {
         else if (id == R.id.rb0_rbvh) return 1;
         else return 0;
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
     public Object[] onProfilePicTapped(int position) {
@@ -356,6 +325,10 @@ public class Repo {
 
     public void closeDatabase() {
         databaseHelper.close();
-        Log.d("datxxx","closed");
+        Log.d("datxxx", "closed");
+    }
+
+    public ArrayList<String> setIncompleteForms() {
+        return databaseHelper.getUnfilledFormNumbers(DatabaseHelper.ben_code);
     }
 }

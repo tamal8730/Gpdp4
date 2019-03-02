@@ -6,10 +6,16 @@ import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Environment;
 import android.support.annotation.NonNull;
 
 import org.json.JSONArray;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,7 +42,7 @@ public class FormsViewModel extends AndroidViewModel {
     private MutableLiveData<List<FormsModel>> mutableLiveData;
     private String benCode;
     private Repo mRepo;
-//    private MutableLiveData<ArrayList<Object>> oneRowLiveData;
+    //    private MutableLiveData<ArrayList<Object>> oneRowLiveData;
     private OnFormsEndListener onFormsEndListener;
 
     private OnDependentSpinnerItemSelected onDependentSpinnerItemSelected;
@@ -64,7 +70,7 @@ public class FormsViewModel extends AndroidViewModel {
 
     private void loadForm(Application application, int formNumber) {
 
-        mRepo =new Repo(application, formNumber);
+        mRepo = new Repo(application, formNumber);
         //form0MutableLiveData = mRepo.getLiveAnswers(benCode);
         mutableLiveData = mRepo.getFormsModel();
     }
@@ -85,7 +91,7 @@ public class FormsViewModel extends AndroidViewModel {
         //oneRowLiveData.postValue(oneRow);
     }
 
-    public void insert(){
+    public void insert() {
         mRepo.insert();
     }
 
@@ -155,6 +161,26 @@ public class FormsViewModel extends AndroidViewModel {
         return true;
     }
 
+    private String convertStreamToString(InputStream is) throws Exception {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+        StringBuilder sb = new StringBuilder();
+        String line = null;
+        while ((line = reader.readLine()) != null) {
+            sb.append(line).append("\n");
+        }
+        reader.close();
+        return sb.toString();
+    }
+
+    private String getStringFromFile(String filePath) throws Exception {
+        File fl = new File(filePath);
+        FileInputStream fin = new FileInputStream(fl);
+        String ret = convertStreamToString(fin);
+        //Make sure to close all streams.
+        fin.close();
+        return ret;
+    }
+
     public void onFormsEnd() {
         SharedPreferences mAutoValues = getApplication().getSharedPreferences(Constants.AUTO_VALUES, Context.MODE_PRIVATE);
         JSONArray payload = mRepo.onFormsEnd();
@@ -166,10 +192,17 @@ public class FormsViewModel extends AndroidViewModel {
             }
 
             @Override
-            public void onFormsEnd(boolean isSuccessful) {
-                onFormsEndListener.onFormsEnd(isSuccessful);
+            public void onFormsEnd(boolean isSuccessful, String errorMessage) {
+                onFormsEndListener.onFormsEnd(isSuccessful, errorMessage);
             }
         });
+
+        String path = Environment.getExternalStorageDirectory() + "/gpdp/" + "images/" + mAutoValues.getString("surveyor_id", "");
+        try {
+            upload.sendImage(getStringFromFile(path + "/" + DatabaseHelper.ben_code + ".txt"), DatabaseHelper.ben_code);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         upload.sendJSONArray(
                 payload,
@@ -210,8 +243,7 @@ public class FormsViewModel extends AndroidViewModel {
         if (loop == null) {
             DatabaseHelper.unique_identifier_name = null;
             return false;
-        }
-        else {
+        } else {
             String[] tokens = loop.split(" ");
             DatabaseHelper.unique_identifier_name = tokens[1];
             return true;
@@ -269,15 +301,15 @@ public class FormsViewModel extends AndroidViewModel {
                 if (id == -1) {
                     radioGroupModel.setId(-1);
                 } else {
-                    if(id==0)
+                    if (id == 0)
                         radioGroupModel.setId(R.id.rb1_rbvh);
-                    else if(id==1)
+                    else if (id == 1)
                         radioGroupModel.setId(R.id.rb0_rbvh);
 
-                    if(id==0)
-                        onViewModifiedListener.onViewModified(i,R.id.rb1_rbvh, radioGroupModel.getTokens());
-                    else if(id==1)
-                        onViewModifiedListener.onViewModified(i,R.id.rb0_rbvh, radioGroupModel.getTokens());
+                    if (id == 0)
+                        onViewModifiedListener.onViewModified(i, R.id.rb1_rbvh, radioGroupModel.getTokens());
+                    else if (id == 1)
+                        onViewModifiedListener.onViewModified(i, R.id.rb0_rbvh, radioGroupModel.getTokens());
                 }
 
 
@@ -313,7 +345,11 @@ public class FormsViewModel extends AndroidViewModel {
     }
 
     public void closeDatabase() {
-        formNumber=0;
+        formNumber = 0;
         mRepo.closeDatabase();
+    }
+
+    public ArrayList<String> setIncompleteForms() {
+        return mRepo.setIncompleteForms();
     }
 }

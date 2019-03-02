@@ -1,11 +1,8 @@
 package gpdp.nita.com.gpdp4.helpers;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.os.Environment;
-import android.util.Base64;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -19,7 +16,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileWriter;
@@ -29,6 +25,7 @@ import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 import gpdp.nita.com.gpdp4.interfaces.OnFormsEndListener;
@@ -62,14 +59,24 @@ public class Upload {
 //        progressDialog.setMessage("Please wait while we sync your data with our servers.");
 //        progressDialog.show();
         onFormsEndListener.onSyncStarted();
+        final boolean[] isSuccesful = {true};
 
-        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.POST, Constants.HTTP_URL, payload,
+        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.POST,
+                Constants.HTTP_URL + "?b=" + ben_code + "&s=" + surveyorCode,
+                payload,
+
                 new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray response) {
+                        Log.d("resxxx", response.toString());
                         try {
-                            String res = response.getString(0);
-                            sendSuccess();
+                            String res = response.getString(1);
+                            if (res.equalsIgnoreCase("NA")) {
+                                isSuccesful[0] = false;
+                                showError("You are not authorized for beneficiary " + ben_code);
+                            } else {
+                                sendSuccess();
+                            }
 //                            progressDialog.dismiss();
 
                         } catch (JSONException e) {
@@ -79,7 +86,7 @@ public class Upload {
                                     payload.toString(),
                                     "backups/" + surveyorCode);
 
-                            showError();
+                            showError("");
                         }
 //                        progressDialog.dismiss();
                     }
@@ -93,25 +100,49 @@ public class Upload {
                                 payload.toString(),
                                 "backups/" + surveyorCode);
 
-                        showError();
+                        showError("");
 
                     }
                 });
-        Volley.newRequestQueue(context).add(jsonArrayRequest);
+
+        if (isSuccesful[0])
+            Volley.newRequestQueue(context).add(jsonArrayRequest);
     }
 
-    public JsonArrayRequest sendJSONArray(JSONArray payload) {
+    public JsonArrayRequest sendJSONArray(JSONArray payload, String surveyorId) {
 
-        return new JsonArrayRequest(Request.Method.POST, Constants.HTTP_URL, payload,
+        String benCode = "";
+
+        try {
+            JSONObject object1 = payload.getJSONObject(0);
+            Iterator<String> iterator = object1.keys();
+            if (iterator.hasNext()) {
+                JSONArray array = object1.getJSONArray(iterator.next());
+                benCode = array.getJSONObject(0).getString("ben_code");
+            } else {
+
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        final String finalBenCode = benCode;
+        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.POST,
+                Constants.HTTP_URL + "?b=" + benCode + "&s=" + surveyorId,
+                payload,
+
                 new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray response) {
                         try {
-                            String res = response.getString(0);
-                            onFormsEndListener.onFormsEnd(true);
+                            String res = response.getString(1);
+                            if (res.equalsIgnoreCase("NA")) {
+                                onFormsEndListener.onFormsEnd(false, "You are not authorized for beneficiary " + finalBenCode);
+                            } else
+                                onFormsEndListener.onFormsEnd(true, "");
 
                         } catch (JSONException e) {
-                            onFormsEndListener.onFormsEnd(false);
+                            onFormsEndListener.onFormsEnd(false, "");
                             e.printStackTrace();
                         }
                     }
@@ -119,26 +150,30 @@ public class Upload {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        onFormsEndListener.onFormsEnd(false);
+                        Log.d("syncfailedxxx", error.getMessage());
+                        onFormsEndListener.onFormsEnd(false, "");
                     }
                 });
+        return jsonArrayRequest;
     }
 
-    private void showError() {
-        onFormsEndListener.onFormsEnd(false);
+    private void showError(String errorMessage) {
+        onFormsEndListener.onFormsEnd(false, errorMessage);
     }
 
     private void sendSuccess() {
-        onFormsEndListener.onFormsEnd(true);
+        onFormsEndListener.onFormsEnd(true, "");
     }
 
 
-    public void sendImage(Bitmap bitmap, final String ben_code) {
+    public void sendImage(final String imageString, final String ben_code) {
 
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-        byte[] imageBytes = baos.toByteArray();
-        final String imageString = Base64.encodeToString(imageBytes, Base64.DEFAULT);
+//        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+//        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+//        byte[] imageBytes = baos.toByteArray();
+//        final String imageString = Base64.encodeToString(imageBytes, Base64.DEFAULT);
+
+
         StringRequest request = new StringRequest(Request.Method.POST, Constants.UPLOAD_URL, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
@@ -146,12 +181,9 @@ public class Upload {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Toast.makeText(context, "Error uploading ben image", Toast.LENGTH_LONG).show();
+                //Toast.makeText(context, "Error uploading ben image", Toast.LENGTH_LONG).show();
             }
-        })
-
-
-        {
+        }) {
             @Override
             protected Map<String, String> getParams() {
                 Map<String, String> parameters = new HashMap<>();

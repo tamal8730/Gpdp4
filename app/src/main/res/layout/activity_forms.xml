@@ -9,20 +9,22 @@
     tools:context=".activities.FormsActivity">
 
     <android.support.constraint.ConstraintLayout
+        android:id="@+id/root"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
-            android:elevation="4dp"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="@color/colorPrimary"
+            android:elevation="4dp"
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+
 
         <Button
             android:id="@+id/btn_next"
@@ -33,6 +35,7 @@
             android:text="@string/next"
             android:textColor="#ffffff"
             android:textSize="@dimen/button_text"
+            android:visibility="visible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
@@ -47,6 +50,7 @@
             android:text="@string/previous"
             android:textColor="#ffffff"
             android:textSize="@dimen/button_text"
+            android:visibility="visible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/btn_next"
             app:layout_constraintHorizontal_bias="0.5"
@@ -56,10 +60,10 @@
             android:id="@+id/recycler"
             android:layout_width="0dp"
             android:layout_height="0dp"
+            android:layoutAnimation="@anim/layout_animation_show_up"
             app:layout_constraintBottom_toTopOf="@+id/btn_next"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            android:layoutAnimation="@anim/layout_animation_show_up"
             app:layout_constraintTop_toBottomOf="@+id/txt_subtitle" />
 
         <TextView
@@ -75,6 +79,18 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/toolbar" />
+
+        <Button
+            android:id="@+id/fill_status"
+            style="@style/Widget.PrayerTimes.FABlikeButton"
+            android:layout_width="wrap_content"
+            android:layout_height="48dp"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/fab_extended"
+            android:text="1 form left"
+            app:layout_constraintBottom_toBottomOf="@+id/recycler"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent" />
 
     </android.support.constraint.ConstraintLayout>
 

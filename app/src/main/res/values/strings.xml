@@ -20,14 +20,16 @@
     <string name="dummy_content">DUMMY\nCONTENT</string>
     <string name="enter_beneficiary_code">Enter beneficiary code</string>
     <string name="or">OR</string>
-    <string name="basic_info">Basic info</string>
+    <string name="basic_info">1. Basic info</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="details_of_family_members">Details of family members</string>
+    <string name="details_of_family_members">2. Details of family members</string>
     <string name="error_message">We could not sync your entry to our servers. A local backup has been created</string>
     <string name="sync_failed_multiple_files">We could not sync your entries to our servers. Please try again later.</string>
     <string name="sync_successful_multiple_files">All entries synced successfully.</string>
     <string name="dismiss">DISMISS</string>
     <string name="try_again">TRY AGAIN</string>
+    <string name="app_version">2.1.2.5</string>
+    <string name="ok">OK</string>
 </resources>
