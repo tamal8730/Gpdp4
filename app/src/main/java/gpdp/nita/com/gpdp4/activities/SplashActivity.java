@@ -96,7 +96,7 @@ public class SplashActivity extends AppCompatActivity {
                     RequestQueue updateQueue = Volley.newRequestQueue(SplashActivity.this);
                     for (String tableName : Constants.master_tables) {
                         updateQueue.add(
-                                upload.requestJSONForUpdates(tableName, false));
+                                upload.requestOneJSONForUpdates(tableName, false));
                     }
                     updateQueue.addRequestFinishedListener(new RequestQueue.RequestFinishedListener<JSONObject>() {
                         @Override

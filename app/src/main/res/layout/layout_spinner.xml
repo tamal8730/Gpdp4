@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@android:color/white"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -12,6 +13,9 @@
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
         android:text="TextView"
+        android:lineSpacingExtra="5dp"
+        android:textColor="#9A000000"
+        android:textStyle="bold"
         android:textSize="@dimen/title"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -19,6 +23,11 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <Spinner
+        android:background="@drawable/outline_normal"
+        android:paddingStart="10dp"
+        android:paddingTop="15dp"
+        android:paddingEnd="30dp"
+        android:paddingBottom="15dp"
         android:spinnerMode="dialog"
         android:id="@+id/spinner_spinnervh"
         android:layout_width="0dp"
@@ -31,11 +40,22 @@
         app:layout_constraintStart_toStartOf="@+id/tv_spinnervh"
         app:layout_constraintTop_toBottomOf="@+id/tv_spinnervh" />
 
+    <ImageView
+        android:id="@+id/imageView3"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_marginEnd="16dp"
+        android:src="@drawable/down_arrow"
+        app:layout_constraintBottom_toBottomOf="@+id/spinner_spinnervh"
+        app:layout_constraintEnd_toEndOf="@+id/spinner_spinnervh"
+        app:layout_constraintTop_toTopOf="@+id/spinner_spinnervh" />
+
     <View
         android:id="@+id/divider4"
         android:layout_width="0dp"
         android:layout_height="1dp"
         android:background="?android:attr/listDivider"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

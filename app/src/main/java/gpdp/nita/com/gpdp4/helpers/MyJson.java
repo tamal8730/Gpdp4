@@ -101,6 +101,36 @@ public class MyJson {
         return list;
     }
 
+
+    public JSONObject getStatusAndCompleteCount(String benCode) {
+
+        String json;
+        try {
+            String fileName = "gpdp/data/" + "ben_list" + ".json";
+            String path = Environment.getExternalStorageDirectory() + "/" + fileName;
+            File file = new File(path);
+
+            InputStream is = new FileInputStream(file);
+            int size = is.available();
+            byte[] buffer = new byte[size];
+            int read = is.read(buffer);
+            is.close();
+
+            json = new String(buffer, Charset.forName("UTF-8"));
+
+            JSONObject jsonObject = new JSONObject(json);
+
+            JSONObject innerObj = jsonObject.getJSONObject(benCode);
+            return innerObj;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+
+
     public ArrayList<String> getSuggestionsList(String filename) {
 
         ArrayList<String> suggestions = null;
@@ -119,7 +149,9 @@ public class MyJson {
 
             json = new String(buffer, Charset.forName("UTF-8"));
 
-            JSONArray jsonArray = new JSONArray(json);
+            JSONObject jsonObject = new JSONObject(json);
+
+            JSONArray jsonArray = jsonObject.names();
 
             suggestions = new ArrayList<>();
 

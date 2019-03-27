@@ -30,6 +30,6 @@
     <string name="sync_successful_multiple_files">All entries synced successfully.</string>
     <string name="dismiss">DISMISS</string>
     <string name="try_again">TRY AGAIN</string>
-    <string name="app_version">2.2.2.5</string>
+    <string name="app_version">2.3.2.5</string>
     <string name="ok">OK</string>
 </resources>

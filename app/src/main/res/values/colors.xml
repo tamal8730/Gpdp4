@@ -9,4 +9,7 @@
     <color name="pomegranate">#c0392b</color>
 
     <color name="colorPrimaryTranslucent">#6aff9100</color>
+    <color name="lightorange">#fbeee6</color>
+    <color name="concrete">#95a5a6</color>
+    <color name="rect_button_pressed">#cf711f</color>
 </resources>

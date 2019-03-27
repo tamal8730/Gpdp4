@@ -39,7 +39,11 @@
         <activity
             android:name=".activities.ScannerActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".activities.BenListActivity"></activity>
+        <activity
+            android:name=".activities.BenListActivity"
+            android:screenOrientation="portrait">
+
+        </activity>
     </application>
 
 </manifest>

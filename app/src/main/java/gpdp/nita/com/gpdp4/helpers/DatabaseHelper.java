@@ -97,6 +97,19 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return bens;
     }
 
+    public String getFamilyHeadName(String benCode) {
+
+        String name = "Anonymous";
+
+        Cursor c = getReadableDatabase()
+                .rawQuery("SELECT family_head_name FROM gpdp_basic_info_1 WHERE ben_code =?", new String[]{benCode});
+        if (c.moveToFirst()) {
+            name = c.getString(0);
+        }
+        c.close();
+        return name.equals("") ? "Anonymous" : name;
+    }
+
     public ArrayList<String> getUnfilledFormNumbers(String benCode) {
 
         ArrayList<String> incompleteForm = new ArrayList<>();

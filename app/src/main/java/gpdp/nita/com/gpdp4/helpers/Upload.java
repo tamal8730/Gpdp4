@@ -16,8 +16,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
@@ -59,7 +61,7 @@ public class Upload {
 //        progressDialog.setMessage("Please wait while we sync your data with our servers.");
 //        progressDialog.show();
         onFormsEndListener.onSyncStarted();
-        final boolean[] isSuccesful = {true};
+        final boolean[] isSuccessful = {true};
 
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.POST,
                 Constants.HTTP_URL + "?b=" + ben_code + "&s=" + surveyorCode,
@@ -72,7 +74,7 @@ public class Upload {
                         try {
                             String res = response.getString(1);
                             if (res.equalsIgnoreCase("NA")) {
-                                isSuccesful[0] = false;
+                                isSuccessful[0] = false;
                                 showError("You are not authorized for beneficiary " + ben_code);
                             } else {
                                 sendSuccess();
@@ -105,7 +107,7 @@ public class Upload {
                     }
                 });
 
-        if (isSuccesful[0])
+        if (isSuccessful[0])
             Volley.newRequestQueue(context).add(jsonArrayRequest);
     }
 
@@ -134,6 +136,9 @@ public class Upload {
                 new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray response) {
+
+                        Log.d("resxxx1", response.toString());
+
                         try {
                             String res = response.getString(1);
                             if (res.equalsIgnoreCase("NA")) {
@@ -270,7 +275,58 @@ public class Upload {
         return extras;
     }
 
-    public JsonObjectRequest requestJSONForUpdates(final String filename, final boolean afterLogin) {
+    public void requestMultipleJSONForUpdates() {
+        String lastUpdated = getLastUpdateDate();
+
+    }
+
+    private String getLastUpdateDate() {
+
+        File sdcard = Environment.getExternalStorageDirectory();
+        File file = new File(sdcard, "lastupdated.txt");
+
+        if (!file.exists()) {
+            return "";
+        }
+
+        StringBuilder text = new StringBuilder();
+
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(file));
+            String line;
+
+            while ((line = br.readLine()) != null) {
+                text.append(line);
+                text.append('\n');
+            }
+            br.close();
+        } catch (IOException e) {
+            return "";
+        }
+
+        return text.toString();
+    }
+
+    private void setLastUpdateDate(String date) {
+        try {
+            File root = new File(Environment.getExternalStorageDirectory(), "gpdp/");
+            if (!root.exists()) {
+                if (!root.mkdirs()) {
+                    cannotCreateDirs();
+                }
+            }
+            File file = new File(root, "lastupdated.txt");
+
+            FileWriter writer = new FileWriter(file);
+            writer.append(date);
+            writer.flush();
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public JsonObjectRequest requestOneJSONForUpdates(final String filename, final boolean afterLogin) {
 
         return new JsonObjectRequest(Request.Method.POST,
                 Constants.UPDATE_TABLES,

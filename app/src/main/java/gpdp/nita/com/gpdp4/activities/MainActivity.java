@@ -91,7 +91,7 @@ public class MainActivity extends AppCompatActivity {
 
         models.add(new MainMenuModel("Add beneficiary", R.drawable.ic_add_user));
         models.add(new MainMenuModel("View all beneficiaries", R.drawable.ic_list));
-        models.add(new MainMenuModel("Sync status", R.drawable.ic_sync));
+        models.add(new MainMenuModel("Sync from backups", R.drawable.ic_sync));
         models.add(new MainMenuModel("Logout", R.drawable.ic_logout));
 
 
@@ -157,8 +157,8 @@ public class MainActivity extends AppCompatActivity {
             public void accept(Boolean isConnected) {
                 if (isConnected) {
                     RequestQueue queue = Volley.newRequestQueue(MainActivity.this);
-                    queue.add(upload.requestJSONForUpdates(Constants.TABLES_TO_BE_DOWNLOADED_AFTER_LOGIN[0], true));
-                    queue.add(upload.requestJSONForUpdates(Constants.TABLES_TO_BE_DOWNLOADED_AFTER_LOGIN[1], true));
+                    queue.add(upload.requestOneJSONForUpdates(Constants.TABLES_TO_BE_DOWNLOADED_AFTER_LOGIN[0], true));
+                    queue.add(upload.requestOneJSONForUpdates(Constants.TABLES_TO_BE_DOWNLOADED_AFTER_LOGIN[1], true));
                 } else {
                     if (!upload.allFilesExist(Constants.TABLES_TO_BE_DOWNLOADED_AFTER_LOGIN)) {
                         Toast.makeText(MainActivity.this, "Cannot proceed", Toast.LENGTH_SHORT).show();
@@ -263,12 +263,12 @@ public class MainActivity extends AppCompatActivity {
                 } else if (!suggestionsArray.contains(benCode)) {
                     Toast.makeText(MainActivity.this, "Invalid beneficiary code", Toast.LENGTH_SHORT).show();
                 } else
-                    toMain(benCode);
+                    toForms(benCode);
             }
         });
     }
 
-    private void toMain(String benCode) {
+    private void toForms(String benCode) {
         dialog.dismiss();
         Intent toForms = new Intent(this, FormsActivity.class);
         toForms.putExtra("ben_code", benCode);

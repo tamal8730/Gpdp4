@@ -130,7 +130,7 @@ public class FormsActivity extends AppCompatActivity {
         tableFormMap.put("gpdp_desc_family_2", "2. Details of family members");
         tableFormMap.put("gpdp_end_poverty_3", "3. End poverty");
         tableFormMap.put("gpdp_income_generation_4", "4. Income generation");
-        tableFormMap.put("gpdp_shg_5", "SHG");
+        tableFormMap.put("gpdp_shg_5", "5. SHG");
         tableFormMap.put("gpdp_loan_status_6", "6. Loan status");
         tableFormMap.put("gpdp_mgnrega_7", "7. MGNREGA");
         tableFormMap.put("gpdp_skill_development_8", "8. Skill development");
@@ -417,6 +417,10 @@ public class FormsActivity extends AppCompatActivity {
                 recyclerView.setAdapter(adapter);
                 recyclerView.setLayoutManager(linearLayoutManager);
 
+                if (fillStatus.getVisibility() != View.VISIBLE) {
+                    fillStatus.setVisibility(View.VISIBLE);
+                    fillStatus.startAnimation(scaleUp);
+                }
 
                 recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
                     @Override
