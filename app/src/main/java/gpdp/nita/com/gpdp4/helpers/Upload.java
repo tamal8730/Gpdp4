@@ -328,6 +328,8 @@ public class Upload {
 
     public JsonObjectRequest requestOneJSONForUpdates(final String filename, final boolean afterLogin) {
 
+        Log.d("dexxx", encapsulateHashInJson(filename).toString());
+
         return new JsonObjectRequest(Request.Method.POST,
                 Constants.UPDATE_TABLES,
                 encapsulateHashInJson(filename),
@@ -335,6 +337,7 @@ public class Upload {
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
+                        Log.d("dexxx", response.toString() + " hell");
                         try {
                             int error = response.getInt("error");
                             if (error == 1) {
@@ -360,6 +363,7 @@ public class Upload {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         error.printStackTrace();
+                        Log.d("dexxx", error.toString() + " hell");
                         onError(error.getMessage());
                     }
                 });

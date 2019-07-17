@@ -2,7 +2,7 @@
   "name": "Agriculture Issues",
   "table_name": "gpdp_agriculture_issues_12",
   "form_number": 12,
-  "loop": null,
+  "loop": "form_11_sectors sector_id S",
   "widgets": [
     {
       "column_name": "area",
